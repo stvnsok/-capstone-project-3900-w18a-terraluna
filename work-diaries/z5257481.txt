@@ -1,0 +1,15 @@
+Week 1 
+Reviewed timeline and details of the project, looked through all avaliable projects.
+Group formed. 
+Decided on Recipe Maker for the project.
+Established coding strengths of the group and discussed what software tools, languages and libraries we might use.
+Brainstormed some key issues that we might come across for the project.
+Joined group Jira, and created a google doc for the proposal.
+Wrote some user stories based on the basic project spec.
+
+Week 2 
+Created GitHub group.
+Explored similar existing recipe reccomendation systems.
+Wrote more user stories based on some additional functionality we could possibly implement.
+As I had not worked with Python and SQL in a while, spent time reviewing past courses and projects before we start coding.
+Also reviewed basic git skills required.
