@@ -1,6 +1,9 @@
 Week 1
-
-Group of 4 people was formed. I became the scrum master, created a Jira project group and invited all my team members to it. I brainstormed ideas for the problem statement and added some user stories to the proposal. I also
-discussed with the team about which software tools and libraries to use for the project.
+Group of 4 people was formed. I became the scrum master, created a Jira project group and invited all my team members to it. 
+I brainstormed ideas for the problem statement and added some user stories to the proposal. 
+I also discussed with the team about which software tools and libraries to use for the project.
 
 Week 2
+I created a github repository for the group and uploaded my work diaries to it. 
+I then brainstormed and wrote additional user stories for sign up and login users. 
+I wrote a problem statement for the proposal and the team had a discussion about a prototype landing page.
