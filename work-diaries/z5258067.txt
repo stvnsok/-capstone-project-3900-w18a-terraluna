@@ -1,3 +1,6 @@
 Week 1
 
-In week 1 we formed a group of 4 with James, Michael and Steven who became scrum master, we decided when to have sprints and what project to start on. We decided on the recipe project. I brainstormed some user stories and came up with the technology stack we would use including using Typescript + React for the frontend and Python + Flask for the backend and Postgresql for the database. We also had a look at the problem statement and the currently available solutions  to the problem presented.
+In week 1 we formed a group of 4 with James, Michael and Steven who became scrum master, we decided when to have sprints and what project to start on. We decided on the recipe project. I brainstormed some user stories and came up with the technology stack we would use including using Typescript + React for the frontend and Python + Flask for the backend and Postgresql for the database. We also had a look at the problem statement and the currently available solutions to the problem presented.
+
+Week 2
+In week 2 I set up the figma file so that we can start using it to design our web application along with the user flow diagrams and flows. I also came up with the color pallete we are to use when designing the page and the user interface and interactions for logging in, signing out and validating username / password. I also brainstormed more on the user stories.
