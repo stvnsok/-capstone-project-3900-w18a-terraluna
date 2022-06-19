@@ -9,7 +9,16 @@ Wrote some user stories based on the basic project spec.
 
 Week 2 
 Created GitHub group.
-Explored similar existing recipe reccomendation systems.
+Explored similar existing recipe reccomendation systems given in project spec
 Wrote more user stories based on some additional functionality we could possibly implement.
-As I had not worked with Python and SQL in a while, spent time reviewing past courses and projects before we start coding.
-Also reviewed basic git skills required.
+As I had not done any coding in a while, spent time reviewing past courses and projects before we start coding.
+Particularly in Python and Networks
+Also reviewed basic git skills required. 
+
+Week 3
+Continued reviewing programming langauages for the project especially Flask
+Found other existing system for recipe reccomendation explorer
+Reviewed pros and cons on each system for the proposal
+Planned to finish proposal this week and start with skeleton and schema for project but took longer than expected
+Wrapped up proposal and planned to meet again tomorrow night to establish more concrete skeleton and architecture
+so we can get started coding.
