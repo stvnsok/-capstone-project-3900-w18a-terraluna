@@ -7,3 +7,8 @@ Week 2
 I created a github repository for the group and uploaded my work diaries to it. 
 I then brainstormed and wrote additional user stories for sign up and login users. 
 I wrote a problem statement for the proposal and the team had a discussion about a prototype landing page.
+
+Week 3
+I finished off some of the user stories and added them to Jira.
+I then started to create flow diagrams for some recipe explorer user stores and added them to the proposal.
+I attended a group meeting to ensure that the proposal was cohesive, we finished the proposal and I submitted it afterwards.
