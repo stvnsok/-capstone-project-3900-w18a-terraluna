@@ -1,0 +1,39 @@
+Week 1
+* This week: form group, project setups
+* Formed a group of 4
+* Elected Steven as the Scrum Master
+* Joined the Jira and WebCMS3 group made by the Scrum Master
+* Joined a Google Doc for our Proposal
+* Discussed our project preferences and chose the Recipe Recommendation System
+* Discussed our language preferences and chose a Python / React stack
+* Reviewed the proposal assessment specification
+* Next week: proposal work
+
+Week 2
+* This week: start proposal work, delegate tasks
+* Joined GitHub classroom
+* Allocated parts of the proposal to different group members
+* Decided on a 5-sprint structure
+* Made the sprints on Jira
+* Made title page of proposal
+* Next week: finish proposal, schema design
+
+Week 3
+* This week: finish proposal
+* Added to problem statement, added in-text citations and references
+* Proofread existing systems
+* Added objectives and how the user stories satisfy these objectives
+* Added user stories to Sprint 1 on Jira
+* Added a few more user stories to satisfy all project objectives
+* Ensured all user stories were added on Jira backlog
+* Outlined a few functional novelties of our system compared to existing ones
+* Documented the sprint structure on our proposal
+* Included screenshots of Jira showing our user stories, our sprint dates, and our stories
+  in scope for the first sprint
+* Added to system architecture
+* Formatted and polished entire proposal
+* Submitted proposal
+* Schema design was not finished due to the proposal taking longer than anticipated. Overall
+  progress not affected, no adjustments needed
+* Next week: schema design, start coding, Sprint 1 stories, authentication/authorisation
+  Python Flask routes
