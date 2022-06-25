@@ -4,3 +4,6 @@ In week 1 we formed a group of 4 with James, Michael and Steven who became scrum
 
 Week 2
 In week 2 I set up the figma file so that we can start using it to design our web application along with the user flow diagrams and flows. I also came up with the color pallete we are to use when designing the page and the user interface and interactions for logging in, signing out and validating username / password. I also brainstormed more on the user stories.
+
+Week 3
+In week 3 I set finished up a lot of designs on figma as well as created the user flow diagrams for the proposal. I created pages for most of the frontend and also helped in the creation of the schema for our database. I also suggested a wide variety of frameworks (by having done research) to use for our frontend such as Tailwind CSS.
