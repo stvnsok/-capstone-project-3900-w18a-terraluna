@@ -6,6 +6,8 @@ import TextInput from "../global/TextInput";
 import { Modal } from "../global/Modal";
 import Button from "../global/Button";
 import { getEmailErrors, getPasswordErrors, getUsernameErrors } from "./helperFunctions";
+import { login, register } from "../../services/auth.service";
+import { toast } from "react-toastify";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -40,10 +42,29 @@ const LoginModal = ({
             const passwordError = getPasswordErrors(password)
             if (passwordError) tmpErrorList.password = passwordError
             setErrorList(tmpErrorList);
+            return
         }
         closeFunction();
         clearInputFields();
-        onLogin();
+        if (isSigningUp) {
+            login(usernameOrEmail, password)
+                .then(_ => {
+                    //TODO (MAYBE)
+                    onLogin();
+                })
+                .catch(err => {
+                    toast.error(err); //TODO
+                })
+        } else {
+            register(usernameOrEmail, email, password)
+            .then(_ => {
+                //TODO (MAYBE)
+                onLogin();
+            })
+            .catch(err => {
+                toast.error(err); //TODO
+            })
+        }
     }
 
     const handleSecondaryButtonPress = () => {

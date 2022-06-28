@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { resetUsername } from "../../services/auth.service";
 import Button from "../global/Button";
 import TextInput from "../global/TextInput";
 import { getUsernameErrors } from "./helperFunctions";
@@ -16,7 +18,15 @@ const ChangeUsernameForm = () => {
         const usernameError = getUsernameErrors(username)
         if (usernameError) tmpErrorList.username = usernameError;
         setErrorList(tmpErrorList);
-        //TODO API CALL
+        if(tmpErrorList === {}) {
+            resetUsername(username)
+                .then(() => {
+                    toast.success('Successfully Changed Username')
+                })
+                .catch(err => {
+                    toast.error(err);//TODO MAY NEED EDITING
+                })
+        }
     }
 
     return (<React.Fragment>

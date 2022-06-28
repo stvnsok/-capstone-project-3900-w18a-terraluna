@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { resetEmail } from "../../services/auth.service";
 import Button from "../global/Button";
 import TextInput from "../global/TextInput";
 import { getEmailErrors } from "./helperFunctions";
@@ -17,6 +19,15 @@ const ChangeEmailForm = () => {
         if (emailError) tmpErrorList.email = emailError;
         setErrorList(tmpErrorList);
         //TODO API CALL
+        if(tmpErrorList === {}) {
+            resetEmail(email)
+                .then(() => {
+                    toast.success('Successfully Changed Email')
+                })
+                .catch(err => {
+                    toast.error(err);//TODO MAY NEED EDITING
+                })
+        }
     }
 
     return (<React.Fragment>

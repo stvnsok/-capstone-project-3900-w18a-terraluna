@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { resetPassword } from "../../services/auth.service";
 import Button from "../global/Button";
 import TextInput from "../global/TextInput";
 import { getPasswordErrors } from "./helperFunctions";
@@ -23,7 +25,15 @@ const ChangePasswordForm = () => {
         if (confirmNewPasswordError) tmpErrorList.confirmNewPassword = confirmNewPasswordError;
         if (confirmNewPassword !== newPassword) tmpErrorList.confirmNewPassword = 'Password and Confirm Password do not match'
         setErrorList(tmpErrorList);
-        //TODO API CALL
+        if(tmpErrorList === {}) {
+            resetPassword(password, newPassword)
+                .then(() => {
+                    toast.success('Successfully Changed Password')
+                })
+                .catch(err => {
+                    toast.error(err);//TODO MAY NEED EDITING
+                })
+        }
     }
 
     return (<React.Fragment>

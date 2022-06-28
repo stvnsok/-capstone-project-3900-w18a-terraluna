@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.Toastify__toast--error {
+    border-radius: 4px !important;
+    color: black !important;
+    border: 1px solid #f05252 !important;
+    background: linear-gradient(
+        0deg,
+        rgba(240,82,82,0.4),
+        rgba(240,82,82,0.4)
+    ),
+    #ffffff !important;
+}
+
+.Toastify__toast--success {
+    border-radius: 4px !important;
+    color: black !important;
+    border: 1px solid rgba(113, 191, 67, 1) !important;
+    background: linear-gradient(
+        0deg,
+        rgba(113, 191, 67, 0.4),
+        rgba(113, 191, 67, 0.4)
+    ),
+    #ffffff !important;
+}
