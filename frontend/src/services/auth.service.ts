@@ -1,4 +1,4 @@
-import api from "../api"
+import { api } from "../api"
 
 export const login = (
     username_or_email: string,
@@ -14,7 +14,7 @@ export const register = (
     email: string,
     password: string 
 ): Promise<RegisterApiRepsonse> => {
-    return (api.post('TODO/register', {
+    return (api.post('auth/register', {
         username, password, email
     }))
 }

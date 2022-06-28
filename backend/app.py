@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import HTTPException
 from werkzeug.local import LocalProxy
+from flask_cors import CORS
 
 load_dotenv()  # Load ".env" file into environment variables
 
@@ -20,6 +21,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
 logger = LocalProxy(lambda: app.logger)
+CORS(app)
 
 
 @app.errorhandler(HTTPException)

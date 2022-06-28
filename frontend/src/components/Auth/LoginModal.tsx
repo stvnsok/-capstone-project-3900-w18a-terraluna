@@ -42,11 +42,11 @@ const LoginModal = ({
             const passwordError = getPasswordErrors(password)
             if (passwordError) tmpErrorList.password = passwordError
             setErrorList(tmpErrorList);
-            return
+            if (tmpErrorList === {}) return
         }
         closeFunction();
         clearInputFields();
-        if (isSigningUp) {
+        if (!isSigningUp) {
             login(usernameOrEmail, password)
                 .then(_ => {
                     //TODO (MAYBE)
@@ -57,8 +57,8 @@ const LoginModal = ({
                 })
         } else {
             register(usernameOrEmail, email, password)
-            .then(_ => {
-                //TODO (MAYBE)
+            .then(res => {
+                console.log(res);
                 onLogin();
             })
             .catch(err => {
