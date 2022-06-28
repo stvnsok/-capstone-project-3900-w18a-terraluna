@@ -1,15 +1,15 @@
 from error import *
 
 
-class InvalidUsernameError(Error422):
+class InvalidUsernameFormatError(Error422):
     description = "Invalid username format"
 
 
-class InvalidEmailError(Error422):
+class InvalidEmailFormatError(Error422):
     description = "Invalid email format"
 
 
-class InvalidPasswordError(Error422):
+class WeakPasswordError(Error422):
     description = "Password too weak"
 
 
@@ -21,5 +21,9 @@ class EmailInUseError(Error409):
     description = "Email is in use"
 
 
-class InvalidUsernameEmailOrPassword(Error401):
-    description = "Invalid username/email and/or password"
+class IncorrectLoginError(Error401):
+    description = "Incorrect username/email and/or password"
+
+
+class IncorrectPasswordError(Error401):
+    description = "Incorrect password"

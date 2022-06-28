@@ -1,4 +1,5 @@
 import json
+import os
 
 from dotenv import load_dotenv
 from flask import Flask
@@ -8,12 +9,10 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import HTTPException
 from werkzeug.local import LocalProxy
 
-from config import Config
-
-load_dotenv()
+load_dotenv()  # Load ".env" file into environment variables
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(os.getenv("FLASK_CONFIG", "config.DevelopmentConfig"))
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
@@ -25,10 +24,10 @@ def handle_exception(e):
     """Return JSON instead of HTML for HTTP errors."""
     logger.error(e)  # type: ignore
 
-    # start with the correct headers and status code from the error
+    # Start with the correct headers and status code from the error
     response = e.get_response()
 
-    # replace HTML body with JSON
+    # Replace HTML body with JSON
     response.data = json.dumps(
         {
             "code": e.code,
