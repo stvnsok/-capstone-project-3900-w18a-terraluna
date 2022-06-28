@@ -3,6 +3,7 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_cors import CORS
 from flask_jwt_extended.jwt_manager import JWTManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,8 @@ load_dotenv()  # Load ".env" file into environment variables
 
 app = Flask(__name__)
 app.config.from_object(os.getenv("FLASK_CONFIG", "config.DevelopmentConfig"))
+CORS(app)  # Enable CORS for all domains on all routes
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
