@@ -37,3 +37,39 @@ Week 3
   progress not affected, no adjustments needed
 * Next week: schema design, start coding, Sprint 1 stories, authentication/authorisation
   Python Flask routes
+
+Week 4
+* This week: schema design, start coding, Sprint 1 stories, authentication/authorisation
+  Python Flask routes
+* Created Flask project skeleton
+* Created VSCode settings file to use `black` and `isort` to format code and enforce clean code
+* Created Flask app entry point, and various configurations based on environment (development,
+  production) that also make use of a `.env` file
+* Created SQLAlchemy integration and models for 2 tables: User and RevokedToken
+* Created a local PostgreSQL database for SQLAlchemy and psycopg2 to connect to
+* Created Flask-Migrate integration to run migrations for ease of development
+* Created a README file outlining development setup and install instructions, including instructions
+  on database setup, creating and syncing migrations, virtual environment setup, installing
+  requirements, installing formatting tools, and running using the Flask CLI
+* Created and registered an authentication blueprint with routes for register, login, logout,
+  reset username, reset email and reset password
+* Created utility functions to verify usernames, emails and passwords according to acceptance
+  criteria
+* Created custom `HTTPException`s for various errors such as registering with a weak password
+* Created Flask-JWT-Extended integration to implement token-based authentication using both
+  access tokens and refresh tokens (to be stored on the client-side)
+* Tested endpoints/routes thoroughly using Postman
+* Coordinated with David to ensure correct communication with the backend API by making clear
+  the expected request/response formats
+* Enabled CORS after David discovered that backend calls did not work with `axios` (albeit
+  working with Postman)
+* This week's backend goals were indeed reached and all user stories were implemented in regards
+  to their backend functionality
+* The main technical obstacle was implementing token-based authentication (as opposed
+  to session-based authentication). Different libraries were tried (such as Flask-Login for
+  session-based authentication) until Flask-JWT-Extended was settled upon
+* The main non-technical obstacle was delays on frontend development due to assignments,
+  making it difficult to observe correct/expected backend functionality as only Postman
+  testing was performed
+* Not finished: 
+* Next week: 
