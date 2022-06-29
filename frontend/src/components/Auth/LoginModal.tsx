@@ -65,7 +65,7 @@ const LoginModal = ({
                 })
                 .catch(err => {
                     const errorDescription = err.response.data.description;
-                    toast.error('Error: ' + errorDescription);
+                    toast.error('Error: ' + (errorDescription ?? 'Invalid Login Details'));
                 })
         } else {
             register(usernameOrEmail, email, password)

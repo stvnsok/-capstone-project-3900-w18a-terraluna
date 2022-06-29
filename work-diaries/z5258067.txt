@@ -7,3 +7,32 @@ In week 2 I set up the figma file so that we can start using it to design our we
 
 Week 3
 In week 3 I set finished up a lot of designs on figma as well as created the user flow diagrams for the proposal. I created pages for most of the frontend and also helped in the creation of the schema for our database. I also suggested a wide variety of frameworks (by having done research) to use for our frontend such as Tailwind CSS.
+
+Week 4
+- Helped others with the schema and setup
+- Helped with configuration of backend and frontend
+- Created styles for the frontend using Tailwind CSS
+- Added a few packages like react-modal, react-toastify and a few others to speed up development process
+- Created token storage infrastructure
+- Created axios instances for api calls
+- Created App Component
+- Created Login Modal Component
+- Created Account Settings Modal
+- Created Login Form
+- Created Sign Up Form
+- Created Change Password Form
+- Set Up Auth login, register, reset password, reset username, reset email endpoints on the frontend
+- Set Up Types for the endpoint responses
+- Created the homescreen
+- Created the Login Flow in React
+- Helped with setting up the backend and database to work with the frontend
+- Managed the Jira and set the user stories to done / complete
+- Created helper functions for error detecting in usernames, emails and passwords.
+- Added error checking for sign in form fields on the frontend to make user flow better
+- Added error checking for log in form fields on the frontend to make user flow better
+- Added error checking for reset username in form fields on the frontend to make user flow better
+- Added error checking for reset password in form fields on the frontend to make user flow better
+- Added error checking for reset email in form fields on the frontend to make user flow better
+- Added toast styles to make it more obvious of the result of the api call
+- Added token handling to the frontend for the axios instance
+- Worked with james to get a lot of the authentication and backend frontend talking to work.
