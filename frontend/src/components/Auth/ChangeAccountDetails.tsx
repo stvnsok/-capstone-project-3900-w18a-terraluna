@@ -6,7 +6,11 @@ import ChangeUsernameForm from "./ChangeUsernameForm";
 
 type ChangeAccountDetailsMenus = 'changePassword' | 'changeUsername' | 'changeEmail';
 
-const ChangeAccountDetails = () => {
+const ChangeAccountDetails = ({
+    onUsernameChange
+}: {
+    onUsernameChange: (username: string) => void;
+}) => {
     const [expanded, setExpanded] = useState<ChangeAccountDetailsMenus>();
 
     return (
@@ -45,7 +49,9 @@ const ChangeAccountDetails = () => {
                 </div>
             </div>
             {expanded === 'changeUsername' && (<div className="px-5 w-2/3 mt-4">
-                <ChangeUsernameForm/>
+                <ChangeUsernameForm
+                    onUsernameChange={onUsernameChange}
+                />
             </div>)}
             <div 
                 className={`w-full h-6 bg-tl-active-green flex ${expanded !== 'changePassword' ? 'cursor-pointer' : ''}`}

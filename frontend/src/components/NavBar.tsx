@@ -7,6 +7,12 @@ const NavBar = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [username, setUsername] = useState<string>();
+
+    const triggerSetUsername = (username: string) => {
+        setUsername(username);
+    }
+
     return (
         <React.Fragment>
             <LoginModal
@@ -14,19 +20,27 @@ const NavBar = () => {
                 closeFunction={() => {
                     setIsLoginModalOpen(false);
                 }}
-                onLogin={() => {
+                onLogin={(res: LoginApiResponse) => {
                     setIsLoggedIn(true);
+                    triggerSetUsername(res.data.username)
+                    localStorage.setItem('access_token', res.data.access_token)
+                    localStorage.setItem('refresh_token', res.data.refresh_token)
                 }}
             />
-            <AccountSettingsModal
+            { username && <AccountSettingsModal
                 isOpen={isAccountSettingsModalOpen}
                 closeFunction={() => {
                     setIsAccountSettingsModalOpen(false);
                 }}
                 onLogOut={() => {
                     setIsLoggedIn(false);
+                    setUsername(undefined);
                 }}
-            />
+                username={username}
+                onUsernameChange={(username: string) => {
+                    setUsername(username)
+                }}
+            />}
             <div 
                 className='w-full bg-tl-inactive-green h-[300px] flex justify-end'
             >
@@ -36,7 +50,7 @@ const NavBar = () => {
                         isLoggedIn ? setIsAccountSettingsModalOpen(true) : setIsLoginModalOpen(true);
                     }}
                 >
-                    {isLoggedIn ? 'David Peng' : 'Log in'} <HiOutlineUser size={20} className='text-tl-active-black inline'/>
+                    { username ?? 'Log in' } <HiOutlineUser size={20} className='text-tl-active-black inline'/>
                 </span> 
             </div>
         </React.Fragment>

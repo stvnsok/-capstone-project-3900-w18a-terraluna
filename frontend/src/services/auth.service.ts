@@ -4,7 +4,7 @@ export const login = (
     username_or_email: string,
     password: string
 ): Promise<LoginApiResponse> => {
-    return (api.post('TODO/login', {
+    return (api.post('auth/login', {
         username_or_email, password
     }))
 }
@@ -21,13 +21,13 @@ export const register = (
 
 export const logout = (
 ): Promise<LogoutApiResponse> => {
-    return (api.delete('TODO/logout'))
+    return (api.delete('auth/logout'))
 }
 
 export const resetUsername = (
         new_username: string
     ): Promise<ResetUsernameApiResponse> => {
-    return (api.put('TODO/reset/username', {
+    return (api.put('auth/reset/username', {
         new_username
     }))
 }
@@ -35,7 +35,7 @@ export const resetUsername = (
 export const resetEmail = (
     new_email: string
 ): Promise<ResetEmailApiResponse> => {
-return (api.put('TODO/reset/email', {
+return (api.put('auth/reset/email', {
     new_email
 }))
 }
@@ -44,7 +44,7 @@ export const resetPassword = (
     old_password: string,
     new_password: string
 ): Promise<ResetPasswordApiResponse> => {
-    return (api.put('TODO/reset/password', {
+    return (api.put('auth/reset/password', {
         new_password, old_password
     }))
 }

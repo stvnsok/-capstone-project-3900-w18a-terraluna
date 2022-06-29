@@ -1,23 +1,25 @@
-interface RegisterApiRepsonse {
-    //TODO
+interface EmptyApiResponse {
+    data: {}
 }
+
+interface ResetEmailApiResponse extends EmptyApiResponse {}
+
+interface LogoutApiResponse extends EmptyApiResponse {}
+
+interface ResetPasswordApiResponse extends EmptyApiResponse {}
 
 interface LoginApiResponse {
-    //TODO
+    data: {
+        access_token: string;
+        refresh_token: string;
+        username: string;
+    }
 }
 
-interface LogoutApiResponse {
-    //TODO
-}
-
-interface ResetPasswordApiResponse {
-    //TODO
-}
+interface RegisterApiRepsonse extends LoginApiResponse {}
 
 interface ResetUsernameApiResponse {
-    //TODO
-}
-
-interface ResetEmailApiResponse {
-    //TODO
+    data: {
+        username: string;
+    }
 }

@@ -88,7 +88,7 @@ def register():
     access_token = create_access_token(identity=user.username, fresh=True)
     refresh_token = create_refresh_token(identity=user.username)
     logger.debug("Registered user: %s", user)  # type: ignore
-    return jsonify(access_token=access_token, refresh_token=refresh_token), 201
+    return jsonify(access_token=access_token, refresh_token=refresh_token, username=user.username), 201
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -125,7 +125,7 @@ def login():
     access_token = create_access_token(identity=user.username, fresh=True)
     refresh_token = create_refresh_token(identity=user.username)
     logger.debug("User logged in: %s", user)  # type: ignore
-    return jsonify(access_token=access_token, refresh_token=refresh_token)
+    return jsonify(access_token=access_token, refresh_token=refresh_token, username=user.username)
 
 
 @auth_bp.route("/logout", methods=["DELETE"])
@@ -170,7 +170,7 @@ def reset_username():
     if not user.reset_username(new_username):
         raise InvalidUsernameFormatError
 
-    return {}
+    return jsonify(username=user.username)
 
 
 @auth_bp.route("/reset/email", methods=["PUT"])

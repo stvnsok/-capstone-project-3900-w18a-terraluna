@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 interface LoginModalProps {
     isOpen: boolean;
     closeFunction: () => void;
-    onLogin: () => void;
+    onLogin: (res: LoginApiResponse) => void;
 }
 
 interface SignupErrorList {
@@ -35,34 +35,50 @@ const LoginModal = ({
     const handlePrimaryButtonPress = () => {
         if (isSigningUp) {
             let tmpErrorList: SignupErrorList = {}
+            let hasErrors = false;
             const usernameError = getUsernameErrors(usernameOrEmail)
-            if (usernameError) tmpErrorList.username = usernameError
+            if (usernameError) {
+                tmpErrorList.username = usernameError;
+                hasErrors = true;
+            }
             const emailError = getEmailErrors(email)
-            if (emailError) tmpErrorList.email = emailError
+            if (emailError) {
+                tmpErrorList.email = emailError;
+                hasErrors = true;
+            }
             const passwordError = getPasswordErrors(password)
-            if (passwordError) tmpErrorList.password = passwordError
+            if (passwordError) {
+                tmpErrorList.password = passwordError;
+                hasErrors = true;
+            }
             setErrorList(tmpErrorList);
-            if (tmpErrorList === {}) return
+            if (hasErrors) return;
         }
-        closeFunction();
-        clearInputFields();
         if (!isSigningUp) {
             login(usernameOrEmail, password)
-                .then(_ => {
-                    //TODO (MAYBE)
-                    onLogin();
+                .then(res => {
+                    onLogin(res);
+                    closeFunction();
+                    clearInputFields();
+                    setIsSigningUp(false);
+                    toast.success("Successfully Logged In");
                 })
                 .catch(err => {
-                    toast.error(err); //TODO
+                    const errorDescription = err.response.data.description;
+                    toast.error('Error: ' + errorDescription);
                 })
         } else {
             register(usernameOrEmail, email, password)
             .then(res => {
-                console.log(res);
-                onLogin();
+                toast.success("Successfully Signed Up");
+                onLogin(res);
+                closeFunction();
+                clearInputFields();
+                setIsSigningUp(false);
             })
             .catch(err => {
-                toast.error(err); //TODO
+                const errorDescription = err.response.data.description;
+                toast.error('Error: ' + errorDescription);
             })
         }
     }

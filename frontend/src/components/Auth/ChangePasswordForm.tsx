@@ -18,20 +18,30 @@ const ChangePasswordForm = () => {
     const [errorList, setErrorList] = useState<ChangePasswordErrorList>()
 
     const submitForm = () => {
+        let hasErrors = false;
         let tmpErrorList: ChangePasswordErrorList = {}
         const newPasswordError = getPasswordErrors(newPassword)
-        if (newPasswordError) tmpErrorList.newPassword = newPasswordError;
+        if (newPasswordError) {
+            tmpErrorList.newPassword = newPasswordError;
+            hasErrors = true;
+        }
         const confirmNewPasswordError = getPasswordErrors(confirmNewPassword)
-        if (confirmNewPasswordError) tmpErrorList.confirmNewPassword = confirmNewPasswordError;
-        if (confirmNewPassword !== newPassword) tmpErrorList.confirmNewPassword = 'Password and Confirm Password do not match'
+        if (confirmNewPasswordError) {
+            tmpErrorList.confirmNewPassword = confirmNewPasswordError;
+            hasErrors = true;
+        }
+        if (confirmNewPassword !== newPassword) {
+            tmpErrorList.confirmNewPassword = 'Password and Confirm Password do not match'
+            hasErrors = true;
+        }
         setErrorList(tmpErrorList);
-        if(tmpErrorList === {}) {
+        if(!hasErrors) {
             resetPassword(password, newPassword)
                 .then(() => {
                     toast.success('Successfully Changed Password')
                 })
                 .catch(err => {
-                    toast.error(err);//TODO MAY NEED EDITING
+                    toast.error(err.response.data.description);
                 })
         }
     }

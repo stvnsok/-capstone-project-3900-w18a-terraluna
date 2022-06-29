@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { HiOutlineSparkles } from "react-icons/hi";
+import { toast } from "react-toastify";
+import { logout } from "../../services/auth.service";
 import { Modal } from "../global/Modal";
 import ChangeAccountDetails from "./ChangeAccountDetails";
 import UserProfile from "./UserProfile";
@@ -8,6 +10,8 @@ interface AccountSettingsModalProps {
     isOpen: boolean;
     closeFunction: () => void;
     onLogOut: () => void;
+    onUsernameChange: (username: string) => void
+    username: string;
 }
 
 type AccountSettingsMenus = 'accountDetails' | 'changeLoginDetails'
@@ -16,6 +20,8 @@ const AccountSettingsModal = ({
     isOpen,
     closeFunction,
     onLogOut,
+    username,
+    onUsernameChange
 }: AccountSettingsModalProps) => {
     const [menuSelected, setMenuSelected] = useState<AccountSettingsMenus>('accountDetails');
 
@@ -24,15 +30,25 @@ const AccountSettingsModal = ({
             case 'accountDetails':
                 return (
                     <UserProfile
+                        username={username}
                         onLogOut={() => {
                             closeFunction()
-                            onLogOut()
+                            logout()
+                                .then(() => {
+                                    toast.success("Successfully Logged Out")
+                                    onLogOut()
+                                })
+                                .catch(() => {
+                                    toast.error("Couldn't Log Out")
+                                })
                         }}
                     />
                 )
             case 'changeLoginDetails':
                 return (
-                    <ChangeAccountDetails/>
+                    <ChangeAccountDetails
+                        onUsernameChange={onUsernameChange}
+                    />
                 )
         }
     }

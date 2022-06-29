@@ -9,22 +9,31 @@ interface ChangeUsernameErrorList {
     username?: string;
 }
 
-const ChangeUsernameForm = () => {
+const ChangeUsernameForm = ({
+    onUsernameChange
+}: {
+    onUsernameChange: (username: string) => void;
+}) => {
     const [username, setUsername] = useState<string>('');
     const [errorList, setErrorList] = useState<ChangeUsernameErrorList>()
 
     const submitForm = () => {
+        let hasErrors = false;
         let tmpErrorList: ChangeUsernameErrorList = {}
         const usernameError = getUsernameErrors(username)
-        if (usernameError) tmpErrorList.username = usernameError;
+        if (usernameError) {
+            tmpErrorList.username = usernameError;
+            hasErrors = true;
+        }
         setErrorList(tmpErrorList);
-        if(tmpErrorList === {}) {
+        if(!hasErrors) {
             resetUsername(username)
-                .then(() => {
+                .then((res) => {
                     toast.success('Successfully Changed Username')
+                    onUsernameChange(res.data.username);
                 })
                 .catch(err => {
-                    toast.error(err);//TODO MAY NEED EDITING
+                    toast.error(err.response.data.description);
                 })
         }
     }

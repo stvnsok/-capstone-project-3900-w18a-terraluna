@@ -9,8 +9,8 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=1)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=3)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
 
 class ProductionConfig(Config):

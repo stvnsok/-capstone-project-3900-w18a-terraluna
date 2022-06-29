@@ -11,4 +11,13 @@ const instance = axios.create({
         qs.stringify(parameters, { arrayFormat: 'brackets' })
 })
 
+instance.interceptors.request.use( (config) => {
+    const access_token = localStorage.getItem('access_token');
+    if (access_token) {
+        const header = { Authorization: 'Bearer ' + localStorage.getItem('access_token') }
+        config.headers = { ...config.headers, ...header }
+    }
+    return config
+})
+
 export { instance as api }

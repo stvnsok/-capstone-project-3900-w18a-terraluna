@@ -14,18 +14,21 @@ const ChangeEmailForm = () => {
     const [errorList, setErrorList] = useState<ChangeEmailErrorList>()
 
     const submitForm = () => {
+        let hasErrors = false;
         let tmpErrorList: ChangeEmailErrorList = {}
         const emailError = getEmailErrors(email)
-        if (emailError) tmpErrorList.email = emailError;
+        if (emailError) {
+            tmpErrorList.email = emailError
+            hasErrors = true;
+        };
         setErrorList(tmpErrorList);
-        //TODO API CALL
-        if(tmpErrorList === {}) {
+        if(!hasErrors) {
             resetEmail(email)
                 .then(() => {
                     toast.success('Successfully Changed Email')
                 })
                 .catch(err => {
-                    toast.error(err);//TODO MAY NEED EDITING
+                    toast.error(err.response.data.description);
                 })
         }
     }
