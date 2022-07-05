@@ -22,3 +22,12 @@ Reviewed pros and cons on each system for the proposal
 Planned to finish proposal this week and start with skeleton and schema for project but took longer than expected
 Wrapped up proposal and planned to meet again tomorrow night to establish more concrete skeleton and architecture
 so we can get started coding.
+
+Week 4
+Continued revision on SQL, planed to establish skeleton and schema for the project
+However a combination and other work commitments and catching a really bad flu 
+put me out of commission for a couple of days. As cited in the retrospective, 
+this combined with the out of sync schedules caused an imbalance of work loads.
+Began formulating schema and simple required functions for next demo.
+
+Week 5
