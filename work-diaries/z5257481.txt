@@ -31,3 +31,9 @@ this combined with the out of sync schedules caused an imbalance of work loads.
 Began formulating schema and simple required functions for next demo.
 
 Week 5
+Ran into trouble setting up project on vlab and ssh VScode
+Set up programming environment on home laptop
+Setup python, postgresql, and git cloning project
+However still could not fully set up working environment
+Researched articles on Flask and SQL Alchemy
+Began coding for second sprint with respect to DB models
