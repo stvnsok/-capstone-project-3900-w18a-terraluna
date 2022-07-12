@@ -12,15 +12,3 @@ Week 3
 I finished off some of the user stories and added them to Jira.
 I then started to create flow diagrams for some recipe explorer user stores and added them to the proposal.
 I attended a group meeting to ensure that the proposal was cohesive, we finished the proposal and I submitted it afterwards.
-
-Week 4
-Set up the react app repository for the front end
-Revised on a bit of typescript and frontend work
-I attended a group meeting to discuss the project
-Started working on sprint 1 requirements
-
-Week 5
-Had a meeting with the group to help set up the database and backend locally
-Wrote up the Retro A document
-Submitted and emailed the retro A document to the tutor
-Started working on sprint 2 requirements
