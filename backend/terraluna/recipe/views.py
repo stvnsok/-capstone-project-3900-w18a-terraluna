@@ -17,6 +17,26 @@ from .utils import *
 auth_bp = Blueprint("auth_bp", __name__)
 """Blueprint: A Blueprint for all authentication and authorization routes."""
 
+def new_recipe():
+    """Add a new recipe
+    
+    """
+    data = request.get_json()
+
+    # Check for Malformed Requests
+    if not data:
+        raise Error400
+
+    ingredients_text = data.get("ingredients")
+    method = data.get("method")
+
+    ingredient_ids= parse_ingredients(ingredients_text)
+
+    recipe = Recipe.create(ingredients_text, method)
+    """Also add relations table"""
+
+
+
 def search_recipes():
     """Search for matching recipes given a list of ingredients
     modified by filters
