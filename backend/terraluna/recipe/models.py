@@ -3,33 +3,89 @@ from app import db, logger
 
 class Recipe(db.Model):
     """A Recipe in the database"""
-    """Developing to be stored as text, will integrate ingredient IDs later for matching"""
 
     id = db.Column(db.Integer, primary_key=True)
-    ingredients_text = db.Column(db.Text, nullable=False)
-    method_text = db.Column(db.Text, nullable=False)
+    name = db.Column(db.text, nullable=False)
+    recipe_contributor = db.Column(db.Integer, nullable=False)
+    published = db.Column(db.Boolean, nullable=False)
+    recipe_photo = db.Column(db.text)
+    description = db.Column(db.Text)
+    meal_type = db.Column(db.ARRAY(db.text))
+    diet_type = db.Column(db.ARRAY(db.text))
+    recipe_instructions = db.Column(db.Text)
+    timer_duration = db.Column(db.Integer)
+    timer_units = db.Column(db.Text)
 
     @staticmethod
-    def create(ingredients_text, method_text):
+    def create(name, recipe_contributor, recipe_photo, description, meal_type, diet_type, 
+        recipe_instructions, timer_duration, timer_units, recipe2ingredient):
         """Create a new recipe model and add it to the database. 
-        Storing ingredients and method as text
 
         Args:
-            ingredients_text (str): Required Ingredients.
-            method_text (str): Recipe Method.\
-
+            name (str): Recipe name.
+            recipe_contributor (int): user_id of creator
+            recipe_photo (str): URL for recipe photo.
+            description (str): Description of recipe.
+            meal_type (List(str)): Types of meals.
+            diet_type (List(str)): Types of diet.
+            recipe_instructions (str): Recipe instructions.
+            timer_duration (int): Cooking time quantity.
+            timer_units (str): Cooking time units.
+            recipe2ingredient (dict): dictionary of ingredient_id and quantity
+            
         Returns:
             Recipe: The new recipe model.
         """
-        highest_recipe_id = db.session.query(func.max(Recipe.id))
         recipe = Recipe(
-            id=highest_recipe_id+1, ingredients_text=ingredients_text, method_text=method_text
+            name, recipe_contributor, published=False,
+            recipe_photo=recipe_photo, description=description,
+            meal_type=meal_type, diet_type=diet_type, 
+            recipe_instructions=recipe_instructions, 
+            timer_duration=timer_duration, timer_units=timer_units
         )
         db.session.add(recipe)
+        # TODO: add/modify recipe2ingredients table
+        #
+        #
+        #
         db.session.commit()
         logger.debug("Added recipe to DB: %s", recipe)  # type: ignore
-        return recipe
+        return
 
+    def save(self, name, recipe_photo, description, meal_type, diet_type, 
+        recipe_instructions, timer_duration, timer_units, recipe2ingredient):
+        """Save recipe with new data.
+
+        Args:
+            name (str): Recipe name.
+            recipe_photo (str): URL for recipe photo.
+            description (str): Description of recipe.
+            meal_type (List(str)): Types of meals.
+            diet_type (List(str)): Types of diet.
+            recipe_instructions (str): Recipe instructions.
+            timer_duration (int): Cooking time quantity.
+            timer_units (str): Cooking time units.
+            recipe2ingredient (List(int)): List of required ingredients (id).
+            
+        Returns:
+            bool: `True` if success, `False` otherwise.
+        """
+
+        return True
+    
+    def publish(self):
+        """Publish the recipe.
+
+        Args:
+            None
+            
+        Returns:
+            bool: `True` if success, `False` otherwise.
+        """
+        self.publish = True
+
+        return True
+    
 class Ingredient(db.Model):
     """A Ingredient in the database"""
 
@@ -37,27 +93,17 @@ class Ingredient(db.Model):
     name = db.Column(db.Text, nullable=False)
 
     @staticmethod
-    def create(ingredient_name):
+    def create(name):
         """Create a new ingredient model and add it to the database. 
 
         Args:
-            ingredients_text (str): Required Ingredients.
-            method_text (str): Recipe Method.\
+            name (str): Ingredient name.
 
         Returns:
-            Recipe: The new recipe model.
+            Recipe: The new ingredient model.
         """
-        highest_ingredient_id = db.session.query(func.max(Ingredient.id))
-        ingredient = Recipe(
-            id=highest_ingredient_id+1, name=ingredient_name
-        )
+        ingredient = Ingredient(name=name)
         db.session.add(ingredient)
         db.session.commit()
         logger.debug("Added ingredient to DB: %s", ingredient)  # type: ignore
         return ingredient
-    
-class IngredientsRequired(db.model):
-    """Ingredients required in a recipe"""
-
-    recipe_id = db.Column(db.Integer, db.ForeignKey('Recipe.id'), primary_key=True)
-    ingredient_id = db.Column(db.Integer, db.ForeignKey('Ingredient.id'), primary_key=True)

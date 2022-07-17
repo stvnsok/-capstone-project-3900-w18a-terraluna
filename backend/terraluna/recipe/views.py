@@ -1,21 +1,17 @@
-from flask import Blueprint, jsonify, request
-from flask_jwt_extended.utils import (
-    create_access_token,
-    create_refresh_token,
-    get_jwt,
-    get_jwt_identity,
-)
-from flask_jwt_extended.view_decorators import jwt_required
-
 from app import jwt, logger
 from error import *
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended.utils import (create_access_token,
+                                      create_refresh_token, get_jwt,
+                                      get_jwt_identity)
+from flask_jwt_extended.view_decorators import jwt_required
 
 from .error import *
 from .models import *
 from .utils import *
 
-auth_bp = Blueprint("auth_bp", __name__)
-"""Blueprint: A Blueprint for all authentication and authorization routes."""
+auth_bp = Blueprint("recipe_bp", __name__)
+"""Blueprint: A Blueprint for all recipe routes."""
 
 def new_recipe():
     """Add a new recipe
