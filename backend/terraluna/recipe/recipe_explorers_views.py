@@ -1,36 +1,3 @@
-from app import jwt, logger
-from error import *
-from flask import Blueprint, jsonify, request
-from flask_jwt_extended.utils import (create_access_token,
-                                      create_refresh_token, get_jwt,
-                                      get_jwt_identity)
-from flask_jwt_extended.view_decorators import jwt_required
-
-from .error import *
-from .models import *
-from .utils import *
-
-auth_bp = Blueprint("recipe_bp", __name__)
-"""Blueprint: A Blueprint for all recipe routes."""
-
-def new_recipe():
-    """Add a new recipe
-    
-    """
-    data = request.get_json()
-
-    # Check for Malformed Requests
-    if not data:
-        raise Error400
-
-    ingredients_text = data.get("ingredients")
-    method = data.get("method")
-
-    ingredient_ids= parse_ingredients(ingredients_text)
-
-    recipe = Recipe.create(ingredients_text, method)
-    """Also add relations table"""
-
 
 
 def search_recipes():

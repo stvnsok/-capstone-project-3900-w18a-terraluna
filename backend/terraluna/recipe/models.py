@@ -65,11 +65,23 @@ class Recipe(db.Model):
             recipe_instructions (str): Recipe instructions.
             timer_duration (int): Cooking time quantity.
             timer_units (str): Cooking time units.
-            recipe2ingredient (List(int)): List of required ingredients (id).
+            recipe2ingredient (dict): dictionary of ingredient_id and quantity
             
         Returns:
-            bool: `True` if success, `False` otherwise.
+            None
         """
+        self.name = name
+        self.recipe_photo = recipe_photo
+        self.description = description
+        self.meal_type = meal_type
+        self.diet_type = diet_type
+        self.recipe_instructions = recipe_instructions
+        self.timer_duration = timer_duration
+        self.timer_units = timer_units
+        # TODO: add/modify recipe2ingredients table
+        #
+        #
+        #
 
         return True
     
@@ -80,8 +92,9 @@ class Recipe(db.Model):
             None
             
         Returns:
-            bool: `True` if success, `False` otherwise.
+            None
         """
+
         self.publish = True
 
         return True
