@@ -1,4 +1,3 @@
-from setuptools import Require
 from app import db, logger
 
 
@@ -32,11 +31,20 @@ class Recipe(db.Model):
             recipe_instructions (str): Recipe instructions.
             timer_duration (int): Cooking time quantity.
             timer_units (str): Cooking time units.
-            required_ingredients (dict): dictionary of ingredient_id and quantity
+            required_ingredients (List(Dict)): ingredients required for recipe
+                [
+                    {
+                        'ingredient_id': int
+                        'quantity': int
+                        'units': str
+                    }
+                ]
             
         Returns:
             Recipe: The new recipe model.
         """
+
+        # Create a recipe object and add to session
         recipe = Recipe(
             name, recipe_contributor, published=False,
             recipe_photo=recipe_photo, description=description,
@@ -45,11 +53,11 @@ class Recipe(db.Model):
             timer_duration=timer_duration, timer_units=timer_units
         )
         db.session.add(recipe)
-        # TODO: add/modify required_ingredients table
-        #
-        #
-        #
+
+        # Add all required ingredients to session
         RequiredIngredient.add_required_ingredients(recipe.id, required_ingredients)
+
+        # Commit changes to database
         db.session.commit()
         logger.debug("Added recipe to DB: %s", recipe)  # type: ignore
         return
@@ -67,11 +75,19 @@ class Recipe(db.Model):
             recipe_instructions (str): Recipe instructions.
             timer_duration (int): Cooking time quantity.
             timer_units (str): Cooking time units.
-            required_ingredients (List(Dict)): list of (ingredient_id and quantity) required for recipe
+            required_ingredients (List(Dict)): ingredients required for recipe
+                [
+                    {
+                        'ingredient_id': int
+                        'quantity': int
+                        'units': str
+                    }
+                ]
             
         Returns:
             None
         """
+        # Update all attributes
         self.name = name
         self.recipe_photo = recipe_photo
         self.description = description
@@ -80,13 +96,12 @@ class Recipe(db.Model):
         self.recipe_instructions = recipe_instructions
         self.timer_duration = timer_duration
         self.timer_units = timer_units
-
-        # TODO: add/modify required_ingredients table
-        #
-        #
-        #
+        # Update required ingredients for the recipe
         RequiredIngredient.update(required_ingredients)
 
+        # Commit changes to database
+        db.session.commit()
+        logger.debug("Modified recipe in DB: %s", recipe)  # type: ignore
         return True
     
     def publish(self):
@@ -98,10 +113,16 @@ class Recipe(db.Model):
         Returns:
             None
         """
-
-        self.publish = True
-
+        # Set recipe status to published
+        self.published = True
+        
+        # Commit changes to database
+        db.session.commit()
+        logger.debug("Set recipe to published in DB: %s", recipe)  # type: ignore
         return True
+
+    def __repr__(self):
+        return f"<id={self.id}>"
     
 class Ingredient(db.Model):
     """A Ingredient in the database"""
@@ -119,11 +140,17 @@ class Ingredient(db.Model):
         Returns:
             Recipe: The new ingredient model.
         """
+        # Create and add ingredient object to db
         ingredient = Ingredient(name=name)
         db.session.add(ingredient)
+
+        # Commit changes to database
         db.session.commit()
         logger.debug("Added ingredient to DB: %s", ingredient)  # type: ignore
         return ingredient
+    
+    def __repr__(self):
+        return f"<id={self.id}\tingredient_name={self.name}>"
 
 class RequiredIngredient(db.Model):
     """Units and quantity of ingredients required for recipe"""
@@ -134,15 +161,23 @@ class RequiredIngredient(db.Model):
     ingredient = db.relationship("Ingredient", back_populates="recipes")
     recipe = db.relationship("Recipes", back_populates="required_ingredients")
 
-    required_quantity = db.Column(db.Integer)
-    required_units = db.Column(db.Text)
+    quantity = db.Column(db.Integer)
+    units = db.Column(db.Text)
 
     @staticmethod
     def add_required_ingredients(recipe_id, required_ingredients):
         """Add required ingredients for a recipe to the database
 
         Args:
-            required_ingredients (List(Dict)): list of Dict(ingredient_id and quantity) required for recipe.
+            recipe_id (int): recipe to modified
+            required_ingredients (List(Dict)): ingredients required for recipe
+                [
+                    {
+                        'ingredient_id': int
+                        'quantity': int
+                        'units': str
+                    }
+                ]
 
         Returns:
             None
@@ -150,10 +185,10 @@ class RequiredIngredient(db.Model):
         """
         for required_ingredient in required_ingredients:
             ingredient_id = required_ingredient['ingredient_id']
-            required_quantity = required_ingredient['required_quantity']
-            required_units = required_ingredient['required_units']
+            quantity = required_ingredient['quantity']
+            units = required_ingredient['units']
             row = RequiredIngredient(recipe_id=recipe_id, ingredient_id=ingredient_id,
-                required_quantity=required_quantity, required_units=required_units)
+                quantity=quantity, units=units)
             db.session.add(row)
 
     @staticmethod
@@ -167,29 +202,30 @@ class RequiredIngredient(db.Model):
             None
         
         """
+        # TODO: remove all entries of RequiredIngredient containing recipe_id
+        #
+        #
+        #
+        #
 
     @staticmethod
     def update(recipe_id, required_ingredients):
         """Update required ingredients for a recipe
 
         Args:
-            required_ingredients (List(Dict)): list of Dict(ingredient_id and quantity) required for recipe.
+            recipe_id (int): recipe to modified
+            required_ingredients (List(Dict)): ingredients required for recipe
+                [
+                    {
+                        'ingredient_id': int
+                        'quantity': int
+                        'units': str
+                    }
+                ]
 
         Returns:
             None
         
         """
-        # TODO: amend RequiredIngredients table to reflect accordingly
-        #
-        #
-        #       - Delete all records matching (recipe_id, ingredient_id)
-        #       - Add new records
-        #
-        #
-        requiredIngredientIDs = [requiredIngredient['ingredient_id'] for requiredIngredient in required_ingredients]
-        for ingredient_id in requiredIngredientIDs:
-            link = 
-            db.session.
-
         RequiredIngredient.remove_all_recipe_ingredients(recipe_id)
-        RequiredIngredients.add_required_ingredients(recipe_id, required_ingredients)
+        RequiredIngredient.add_required_ingredients(recipe_id, required_ingredients)

@@ -36,9 +36,9 @@ def new_recipe():
 def list_recipes(recipe_id):
     pass
 
-@recipe_contributors_bp.route("/recipe/<int:recipe_id>/copy", methods=["POST"])
+@recipe_contributors_bp.route("/recipe/<int:recipe_id>/update", methods=["PUT"])
 @jwt_required(fresh=True)
-def copy_recipe(recipe_id):
+def update_recipe(recipe_id):
     pass
 
 @recipe_contributors_bp.route("/recipe/<int:recipe_id>/delete", methods=["DELETE"])
@@ -46,10 +46,23 @@ def copy_recipe(recipe_id):
 def delete_recipe(recipe_id):
     pass
 
+@recipe_contributors_bp.route("/recipe/<int:recipe_id>/copy", methods=["POST"])
+@jwt_required(fresh=True)
+def copy_recipe(recipe_id):
+    pass
+
 @recipe_contributors_bp.route("/recipe/<int:recipe_id>/publish", methods=["PUT"])
 @jwt_required(fresh=True)
 def publish_recipe(recipe_id):
     pass
+
+
+
+
+
+
+
+
 
 @recipe_contributors_bp.route("/no_match_frequency", methods=["GET"])
 @jwt_required(fresh=True)
