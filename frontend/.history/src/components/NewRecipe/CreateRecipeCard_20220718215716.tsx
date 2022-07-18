@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BsCloudUpload } from 'react-icons/bs';
-import { HiOutlinePlusCircle } from 'react-icons/hi';
 import { useForm, UseFormRegisterReturn } from 'react-hook-form'
 import Button from '../global/Button';
 
@@ -143,21 +142,6 @@ export default function CreateRecipe () {
                         { value: 'minute'},
                         { value: 'hour'},
                     ]}
-                />
-                <HiOutlinePlusCircle
-                    onClick = {() => {
-                        console.log('Todo:add step'); 
-                    }}
-                />
-                <HiOutlinePlusCircle
-                     onClick = {() => {
-                        console.log('Todo:add timer'); 
-                    }}               
-                />
-                <HiOutlinePlusCircle
-                    onClick = {() => {
-                        console.log('Todo:add video'); 
-                    }}
                 />
             </div>
             

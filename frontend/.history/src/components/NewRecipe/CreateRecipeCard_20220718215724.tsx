@@ -144,21 +144,6 @@ export default function CreateRecipe () {
                         { value: 'hour'},
                     ]}
                 />
-                <HiOutlinePlusCircle
-                    onClick = {() => {
-                        console.log('Todo:add step'); 
-                    }}
-                />
-                <HiOutlinePlusCircle
-                     onClick = {() => {
-                        console.log('Todo:add timer'); 
-                    }}               
-                />
-                <HiOutlinePlusCircle
-                    onClick = {() => {
-                        console.log('Todo:add video'); 
-                    }}
-                />
             </div>
             
             <div>
