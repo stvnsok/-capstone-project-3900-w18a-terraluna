@@ -9,7 +9,6 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import HTTPException
 from werkzeug.local import LocalProxy
-from flask_cors import CORS
 
 load_dotenv()  # Load ".env" file into environment variables
 

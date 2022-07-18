@@ -5,19 +5,21 @@ class Recipe(db.Model):
     """A Recipe in the database"""
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.text, nullable=False)
+    name = db.Column(db.Text, nullable=False)
     recipe_contributor = db.Column(db.Integer, nullable=False)
     published = db.Column(db.Boolean, nullable=False)
-    recipe_photo = db.Column(db.text)
+    recipe_photo = db.Column(db.Text)
+    recipe_video = db.Column(db.Text)
     description = db.Column(db.Text)
-    meal_type = db.Column(db.ARRAY(db.text))
-    diet_type = db.Column(db.ARRAY(db.text))
+    meal_type = db.Column(db.ARRAY(db.Text))
+    diet_type = db.Column(db.ARRAY(db.Text))
     recipe_instructions = db.Column(db.Text)
     timer_duration = db.Column(db.Integer)
     timer_units = db.Column(db.Text)
+    required_ingredients = db.relationship("RequiredIngredient", back_populates="recipe")
 
     @staticmethod
-    def create(name, recipe_contributor, recipe_photo, description, meal_type, diet_type, 
+    def create(name, recipe_contributor, recipe_photo, recipe_video, description, meal_type, diet_type, 
         recipe_instructions, timer_duration, timer_units, required_ingredients):
         """Create a new recipe model and add it to the database. 
 
@@ -25,6 +27,7 @@ class Recipe(db.Model):
             name (str): Recipe name.
             recipe_contributor (int): user_id of creator
             recipe_photo (str): URL for recipe photo.
+            recipe_video (str): URL for recipe video.
             description (str): Description of recipe.
             meal_type (List(str)): Types of meals.
             diet_type (List(str)): Types of diet.
@@ -46,10 +49,9 @@ class Recipe(db.Model):
 
         # Create a recipe object and add to session
         recipe = Recipe(
-            name, recipe_contributor, published=False,
-            recipe_photo=recipe_photo, description=description,
-            meal_type=meal_type, diet_type=diet_type, 
-            recipe_instructions=recipe_instructions, 
+            name=name, recipe_contributor=recipe_contributor, published=False,
+            recipe_photo=recipe_photo, recipe_video=recipe_video, description=description,
+            meal_type=meal_type, diet_type=diet_type, recipe_instructions=recipe_instructions, 
             timer_duration=timer_duration, timer_units=timer_units
         )
         db.session.add(recipe)
@@ -62,13 +64,14 @@ class Recipe(db.Model):
         logger.debug("Added recipe to DB: %s", recipe)  # type: ignore
         return
 
-    def save(self, name, recipe_photo, description, meal_type, diet_type, 
+    def save(self, name, recipe_photo, recipe_video, description, meal_type, diet_type, 
         recipe_instructions, timer_duration, timer_units, required_ingredients):
         """Save recipe with new data.
 
         Args:
             name (str): Recipe name.
             recipe_photo (str): URL for recipe photo.
+            recipe_video (str): URL for recipe video.
             description (str): Description of recipe.
             meal_type (List(str)): Types of meals.
             diet_type (List(str)): Types of diet.
@@ -87,9 +90,10 @@ class Recipe(db.Model):
         Returns:
             None
         """
-        # Update all attributes
+        # Update all attributes to given new ones
         self.name = name
         self.recipe_photo = recipe_photo
+        self.recipe_video = recipe_video
         self.description = description
         self.meal_type = meal_type
         self.diet_type = diet_type
@@ -129,6 +133,7 @@ class Ingredient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, nullable=False)
+    recipes = db.relationship("RequiredIngredient", back_populates="ingredient")
 
     @staticmethod
     def create(name):
@@ -202,11 +207,8 @@ class RequiredIngredient(db.Model):
             None
         
         """
-        # TODO: remove all entries of RequiredIngredient containing recipe_id
-        #
-        #
-        #
-        #
+        RequiredIngredient.query.filter_by(recipe_id=recipe_id).delete()
+
 
     @staticmethod
     def update(recipe_id, required_ingredients):
