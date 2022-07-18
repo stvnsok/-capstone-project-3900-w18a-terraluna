@@ -23,8 +23,8 @@
 |---|---|---|---|---|---|
 | recipe/new | POST | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients } | { recipe_id } |  |  |
 | recipes | GET | {} | { recipes } |  |  |
-| recipe/{recipe_id} | GET | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients } |  |  |
-| recipe/{recipe_id}/update | PUT | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients } | {} |  |  |
-| recipe/{recipe_id}/delete | DELETE | {} | {} |  |  |
-| recipe/{recipe_id}/copy | POST | {} | { recipe_id } |  |  |
-| recipe/{recipe_id}/publish | PUT | {} | {} |  |  |
+| recipe | GET | { recipe_id } | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients } |  |  |
+| recipe/update | PUT | { recipe_id, name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients } | {} |  |  |
+| recipe/delete | DELETE | { recipe_id } | {} |  |  |
+| recipe/copy | POST | { recipe_id } | { recipe_id } |  |  |
+| recipe/publish | PUT | { recipe_id } | {} |  |  |
