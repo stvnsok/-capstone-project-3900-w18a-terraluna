@@ -1,12 +1,11 @@
-from app import jwt, logger
+from app import db, logger
 from error import *
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
-from terraluna.recipe.models import Recipe
 
 from .error import *
-from .recipe_contributors_views import *
+from .models import *
 from .utils import *
 
 recipe_contributors_bp = Blueprint("recipe_contributors_bp", __name__)
@@ -15,7 +14,7 @@ recipe_contributors_bp = Blueprint("recipe_contributors_bp", __name__)
 @recipe_contributors_bp.route("/recipe/new", methods=["POST"])
 @jwt_required(fresh=True)
 def new_recipe():
-    """Add a new recipe"""
+    """Add a new recipe and return new recipe_id"""
 
     # Get dict of input from front end 
     data = request.get_json()
@@ -35,7 +34,7 @@ def new_recipe():
     timer_units = data.get("timerUnits")
     required_ingredients = data.get("requiredIngredients")
 
-    # Check for Well-formed Requests that cannot be processed
+    # Check for valid recipe name
     if not verify_recipe_name(name):
         raise InvalidRecipeNameFormatError
     else:
@@ -48,48 +47,182 @@ def new_recipe():
             meal_type=meal_type, diet_type=diet_type, recipe_instructions=recipe_instructions, 
             timer_duration=timer_duration, timer_units=timer_units, required_ingredients=required_ingredients)
     
-    return recipe.id
+    logger.debug("Created recipe: %s", recipe)  # type: ignore
+    return jsonify(recipe_id=recipe.id)
 
 
 @recipe_contributors_bp.route("/recipes", methods=["GET"])
 @jwt_required(fresh=True)
-def list_recipes():
-    """Return a list of all recipes"""
-    recipe_contributor = username_to_user_id(get_jwt_identity())
+def recipes_list():
+    """Return a list of all recipes created by the recipe contributor"""
 
-    pass
+    username = get_jwt_identity()
+    recipe_contributor_id = username_to_user_id(username)
 
-@recipe_contributors_bp.route("/recipe/<int:recipe_id>", methods=["GET"])
-@jwt_required(fresh=True)
-def view_recipe():
+    # TODO: Query list of all recipes by this recipe contributor
+    #
+    #
+    #
+    # 
+    # Recipe.query.filter_by(recipe_contributor=recipe_contributor_id).all()
+    # db.select(Recipe.recipe_id. Recipe.name, .......)
     
-    recipe_contributor = username_to_user_id(get_jwt_identity())
+    # Check this is correct also need to select specific attributes to return
+
+    pass
+
+@recipe_contributors_bp.route("/recipe/details", methods=["GET"])
+@jwt_required(fresh=True)
+def recipe_details():
     
+    # Get dict of input from front end 
+    data = request.get_json()
+
+    # Check for Malformed Requests
+    if not data:
+        raise Error400
+        
+    # Verify user is the creator of the recipe
+    recipe_id = data.get("recipe_id")
+    username = get_jwt_identity()
+    recipe = recipe_or_403(username, recipe_id)
+
+    # TODO: Retrieve details of the recipe
+    #
+    #
+    #
+    #
+    
+    logger.debug("Recipe details returned: %s", recipe)  # type: ignore
+    """
+    return jsonify(name, recipePhoto_url, recipeVideo_url, description, 
+        mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients)
+    """
     pass
 
-@recipe_contributors_bp.route("/recipe/<int:recipe_id>/update", methods=["PUT"])
+@recipe_contributors_bp.route("/recipe/update", methods=["PUT"])
 @jwt_required(fresh=True)
-def update_recipe(recipe_id):
-    pass
+def recipe_update():
 
-@recipe_contributors_bp.route("/recipe/<int:recipe_id>/delete", methods=["DELETE"])
+    # Get dict of input from front end 
+    data = request.get_json()
+
+    # Check for Malformed Requests
+    if not data:
+        raise Error400
+        
+    # Verify user is the creator of the recipe
+    username = get_jwt_identity()
+    recipe_id = data.get("recipe_id")
+    recipe = recipe_or_403(username, recipe_id)
+
+
+    name = data.get("name")
+    recipe_photo = data.get("recipePhoto_url")
+    recipe_video = data.get("recipeVideo_url")
+    description = data.get("description")
+    meal_type = data.get("mealType")
+    diet_type = data.get("dietType")
+    recipe_instructions = data.get("recipeInstructions")
+    timer_duration = data.get("timerDuration")
+    timer_units = data.get("timerUnits")
+    required_ingredients = data.get("requiredIngredients")
+
+    # Check for valid recipe name
+    if not verify_recipe_name(name):
+        raise InvalidRecipeNameFormatError
+    else:
+        name = name.strip()
+
+    recipe.update(name=name, recipe_photo=recipe_photo, recipe_video=recipe_video, description=description,
+                meal_type=meal_type, diet_type=diet_type, recipe_instructions=recipe_instructions, 
+                timer_duration=timer_duration, timer_units=timer_units, required_ingredients=required_ingredients)
+    
+    logger.debug("Recipe updated: %s", recipe)  # type: ignore
+    return jsonify()
+
+@recipe_contributors_bp.route("/recipe/delete", methods=["DELETE"])
 @jwt_required(fresh=True)
-def delete_recipe(recipe_id):
-    pass
+def recipe_delete():
 
-@recipe_contributors_bp.route("/recipe/<int:recipe_id>/copy", methods=["POST"])
+    # Get dict of input from front end 
+    data = request.get_json()
+
+    # Check for Malformed Requests
+    if not data:
+        raise Error400
+    
+    # Verify user is the creator of the recipe
+    recipe_id = data.get("recipe_id")
+    username = get_jwt_identity()
+    recipe = recipe_or_403(username, recipe_id)
+
+    # Delete the recipe
+    db.session.delete(recipe)
+    
+    logger.debug("Recipe deleted: %s", recipe)  # type: ignore
+    return jsonify()
+
+@recipe_contributors_bp.route("/recipe/copy", methods=["POST"])
 @jwt_required(fresh=True)
-def copy_recipe(recipe_id):
+def recipe_copy():
+
+    # Get dict of input from front end 
+    data = request.get_json()
+
+    # Check for Malformed Requests
+    if not data:
+        raise Error400
+    
+    # Verify user is the creator of the recipe
+    recipe_id = data.get("recipe_id")
+    username = get_jwt_identity()
+    recipe = recipe_or_403(username, recipe_id)
+
+    # TODO: Copy the recipe
+    #
+    #
+    #
+    #
+
+    name = recipe.get("name")
+    recipe_photo = recipe.get("recipePhoto_url")
+    recipe_video = recipe.get("recipeVideo_url")
+    description = recipe.get("description")
+    meal_type = recipe.get("mealType")
+    diet_type = recipe.get("dietType")
+    recipe_instructions = recipe.get("recipeInstructions")
+    timer_duration = recipe.get("timerDuration")
+    timer_units = recipe.get("timerUnits")
+    required_ingredients = recipe.get("requiredIngredients")
+
+    logger.debug("Recipe copied: %s", recipe)  # type: ignore
     pass
 
-@recipe_contributors_bp.route("/recipe/<int:recipe_id>/publish", methods=["PUT"])
+@recipe_contributors_bp.route("/recipe/publish", methods=["PUT"])
 @jwt_required(fresh=True)
-def publish_recipe(recipe_id):
+def recipe_publish():
+
+    # Get dict of input from front end 
+    data = request.get_json()
+
+    # Check for Malformed Requests
+    if not data:
+        raise Error400
+    
+    # Verify user is the creator of the recipe
+    recipe_id = data.get("recipe_id")
+    username = get_jwt_identity()
+    recipe = recipe_or_403(username, recipe_id)
+
+    # TODO: Publish the recipe
+    #
+    #
+    #
+    #
+
+    logger.debug("Recipe published: %s", recipe)  # type: ignore
     pass
-
-
-
-
 
 
 

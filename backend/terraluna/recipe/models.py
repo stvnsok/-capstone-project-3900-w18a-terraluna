@@ -64,9 +64,9 @@ class Recipe(db.Model):
         logger.debug("Added recipe to DB: %s", recipe)  # type: ignore
         return
 
-    def save(self, name, recipe_photo, recipe_video, description, meal_type, diet_type, 
+    def update(self, name, recipe_photo, recipe_video, description, meal_type, diet_type, 
         recipe_instructions, timer_duration, timer_units, required_ingredients):
-        """Save recipe with new data.
+        """Update recipe with new data.
 
         Args:
             name (str): Recipe name.

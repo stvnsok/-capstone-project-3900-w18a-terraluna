@@ -2,6 +2,9 @@ import re
 
 from terraluna.auth.models import User
 
+from .error import *
+from .models import *
+
 
 def username_to_user_id(username):
     """Given a username, returns the corresponding user id
@@ -14,6 +17,31 @@ def username_to_user_id(username):
     """
     user = User.query.filter_by(username=username).first()
     return user.id
+
+def recipe_or_403(username, recipe_id):
+    """Given a username and recipe_id, 
+        check if user is the recipe contributor
+        else raises 403 error
+
+    Args:
+        username (str): username to check.
+        recipe_id (int): recipe_id of recipe
+
+    Returns:
+        int: user_id
+    """
+
+    # Retrieve user_id and recipe_contributor_id
+    user_id = username_to_user_id(username)
+    recipe = Recipe.query.filter_by(recipe_id=recipe_id).first()
+    contributor_id = recipe.recipe_contributor
+
+    # If the user is not the recipe contributor, raise 403 Forbidden
+    if user_id is not contributor_id:
+        raise ForbiddenRecipeContributor
+    
+    return recipe
+
 
 def verify_recipe_name(name):
     """Verify if a recipe name is of a valid format according to the following

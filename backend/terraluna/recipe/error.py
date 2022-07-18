@@ -5,25 +5,7 @@ class InvalidRecipeNameFormatError(Error422):
     description = "Invalid recipe name format"
 
 
-class InvalidEmailFormatError(Error422):
-    description = "Invalid email format"
+class ForbiddenRecipeContributor(Error403):
+    description = "Unauthorised Recipe Contributor: You don't have permission to access this recipe"
 
 
-class WeakPasswordError(Error422):
-    description = "Password too weak"
-
-
-class UsernameInUseError(Error409):
-    description = "Username is in use"
-
-
-class EmailInUseError(Error409):
-    description = "Email is in use"
-
-
-class IncorrectLoginError(Error401):
-    description = "Incorrect username/email and/or password"
-
-
-class IncorrectPasswordError(Error401):
-    description = "Incorrect password"
