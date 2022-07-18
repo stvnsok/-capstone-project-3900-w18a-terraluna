@@ -1,5 +1,5 @@
 import { api } from "../api"
-import { NewRecipeApiResponse, CopyRecipeApiResponse, DeleteRecipeApiResponse, NoMatchFrequencyApiResponse, RecipesRecipeContributorsApiResponse } from "../types/RecipeContributorApiResponse"
+import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NoMatchFrequencyApiResponse, RecipesRecipeContributorsApiResponse } from "../types/RecipeContributorApiResponse"
 
 export const createRecipeFromTemplate = (
     id: number
@@ -22,10 +22,4 @@ export const getRecipesRecipeContributors = (
         pageNumber: number
     ): Promise<RecipesRecipeContributorsApiResponse> => {
     return (api.get('/recipe_contributors/recipes', { params: { pageNumber: pageNumber } }))
-}
-
-export const createRecipe = (
-    recipe: Recipe
-): Promise<NewRecipeApiResponse> => {
-    return (api.post('/recipe_contributors/new', {params: {recipe: recipe}}))
 }

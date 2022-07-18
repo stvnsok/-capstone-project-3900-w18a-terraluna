@@ -19,14 +19,3 @@ interface RecipesRecipeContributorsApiResponse {
         recipes: Recipe[]
     }
 }
-
-interface NewRecipeApiResponse {
-    data: {
-        id: number;
-        name: string;
-        description: string;
-        ingredients: Ingredient[];
-        mealType: mealType[];
-    
-    }
-}

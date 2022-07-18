@@ -4,7 +4,6 @@ interface Recipe {
     cookTime: number;
     imageUrl?: string;
     mealType: string;
-    dietType: string;
 }
 
 interface Ingredient {

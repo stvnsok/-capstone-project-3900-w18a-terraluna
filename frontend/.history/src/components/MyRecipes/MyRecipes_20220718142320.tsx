@@ -127,7 +127,7 @@ const MyRecipes = () => {
         />
 
         <CreateRecipeForm
-            //open={CreateRecipeFormOpen}
+            open={CreateRecipeFormOpen}
             onClose={() => {
                 setCreateRecipeFormOpen(false)
             }}

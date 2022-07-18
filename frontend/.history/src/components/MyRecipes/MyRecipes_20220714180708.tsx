@@ -6,56 +6,43 @@ import Button from '../global/Button';
 import NavBar from '../NavBar';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
-import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
+    const [recipeForm, setRecipeForm] = useState<Recipe>();
     const [pageNumber, setPageNumber] = useState<number>(0)
-    const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState< boolean>(false);
-    const [CreateRecipeFormOpen, setCreateRecipeFormOpen] = useState<boolean>(false);
+    const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
     // const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>([{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
-        cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        cookTime: 300
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
-        cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        cookTime: 300
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
-        cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        cookTime: 300
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
-        cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        cookTime: 300
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
-        cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        cookTime: 300
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
-        cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        cookTime: 300
     }]);
 
     useEffect(() => {
@@ -83,7 +70,6 @@ const MyRecipes = () => {
                 <Button
                     onClick={() => {
                         // createRecipe()
-                        setCreateRecipeFormOpen(true);
                         console.log("TODO")
                     }}
                     className="w-10 h-10 border border-solid border-tl-inactive-black rounded-md"
@@ -123,13 +109,6 @@ const MyRecipes = () => {
             recipe={slideOutRecipe}
             onClose={() => {
                 setSlideOutRecipe(undefined)
-            }}
-        />
-
-        <CreateRecipeForm
-            //open={CreateRecipeFormOpen}
-            onClose={() => {
-                setCreateRecipeFormOpen(false)
             }}
         />
     </React.Fragment> 
