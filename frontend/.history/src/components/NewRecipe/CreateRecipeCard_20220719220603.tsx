@@ -18,6 +18,7 @@ interface recipeForm {
     recipeVideo_url?: string;
 }
 
+
 export default function CreateRecipe () {
 
     const { register, handleSubmit } = useForm<recipeForm>();
@@ -45,6 +46,7 @@ export default function CreateRecipe () {
 
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
+
             <form>
                 <div>
                     <label htmlFor='name'> Recipe Name</label>
@@ -100,14 +102,12 @@ export default function CreateRecipe () {
 
                     </select>
                 </div>
-
-                <div className = ' box-border h-32 w-32 p-4 border-4mborder border-dashed border-tl-active-green '>
+                <div className = 'mborder border-dashed border-tl-active-green '>
                     {preview ? <img src = {preview} alt = 'recipe'/> 
                     : (
                     <div className = 'flex justify-center items-center'>
                         <BsCloudUpload 
-                            color = '#A8F59B'
-                            size = {50}
+                            className = 'icon-large'
                         />
                     </div>
                     )}
@@ -127,7 +127,6 @@ export default function CreateRecipe () {
                         text={('Upload Photo')}
                     /> */}
                 </div>
-
                 <div>
                     <label htmlFor = 'Instruction'> Recipe Instructions</label>
                     <textarea 
@@ -136,56 +135,40 @@ export default function CreateRecipe () {
                         className='shadow appearance-none py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
                         
                     />
-                    <div className = 'grid grid-cols-2 gap-1'>
-                        <input
-                            {...register('timerDuration')}
-                            placeholder = 'Timer Duration'
-                            className='shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
-                        />
-                        <select
-                            placeholder='Timer Units'
-                            {...register('timerUnits')}
-                        >
-                            <option value = 'minutes'>Minutes</option>
-                            <option value = 'hours'>Hours</option>
-                        </select>
-                    </div>
-                    <div className = 'grid grid-cols-3' >
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add step'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Step
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add timer'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Timer
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add Video'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Video
-                        </div>
-                    </div>
 
+                    <input
+                        {...register('timerDuration')}
+                        placeholder = 'Timer Duration'
+                    />
+                    <select
+                        placeholder='Timer Units'
+                        {...register('timerUnits')}
+                    >
+                        <option value = 'minutes'>Minutes</option>
+                        <option value = 'hours'>Hours</option>
+                    </select>
+                    <div className = 'grid grid-cols-3 gap-4"'>
+
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add step'); 
+                            }}
+                            color = '#00bcd4'
+                        />
+                        Add Step
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add timer'); 
+                            }}               
+                        />
+                        Add Timer
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add video'); 
+                            }}
+                        />
+                        Add Video
+                    </div>
                 </div>
                 
                 <div>

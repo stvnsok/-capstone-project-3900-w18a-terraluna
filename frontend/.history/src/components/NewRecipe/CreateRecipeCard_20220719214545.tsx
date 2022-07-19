@@ -4,26 +4,26 @@ import { HiOutlinePlusCircle } from 'react-icons/hi';
 import { useForm } from 'react-hook-form'
 import Button from '../global/Button';
 
-interface recipeForm {
-    name?: string,
-    cookTime?:number
-    description?:string
-    recipeInstructions?:string[];
-    mealType?:string
-    dietType?:string
-    timerDuration?:number[];
-    timerUnits?:string;
-    requiredIngredients?:string[];
-    recipePhoto_url?: string;
-    recipeVideo_url?: string;
+type recipeForm = {
+    name:string
+    cookTime:number
+    description:string
+    recipeInstructions:string[];
+    mealType:string
+    dietType:string
+    timerDuration:number[];
+    timerUnits:string;
+    requiredIngredients:string[];
+    recipePhoto_url: string;
+    recipeVideo_url: string;
 }
+
 
 export default function CreateRecipe () {
 
     const { register, handleSubmit } = useForm<recipeForm>();
     const [image, setImage] = useState<File>();
     const [preview, setPreview] = useState<string>();
-    
     // const inputFileRef = useRef<HTMLInputElement | null>(null);
 
     const onSubmit = async (data: recipeForm) => {
@@ -44,12 +44,13 @@ export default function CreateRecipe () {
       }, [image]);
 
     return <React.Fragment>
-        <div className = 'w-full max-w-xs content-center'>
+        <div className = 'w-full max-w-xs justify-content center'>
+
             <form>
                 <div>
-                    <label htmlFor='name'> Recipe Name</label>
+                    <label htmlFor='name' className = 'block text-gray-700 text-sm font-bold mb-2'> Recipe Name</label>
                     <input 
-                        {...register('name', { required: true})} 
+                        {...register('name')} 
                         placeholder = "Recipe Name..."
                         className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
                     />
@@ -57,7 +58,7 @@ export default function CreateRecipe () {
                 <div>
                     <label htmlFor = 'cookTime'> Expected Duration</label>
                     <input
-                        {...register('cookTime', { required: true})} 
+                        {...register('cookTime')}
                         placeholder = "Expected Duration..."
                         className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
                     />
@@ -65,7 +66,7 @@ export default function CreateRecipe () {
                 <div>
                     <label htmlFor = 'mealType'> Meal Type</label>
                     <select
-                        {...register('mealType', { required: true})} 
+                        {...register('mealType')}
                         placeholder = 'Meal Type...'
                         className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
                     >
@@ -78,9 +79,9 @@ export default function CreateRecipe () {
                 <div>
                     <label htmlFor = 'description'> Description</label>
                     <input 
-                        {...register('description', { required: true})} 
+                        {...register('description')}
                         placeholder = 'Description...'
-                        className = 'shadow appearance-none border rounded w-full py-8 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
+                        className = 'shadow appearance-none border rounded w-full box-border h-32 w-32 p-4 border-4 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
                         
                     />
                     
@@ -100,14 +101,12 @@ export default function CreateRecipe () {
 
                     </select>
                 </div>
-
-                <div className = ' box-border h-32 w-32 p-4 border-4mborder border-dashed border-tl-active-green '>
+                <div className = 'mborder border-dashed border-tl-active-green '>
                     {preview ? <img src = {preview} alt = 'recipe'/> 
                     : (
                     <div className = 'flex justify-center items-center'>
                         <BsCloudUpload 
-                            color = '#A8F59B'
-                            size = {50}
+                            className = 'icon-large'
                         />
                     </div>
                     )}
@@ -127,65 +126,44 @@ export default function CreateRecipe () {
                         text={('Upload Photo')}
                     /> */}
                 </div>
-
                 <div>
-                    <label htmlFor = 'Instruction'> Recipe Instructions</label>
+                    <label htmlFor = 'Instruction'> Instructions</label>
                     <textarea 
                         {...register('recipeInstructions')}
                         placeholder = 'Step Description...'
-                        className='shadow appearance-none py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
+                        className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
                         
                     />
-                    <div className = 'grid grid-cols-2 gap-1'>
-                        <input
-                            {...register('timerDuration')}
-                            placeholder = 'Timer Duration'
-                            className='shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-lg border-opacity-0'
-                        />
-                        <select
-                            placeholder='Timer Units'
-                            {...register('timerUnits')}
-                        >
-                            <option value = 'minutes'>Minutes</option>
-                            <option value = 'hours'>Hours</option>
-                        </select>
-                    </div>
-                    <div className = 'grid grid-cols-3' >
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add step'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Step
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add timer'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Timer
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add Video'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Video
-                        </div>
-                    </div>
 
+                    <input
+                        {...register('timerDuration')}
+                        placeholder = 'Timer Duration...'
+                    />
+                    <select
+                        placeholder='Timer Units'
+                        {...register('timerUnits')}
+                    >
+                        <option value = 'minutes'>Minutes</option>
+                        <option value = 'hours'>Hours</option>
+                    </select>
+                    <HiOutlinePlusCircle
+                        onClick = {() => {
+                            console.log('Todo:add step'); 
+                        }}
+                    />
+                    Add Step
+                    <HiOutlinePlusCircle
+                        onClick = {() => {
+                            console.log('Todo:add timer'); 
+                        }}               
+                    />
+                    Add Timer
+                    <HiOutlinePlusCircle
+                        onClick = {() => {
+                            console.log('Todo:add video'); 
+                        }}
+                    />
+                    Add Video
                 </div>
                 
                 <div>

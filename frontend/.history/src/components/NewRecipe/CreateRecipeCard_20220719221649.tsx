@@ -45,6 +45,7 @@ export default function CreateRecipe () {
 
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
+
             <form>
                 <div>
                     <label htmlFor='name'> Recipe Name</label>
@@ -100,34 +101,34 @@ export default function CreateRecipe () {
 
                     </select>
                 </div>
+                <div className = 'mborder border-dashed border-tl-active-green '>
 
-                <div className = ' box-border h-32 w-32 p-4 border-4mborder border-dashed border-tl-active-green '>
-                    {preview ? <img src = {preview} alt = 'recipe'/> 
-                    : (
-                    <div className = 'flex justify-center items-center'>
-                        <BsCloudUpload 
-                            color = '#A8F59B'
-                            size = {50}
-                        />
-                    </div>
-                    )}
-                    <input 
-                        type = 'file'
-                        accept = "image/*"
-                        {...register('recipePhoto_url')}
-                        onChange = {(e) => {
-                            e.preventDefault();
-                            setImage(e.target.files?.[0]);
-                        }}
-                    />
-                    {/* <Button
-                            onClick = {() => {
-                                inputFileRef.current.click();
+                    <div>
+                        {preview ? <img src = {preview} alt = 'recipe'/> 
+                        : (
+                        <div className = 'flex justify-center items-center'>
+                            <BsCloudUpload 
+                                className = 'icon-large'
+                            />
+                        </div>
+                        )}
+                        <input 
+                            type = 'file'
+                            accept = "image/*"
+                            {...register('recipePhoto_url')}
+                            onChange = {(e) => {
+                                e.preventDefault();
+                                setImage(e.target.files?.[0]);
                             }}
-                        text={('Upload Photo')}
-                    /> */}
+                        />
+                        {/* <Button
+                                onClick = {() => {
+                                    inputFileRef.current.click();
+                                }}
+                            text={('Upload Photo')}
+                        /> */}
+                    </div>
                 </div>
-
                 <div>
                     <label htmlFor = 'Instruction'> Recipe Instructions</label>
                     <textarea 
@@ -150,42 +151,31 @@ export default function CreateRecipe () {
                             <option value = 'hours'>Hours</option>
                         </select>
                     </div>
-                    <div className = 'grid grid-cols-3' >
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add step'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Step
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add timer'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Timer
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add Video'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Video
-                        </div>
-                    </div>
+                    <div className = 'grid grid-cols-3 gap-4'>
 
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add step'); 
+                            }}
+                            color = '#A8F59B'
+                            className = 'icon-large'
+                            size={22}
+                        />
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add timer'); 
+                            }}
+                            color = '#A8F59B'
+                            size={22}              
+                        />
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add video'); 
+                            }}
+                            color = '#A8F59B'
+                            size={22}
+                        />
+                    </div>
                 </div>
                 
                 <div>

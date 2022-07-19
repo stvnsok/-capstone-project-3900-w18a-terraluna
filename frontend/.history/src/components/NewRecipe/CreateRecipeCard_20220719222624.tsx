@@ -45,6 +45,7 @@ export default function CreateRecipe () {
 
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
+
             <form>
                 <div>
                     <label htmlFor='name'> Recipe Name</label>
@@ -106,8 +107,7 @@ export default function CreateRecipe () {
                     : (
                     <div className = 'flex justify-center items-center'>
                         <BsCloudUpload 
-                            color = '#A8F59B'
-                            size = {50}
+                            className = 'icon-large'
                         />
                     </div>
                     )}
@@ -151,7 +151,7 @@ export default function CreateRecipe () {
                         </select>
                     </div>
                     <div className = 'grid grid-cols-3' >
-                        <div className='flex flex-row'>
+                        <div className='flex-row'>
                             <HiOutlinePlusCircle
                                 onClick = {() => {
                                     console.log('Todo:add step'); 
@@ -160,9 +160,9 @@ export default function CreateRecipe () {
                                 className = 'icon-large'
                                 size={22}
                             />
-                            Add Step
+                            <span>Add Step</span>
                         </div>
-                        <div className='flex flex-row'>
+                        <div className='flex-row'>
                             <HiOutlinePlusCircle
                                 onClick = {() => {
                                     console.log('Todo:add timer'); 
@@ -173,7 +173,7 @@ export default function CreateRecipe () {
                             />
                             Add Timer
                         </div>
-                        <div className='flex flex-row'>
+                        <div className='flex-row'>
                             <HiOutlinePlusCircle
                                 onClick = {() => {
                                     console.log('Todo:add Video'); 

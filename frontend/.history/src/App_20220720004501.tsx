@@ -29,7 +29,9 @@ function App() {
           <Route path="/" element={<NavBar/>} />
           <Route path="/my_recipes" element={<MyRecipes />} />
           {/* path is for testing purposes, remove once added to slide out window*/}
-          <Route path ="/new_recipe" element={<CreateRecipeCard/>} />
+          <Route path ="/new_recipe" element={<CreateRecipeCard onClose={function (): void {
+            throw new Error('Function not implemented.');
+          } } />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -16,7 +16,7 @@ const RecipeForm = ({
 
     }}>
         {/* <div><HiX className='ml-4 cursor-pointer text-tl-inactive-grey' size={50} onClick={onClose}/></div> */}
-        <div className='w-full max-w-xs content-center'>
+        <div className='justify-content center'>
             <CreateRecipeCard/>
         </div>
 

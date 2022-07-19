@@ -45,6 +45,7 @@ export default function CreateRecipe () {
 
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
+
             <form>
                 <div>
                     <label htmlFor='name'> Recipe Name</label>
@@ -106,8 +107,7 @@ export default function CreateRecipe () {
                     : (
                     <div className = 'flex justify-center items-center'>
                         <BsCloudUpload 
-                            color = '#A8F59B'
-                            size = {50}
+                            className = 'icon-large'
                         />
                     </div>
                     )}
@@ -150,42 +150,36 @@ export default function CreateRecipe () {
                             <option value = 'hours'>Hours</option>
                         </select>
                     </div>
-                    <div className = 'grid grid-cols-3' >
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add step'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Step
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add timer'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Timer
-                        </div>
-                        <div className='flex flex-row'>
-                            <HiOutlinePlusCircle
-                                onClick = {() => {
-                                    console.log('Todo:add Video'); 
-                                }}
-                                color = '#A8F59B'
-                                className = 'icon-large'
-                                size={22}
-                            />
-                            Add Video
-                        </div>
-                    </div>
+                    <div className = 'grid grid-cols-3 gap-4'>
 
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add step'); 
+                            }}
+                            color = '#A8F59B'
+                            className = 'icon-large'
+                            size={22}
+                        />
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add timer'); 
+                            }}
+                            color = '#A8F59B'
+                            size={22}              
+                        />
+                        <HiOutlinePlusCircle
+                            onClick = {() => {
+                                console.log('Todo:add video'); 
+                            }}
+                            color = '#A8F59B'
+                            size={22}
+                        />
+                    </div>
+                    <div className = 'grid grid-cols-3 gap-4'>
+                        Add Step
+                        Add Timer
+                        Add Video
+                    </div>
                 </div>
                 
                 <div>

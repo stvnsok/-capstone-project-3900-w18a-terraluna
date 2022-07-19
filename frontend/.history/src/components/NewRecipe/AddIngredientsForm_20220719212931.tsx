@@ -26,6 +26,3 @@
 // }
 
 // export default AddIngredientsForm;
-function AddIngredientsForm () {
-}
-export default AddIngredientsForm;

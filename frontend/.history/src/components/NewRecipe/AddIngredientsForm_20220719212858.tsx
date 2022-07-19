@@ -10,6 +10,7 @@
     
 //     const addNewIngredient = () => {
 //         append({
+//             name: '',
 //         });
 //     };
     
@@ -26,6 +27,3 @@
 // }
 
 // export default AddIngredientsForm;
-function AddIngredientsForm () {
-}
-export default AddIngredientsForm;

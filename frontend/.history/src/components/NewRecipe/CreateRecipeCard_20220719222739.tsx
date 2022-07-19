@@ -45,6 +45,7 @@ export default function CreateRecipe () {
 
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
+
             <form>
                 <div>
                     <label htmlFor='name'> Recipe Name</label>
@@ -106,8 +107,7 @@ export default function CreateRecipe () {
                     : (
                     <div className = 'flex justify-center items-center'>
                         <BsCloudUpload 
-                            color = '#A8F59B'
-                            size = {50}
+                            className = 'icon-large'
                         />
                     </div>
                     )}
@@ -173,7 +173,7 @@ export default function CreateRecipe () {
                             />
                             Add Timer
                         </div>
-                        <div className='flex flex-row'>
+                        <div className='flex flex-row' color = '#A8F59B'>
                             <HiOutlinePlusCircle
                                 onClick = {() => {
                                     console.log('Todo:add Video'); 

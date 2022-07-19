@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MyRecipes from './components/MyRecipes/MyRecipes';
-import CreateRecipeCard from './components/NewRecipe/CreateRecipeCard';
+import CreateRecipeForm from './components/NewRecipe/CreateRecipeForm';
 
 function App() {
   return (
@@ -29,7 +29,9 @@ function App() {
           <Route path="/" element={<NavBar/>} />
           <Route path="/my_recipes" element={<MyRecipes />} />
           {/* path is for testing purposes, remove once added to slide out window*/}
-          <Route path ="/new_recipe" element={<CreateRecipeCard/>} />
+          <Route path ="/new_recipe" element={<CreateRecipeForm onClose={function (): void {
+            throw new Error('Function not implemented.');
+          } } />} />
         </Routes>
       </div>
     </BrowserRouter>
