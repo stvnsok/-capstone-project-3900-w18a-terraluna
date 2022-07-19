@@ -115,7 +115,7 @@ export default function CreateRecipe () {
                 <input 
                     type = 'file'
                     accept = "image/*"
-                    {...register('recipePhoto_url')}
+                    // {...register('recipePhoto')}
                     onChange = {(e) => {
                         e.preventDefault();
                         setImage(e.target.files?.[0]);
@@ -152,19 +152,16 @@ export default function CreateRecipe () {
                         console.log('Todo:add step'); 
                     }}
                 />
-                Add Step
                 <HiOutlinePlusCircle
                      onClick = {() => {
                         console.log('Todo:add timer'); 
                     }}               
                 />
-                Add Timer
                 <HiOutlinePlusCircle
                     onClick = {() => {
                         console.log('Todo:add video'); 
                     }}
                 />
-                Add Video
             </div>
             
             <div>
