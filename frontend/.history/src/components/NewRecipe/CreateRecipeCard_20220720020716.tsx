@@ -209,7 +209,7 @@ export default function CreateRecipe () {
                 <div>
                     <Button
                         text={"Create"}
-                        className="mr-18 border border-solid border-tl-inactive-green bg-tl-inactive-green px-6 py-3 rounded-md"
+                        className="mr-18 border border-solid bg-tl-inactive-green px-6 py-3 rounded-md"
                         onClick = {handleSubmit(onSubmit)}
                     />
                         

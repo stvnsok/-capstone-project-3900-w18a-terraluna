@@ -1,0 +1,32 @@
+
+const IngredientsList: Ingredient[] = [
+    { id: 1, name: 'Bread' },
+    { id: 2, name: 'Milk' },
+    { id: 3, name: 'Eggs' },
+    { id: 4, name: 'Sugar' },
+    { id: 5, name: 'Salt' },
+    { id: 6, name: 'Pepper' },
+    { id: 7, name: 'Tomato' },
+    { id: 8, name: 'Onion' },
+    { id: 9, name: 'Garlic' },
+    { id: 10, name: 'Chicken' },
+    { id: 11, name: 'Beef' },
+    { id: 12, name: 'Pork' },
+    { id: 13, name: 'Lamb' },
+    { id: 14, name: 'Fish' },
+    { id: 15, name: 'Cucumber' },
+    { id: 16, name: 'Carrot' },
+    { id: 17, name: 'Potato' },
+    { id: 18, name: 'Celery' },
+    { id: 19, name: 'Onion' },
+    { id: 20, name: 'Garlic' },
+    { id: 21, name: 'Chicken' },
+    { id: 22, name: 'Beef' },
+    { id: 23, name: 'Pork' },
+    { id: 24, name: 'Lamb' },
+    { id: 25, name: 'Fish' },
+    { id: 26, name: 'Cucumber' },
+    { id: 27, name: 'Carrot' },
+];
+
+export default IngredientsList;

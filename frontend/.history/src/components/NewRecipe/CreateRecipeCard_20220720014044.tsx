@@ -46,6 +46,34 @@ export default function CreateRecipe () {
         }
       }, [image]);
 
+      const IngredientsList = [
+        {value: 'Bread', label: 'Bread'},
+        {value: 'Butter', label: 'Butter'},
+        {value: 'Cheese', label: 'Cheese'},
+        {value: 'Chicken', label: 'Chicken'},
+        {value: 'Eggs', label: 'Eggs'},
+        {value: 'Flour', label: 'Flour'},
+        {value: 'Milk', label: 'Milk'},
+        {value: 'Olive Oil', label: 'Olive Oil'},
+        {value: 'Onion', label: 'Onion'},
+        {value: 'Paprika', label: 'Paprika'},
+        {value: 'Pepper', label: 'Pepper'},
+        {value: 'Salt', label: 'Salt'},
+        {value: 'Sugar', label: 'Sugar'},
+        {value: 'Tomato', label: 'Tomato'},
+        {value: 'Water', label: 'Water'},
+        {value: 'Yeast', label: 'Yeast'},
+        {value: 'Zucchini', label: 'Zucchini'},
+        {value: 'Almond', label: 'Almond'},
+        {value: 'Apple', label: 'Apple'},
+        {value: 'Apricot', label: 'Apricot'},
+        {value: 'Asparagus', label: 'Asparagus'},
+        {value: 'Avocado', label: 'Avocado'},
+        {value: 'Banana', label: 'Banana'},
+        {value: 'Basil', label: 'Basil'},
+        {value: 'Bean', label: 'Bean'},
+        {value: 'Beet', label: 'Beet'},
+    ];
 
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
@@ -134,12 +162,11 @@ export default function CreateRecipe () {
                 {/* Ingredients will be changed to accomodate quantities*/ }
                 <div >
                     <label htmlFor = 'Ingredients'> Ingredient</label>
-                    <Select<Ingredient>
-                        //{...register('requiredIngredients')}
-                        //isMulti
-                        getOptionLabel={(ingredient: Ingredient) => ingredient.name}
-                        getOptionValue={(ingredient: Ingredient) => ingredient.name}
-                        name="Ingredients"
+                    <Select
+                        // {...register('requiredIngredients')}
+                        defaultValue={['Ingredient']}
+                        isMulti
+                        name="colors"
                         options={IngredientsList}
                         className="basic-multi-select"
                         classNamePrefix="select"
@@ -208,8 +235,6 @@ export default function CreateRecipe () {
                 
                 <div>
                     <Button
-                        text={"Create"}
-                        className="mr-18 border border-solid border-tl-inactive-green bg-tl-inactive-green px-6 py-3 rounded-md"
                         onClick = {handleSubmit(onSubmit)}
                     />
                         

@@ -46,7 +46,6 @@ export default function CreateRecipe () {
         }
       }, [image]);
 
-
     return <React.Fragment>
         <div className = 'w-full max-w-xs content-center'>
             <form>
@@ -134,12 +133,11 @@ export default function CreateRecipe () {
                 {/* Ingredients will be changed to accomodate quantities*/ }
                 <div >
                     <label htmlFor = 'Ingredients'> Ingredient</label>
-                    <Select<Ingredient>
-                        //{...register('requiredIngredients')}
-                        //isMulti
-                        getOptionLabel={(ingredient: Ingredient) => ingredient.name}
-                        getOptionValue={(ingredient: Ingredient) => ingredient.name}
-                        name="Ingredients"
+                    <Select
+                        // {...register('requiredIngredients')}
+                        defaultValue={['Ingredient']}
+                        isMulti
+                        name="colors"
                         options={IngredientsList}
                         className="basic-multi-select"
                         classNamePrefix="select"
@@ -208,8 +206,6 @@ export default function CreateRecipe () {
                 
                 <div>
                     <Button
-                        text={"Create"}
-                        className="mr-18 border border-solid border-tl-inactive-green bg-tl-inactive-green px-6 py-3 rounded-md"
                         onClick = {handleSubmit(onSubmit)}
                     />
                         
