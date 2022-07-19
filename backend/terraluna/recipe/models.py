@@ -1,6 +1,38 @@
 from app import db, logger
 
 
+class Ingredient(db.Model):
+    """A Ingredient in the database"""
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    recipes = db.relationship("RequiredIngredient", back_populates="ingredient")
+
+    @staticmethod
+    def create(name):
+        """Create a new ingredient model and add it to the database. 
+
+        Args:
+            name (str): Ingredient name.
+
+        Returns:
+            Recipe: The new ingredient model.
+        """
+        # Create and add ingredient object to db
+        ingredient = Ingredient(name=name)
+        db.session.add(ingredient)
+
+        # Commit changes to database
+        db.session.commit()
+        logger.debug("Added ingredient to DB: ingredient_id: {ingredient.id}")  # type: ignore
+        return ingredient
+    
+    def __repr__(self):
+        return f"""
+        <ingredient_id={self.id}>
+        <name={self.name}>
+        """
+
 class Recipe(db.Model):
     """A Recipe in the database"""
 
@@ -57,11 +89,12 @@ class Recipe(db.Model):
         db.session.add(recipe)
 
         # Add all required ingredients to session
-        RequiredIngredient.add_required_ingredients(recipe.id, required_ingredients)
+        if required_ingredients is not None:
+            RequiredIngredient.add_required_ingredients(recipe.id, required_ingredients)
 
         # Commit changes to database
         db.session.commit()
-        logger.debug("Added recipe to DB: %s", recipe)  # type: ignore
+        logger.debug(f"Added recipe to DB: id:{recipe.id}")  # type: ignore
         return
 
     def update(self, name, recipe_photo, recipe_video, description, meal_type, diet_type, 
@@ -105,7 +138,7 @@ class Recipe(db.Model):
 
         # Commit changes to database
         db.session.commit()
-        logger.debug("Modified recipe in DB: %s", recipe)  # type: ignore
+        logger.debug(f"Modified recipe in DB: id:{self.id}")  # type: ignore
         return True
     
     def publish(self):
@@ -122,40 +155,27 @@ class Recipe(db.Model):
         
         # Commit changes to database
         db.session.commit()
-        logger.debug("Set recipe to published in DB: %s", recipe)  # type: ignore
+        logger.debug(f"Set recipe to published in DB: id:{self.id}")  # type: ignore
         return True
 
     def __repr__(self):
-        return f"<id={self.id}>"
-    
-class Ingredient(db.Model):
-    """A Ingredient in the database"""
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
-    recipes = db.relationship("RequiredIngredient", back_populates="ingredient")
-
-    @staticmethod
-    def create(name):
-        """Create a new ingredient model and add it to the database. 
-
-        Args:
-            name (str): Ingredient name.
-
-        Returns:
-            Recipe: The new ingredient model.
-        """
-        # Create and add ingredient object to db
-        ingredient = Ingredient(name=name)
-        db.session.add(ingredient)
-
-        # Commit changes to database
-        db.session.commit()
-        logger.debug("Added ingredient to DB: %s", ingredient)  # type: ignore
-        return ingredient
-    
-    def __repr__(self):
-        return f"<id={self.id}\tingredient_name={self.name}>"
+        return f"""
+        <recipe_id={self.id}>
+        <name={self.name}>
+        <recipe_contributor_id={self.recipe_contributor}>
+        <published={self.published}>
+        <recipe_photo={self.recipe_photo}>
+        <recipe_video={self.recipe_video}>
+        <description={self.description}>
+        <meal_type={self.meal_type}>
+        <diet_type={self.diet_type}>
+        <recipe_instructions={self.recipe_instructions}>
+        <timer_duration={self.timer_duration}>
+        <timer_units={self.timer_units}>"""
+        # 
+        # <required_ingredients={[ (ingredient.id, ingredient.ingredient_name) 
+        # for ingredient in RequiredIngredient.query.filter_by(recipe_id=self.recipe_id)]}>
+        
 
 class RequiredIngredient(db.Model):
     """Units and quantity of ingredients required for recipe"""
@@ -230,4 +250,5 @@ class RequiredIngredient(db.Model):
         
         """
         RequiredIngredient.remove_all_recipe_ingredients(recipe_id)
-        RequiredIngredient.add_required_ingredients(recipe_id, required_ingredients)
+        if required_ingredients is not None:
+            RequiredIngredient.add_required_ingredients(recipe_id, required_ingredients)

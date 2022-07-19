@@ -28,7 +28,7 @@ def recipe_or_403(username, recipe_id):
         recipe_id (int): recipe_id of recipe
 
     Returns:
-        int: user_id
+        Recipe: recipe
     """
 
     # Retrieve user_id and recipe_contributor_id
