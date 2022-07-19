@@ -18,6 +18,7 @@
 | has suffix **_id** | integer |  |
 | has suffix **_url** | string |  |
 | named exactly **requiredIngredients** | Dictionary containing { ingredient_id, quantity, units } |  |
+| named exactly **filters** | Dictionary containing { ...different booleans vegetarian, lactose, vegan } |  |
 | (outputs only) named exactly **ingredients** | List of dictionaries, where each dictionary contains types { ingredient_id, name } |  |
 | (outputs only) named exactly **ingredientCategories** | List of dictionaries, where each dictionary contains types { name, ingredients } |  |
 | (outputs only) named exactly **recipes** | List of dictionaries, where each dictionary contains types { recipe_id, name, recipePhoto_url, published, description } |  |
@@ -34,6 +35,7 @@
 | recipe_contributors/recipe/delete | DELETE | { recipe_id } | {} |  |  |
 | recipe_contributors/recipe/copy | POST | { recipe_id } | { recipe_id } |  |  |
 | recipe_contributors/recipe/publish | PUT | { recipe_id } | {} |  |  |
-| recipe_explorers/recipe/comment | POST | { recipe_id, message } | { comment_id } |  |  |
-| recipe_explorers/recipe/view | GET | { recipe_id } | { _view_recipe_format_, comments } |  |  |
+| recipe_explorers/ingredient_categories | GET | {} | { ingredientCategories } |  |  |
 | recipe_explorers/search | GET | { ...smth... } | { recipes } |  |  |
+| recipe_explorers/recipe/view | GET | { recipe_id } | { view_recipe_format including comments } |  |  |
+| recipe_explorers/recipe/comment | POST | { recipe_id, message } | { comment_id } |  |  |
