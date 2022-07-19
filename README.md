@@ -5,8 +5,8 @@
 |---|---|---|
 | named exactly **name** | string |  |
 | named exactly **description** | string |  |
-| named exactly **mealType** | string |  |
-| named exactly **dietType** | string |  |
+| named exactly **mealType** | [ string ] |  |
+| named exactly **dietType** | [ string ] |  |
 | named exactly **recipeInstructions** | string |  |
 | named exactly **timerDuration** | integer |  |
 | named exactly **timerUnits** | string |  |
