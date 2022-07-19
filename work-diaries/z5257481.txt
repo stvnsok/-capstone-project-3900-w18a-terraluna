@@ -37,3 +37,16 @@ Setup python, postgresql, and git cloning project
 However still could not fully set up working environment
 Researched articles on Flask and SQL Alchemy
 Began coding for second sprint with respect to DB models
+
+Week 6
+With the flexible week, unfortunately I feel very sick, little progress on the project was made
+Other members of the group were primarily occupied by other courses.
+Drafted psuedo code for recipe + ingredients and relationship models.
+
+Week 7
+Began writing skeleton code to meet basic functionality for demo B.
+Realised witht he team that a few more details needed to be ironed out as to how we
+would implement the project in particular reference to how a user would input information
+and storage in database. Realised I needed to touch base with flask_blueprint and flast_jwt
+packages for the project. Also plan on writing some basic backend tests. 
+Defined required views to connect backend to frontend
