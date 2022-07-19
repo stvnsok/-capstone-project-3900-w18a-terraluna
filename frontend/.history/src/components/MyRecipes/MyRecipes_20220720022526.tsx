@@ -14,7 +14,6 @@ const MyRecipes = () => {
     const [pageNumber, setPageNumber] = useState<number>(0)
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState< boolean>(false);
     // const [CreateRecipeFormOpen, setCreateRecipeFormOpen] = useState<boolean>(false);
-    const navigate = useNavigate();
     // const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>([{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
@@ -87,7 +86,7 @@ const MyRecipes = () => {
                         // setCreateRecipeFormOpen(true);
 
                         /* Currently opens to new route for creating recipe but want to make it open a sliding window later*/
-                        navigate('/new_recipe');
+                        window.location.href = '/new_recipe';
                     }}
                     className="w-10 h-10 border border-solid border-tl-inactive-black rounded-md"
                     text={<HiPlus size={22} className="m-auto"/>}

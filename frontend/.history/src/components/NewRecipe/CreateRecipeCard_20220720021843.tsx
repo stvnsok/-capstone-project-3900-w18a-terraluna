@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import Button from '../global/Button';
 import Select from 'react-select'
 import IngredientsList from './IngredientsList';
-import { useNavigate } from "react-router-dom";
 
 interface recipeForm {
     name?: string,
@@ -26,7 +25,6 @@ export default function CreateRecipe () {
     const { register, handleSubmit } = useForm<recipeForm>();
     const [image, setImage] = useState<File>();
     const [preview, setPreview] = useState<string>();
-    const navigate = useNavigate();
 
     
     // const inputFileRef = useRef<HTMLInputElement | null>(null);
@@ -212,8 +210,7 @@ export default function CreateRecipe () {
                 <Button
                     onClick={() => {
                         // will need to change it so that it is sliding window
-                        // currently hard coded
-                        navigate(-1);
+                        window.location.href = '/my_recipes';
                     }}
                     text={"Go Back"}
                     className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-white px-6 py-3 rounded-md"

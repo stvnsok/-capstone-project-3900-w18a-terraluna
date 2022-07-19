@@ -213,7 +213,7 @@ export default function CreateRecipe () {
                     onClick={() => {
                         // will need to change it so that it is sliding window
                         // currently hard coded
-                        navigate(-1);
+                        navigate('')
                     }}
                     text={"Go Back"}
                     className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-white px-6 py-3 rounded-md"
