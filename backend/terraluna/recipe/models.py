@@ -89,8 +89,7 @@ class Recipe(db.Model):
         db.session.add(recipe)
 
         # Add all required ingredients to session
-        if required_ingredients is not None:
-            RequiredIngredient.add_required_ingredients(recipe.id, required_ingredients)
+        RequiredIngredient.add_required_ingredients(recipe.id, required_ingredients)
 
         # Commit changes to database
         db.session.commit()
@@ -208,13 +207,14 @@ class RequiredIngredient(db.Model):
             None
         
         """
-        for required_ingredient in required_ingredients:
-            ingredient_id = required_ingredient['ingredient_id']
-            quantity = required_ingredient['quantity']
-            units = required_ingredient['units']
-            row = RequiredIngredient(recipe_id=recipe_id, ingredient_id=ingredient_id,
-                quantity=quantity, units=units)
-            db.session.add(row)
+        if required_ingredients is not None:
+            for required_ingredient in required_ingredients:
+                ingredient_id = required_ingredient['ingredient_id']
+                quantity = required_ingredient['quantity']
+                units = required_ingredient['units']
+                row = RequiredIngredient(recipe_id=recipe_id, ingredient_id=ingredient_id,
+                    quantity=quantity, units=units)
+                db.session.add(row)
 
     @staticmethod
     def remove_all_recipe_ingredients(recipe_id):
@@ -250,5 +250,4 @@ class RequiredIngredient(db.Model):
         
         """
         RequiredIngredient.remove_all_recipe_ingredients(recipe_id)
-        if required_ingredients is not None:
-            RequiredIngredient.add_required_ingredients(recipe_id, required_ingredients)
+        RequiredIngredient.add_required_ingredients(recipe_id, required_ingredients)

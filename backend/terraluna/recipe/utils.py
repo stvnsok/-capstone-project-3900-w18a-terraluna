@@ -59,3 +59,23 @@ def verify_recipe_name(name):
     if not re.match('.*[a-zA-Z0-9].*', name) and name.strip().len() >= 2:
         return False
     return True
+
+def dict_required_ingredients(recipe_id):
+    """Given a recipe_id, 
+        extracts required ingredients
+
+    Args:
+        recipe_id (int): recipe_id of recipe
+
+    Returns:
+        list: list of dictionary of required ingredients
+    """
+    required_ingredients = [ 
+        {
+            'ingredient_id': ingredient.ingredient_id, 
+            'quantity': ingredient.quantity,
+            'units': ingredient.units
+        } 
+        for ingredient in RequiredIngredient.query.filter_by(recipe_id=recipe_id) 
+    ]
+    return required_ingredients

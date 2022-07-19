@@ -76,17 +76,17 @@ def recipes_list():
     username = get_jwt_identity()
     recipe_contributor_id = username_to_user_id(username)
 
-    # TODO: Query list of all recipes by this recipe contributor
-    #
-    #
-    #
-    # 
-    # Recipe.query.filter_by(recipe_contributor=recipe_contributor_id).all()
-    # db.select(Recipe.recipe_id. Recipe.name, .......)
+    recipes = []
+    for recipe in Recipe.query.filter_by(recipe_contributor=recipe_contributor_id):
+        recipes.append({
+            'recipe_id': recipe.id,
+            'name': recipe.name,
+            'recipePhoto_url': recipe.recipe_photo,
+            'published': recipe.published,
+            'description': recipe.description,
+        })
     
-    # Check this is correct also need to select specific attributes to return
-
-    pass
+    return Response(json.dumps(recipes), mimetype='application/json')
 
 @recipe_contributors_bp.route("/recipe/details", methods=["GET"])
 @jwt_required(fresh=True)
@@ -104,18 +104,21 @@ def recipe_details():
     username = get_jwt_identity()
     recipe = recipe_or_403(username, recipe_id)
 
-    # TODO: Retrieve details of the recipe
-    #
-    #
-    #
-    #
+    details = {
+        'name': recipe.name,
+        'recipePhoto_url': recipe.recipePhoto_url,
+        'recipeVideo_url': recipe.recipeVideo_url,
+        'description': recipe.description,
+        'mealType': recipe.meal_type,
+        'dietType': recipe.diet_type,
+        'recipeInstructions': recipe.recipe_instructions,
+        'timerDuration': recipe.timer_duration,
+        'timerUnits': recipe.timer_units,
+        'required_ingredients': dict_required_ingredients(recipe_id)
+    }
     
     logger.debug("Recipe details returned: %s", recipe)  # type: ignore
-    """
-    return jsonify(name, recipePhoto_url, recipeVideo_url, description, 
-        mealType, dietType, recipeInstructions, timerDuration, timerUnits, requiredIngredients)
-    """
-    pass
+    return Response(json.dumps(details), mimetype='application/json')
 
 @recipe_contributors_bp.route("/recipe/update", methods=["PUT"])
 @jwt_required(fresh=True)
@@ -208,14 +211,7 @@ def recipe_copy():
     recipe_instructions = original_recipe.recipe_instructions
     timer_duration = original_recipe.timer_duration
     timer_units = original_recipe.timer_units
-    required_ingredients = [ 
-        {
-            'ingredient_id': ingredient.ingredient_id, 
-            'quantity': ingredient.quantity,
-            'units': ingredient.units
-        } 
-        for ingredient in RequiredIngredient.query.filter_by(recipe_id=recipe_id) 
-    ]
+    required_ingredients = dict_required_ingredients(recipe_id)
 
     # Create a new recipe
     recipe = Recipe.create(name=name, recipe_contributor=recipe_contributor, 
