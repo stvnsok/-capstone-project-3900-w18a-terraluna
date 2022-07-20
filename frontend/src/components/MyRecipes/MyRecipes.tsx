@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 import { getNoRecipeMatchRecipes, getRecipesRecipeContributors } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import NavBar from '../NavBar';
-import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
 import { useNavigate } from "react-router-dom";
+import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 // import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 
 const MyRecipes = () => {
