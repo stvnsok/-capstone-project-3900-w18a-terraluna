@@ -1,5 +1,5 @@
 import { api } from "../api"
-import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NoMatchFrequencyApiResponse, RecipesRecipeContributorsApiResponse } from "../types/RecipeContributorApiResponse"
+import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NewRecipeApiResponse, NoMatchFrequencyApiResponse, RecipesRecipeContributorsApiResponse } from "../types/RecipeContributorApiResponse"
 
 export const createRecipeFromTemplate = async (
     id: number
@@ -22,4 +22,10 @@ export const getRecipesRecipeContributors = async (
         pageNumber: number
     ): Promise<RecipesRecipeContributorsApiResponse> => {
     return (await api.get('/recipe_contributors/recipes', { params: { pageNumber: pageNumber } })).data
+}
+
+export const createRecipe = async (
+    recipe: Recipe
+): Promise<NewRecipeApiResponse> => {
+    return (await api.post('/recipe_contributors/new', {params: {recipe: recipe}})).data
 }
