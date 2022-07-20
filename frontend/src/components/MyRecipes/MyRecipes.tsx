@@ -63,7 +63,7 @@ const MyRecipes = () => {
     useEffect(() => {
         getRecipesRecipeContributors(pageNumber)
             .then(res => {
-                setRecipes(res.data.recipes);
+                setRecipes(res.recipes);
             })
             .catch(err => {
                 toast.error(err);
@@ -73,7 +73,7 @@ const MyRecipes = () => {
     useEffect(() => {
         getNoRecipeMatchRecipes()
             .then(res => {
-                console.log("TODO" + res.data.ingredientSets)
+                console.log("TODO" + res.ingredientSets)
                 setNoMatchIngredientSets([{
                     ingredients: [{
                         id: 0,
@@ -119,6 +119,12 @@ const MyRecipes = () => {
                 }, {
                     id: 2,
                     name: 'Fig'
+                }, {
+                    id: 3,
+                    name: 'Sugar'
+                }, {
+                    id: 4,
+                    name: 'ChickenBreast'
                 }]
             }])
     }, [])
@@ -142,7 +148,7 @@ const MyRecipes = () => {
                         /* Currently opens to new route for creating recipe but want to make it open a sliding window later*/
                         navigate('/new_recipe');
                     }}
-                    className="w-10 h-10 border border-solid border-tl-inactive-black rounded-md"
+                    className="w-10 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md"
                     text={<HiPlus size={22} className="m-auto"/>}
                 />
                 <div className='relative'>
@@ -150,10 +156,13 @@ const MyRecipes = () => {
                         onClick={() => {
                             setOpenNoMatchContextMenu(!openNoMatchContextMenu);
                         }}
-                        className="w-60 h-10 border border-solid border-tl-active-red rounded-md ml-4"
+                        className="w-60 h-10 border border-solid border-tl-active-red bg-tl-inactive-white rounded-md ml-4"
                         text={<React.Fragment><HiFire size={22} className="m-auto text-tl-active-red inline"/>Hottest Recipes Needed</React.Fragment>}
                     />
-                    {openNoMatchContextMenu && <div className='absolute'>
+                    {openNoMatchContextMenu && 
+                    <div 
+                        className='absolute'
+                    >
                         {noMatchIngredientSets.map(noMatchIngredients => {
                             return <NoMatchRecipeMenuItem
                                 noMatchIngredients={noMatchIngredients}

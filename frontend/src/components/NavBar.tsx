@@ -54,7 +54,7 @@ const NavBar = () => {
                     }}
                 >
                     { username ?? 'Log in' } <HiOutlineUser size={20} className='text-tl-active-black inline'/>
-                    {isContextMenuOpen && <div className='absolute bg-tl-inactive-white right-0'>
+                    {isContextMenuOpen && <div className='absolute bg-tl-inactive-brown right-0'>
                         <div 
                             className='p-3 flex w-40 border-solid border border-tl-inactive-grey'
                             onClick={() => {

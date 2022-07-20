@@ -216,7 +216,7 @@ export default function CreateRecipe () {
                         navigate(-1);
                     }}
                     text={"Go Back"}
-                    className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-white px-6 py-3 rounded-md"
+                    className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
                 />
                     <Button
                         text={"Create"}

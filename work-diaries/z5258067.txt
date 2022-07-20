@@ -36,3 +36,13 @@ Week 4
 - Added toast styles to make it more obvious of the result of the api call
 - Added token handling to the frontend for the axios instance
 - Worked with james to get a lot of the authentication and backend frontend talking to work.
+
+Week 5
+Worked on the project making some of the data interface files and api files. standardising the way we send data to and from the backend.
+
+Week 6
+Worked on the project sprint 2 making recipe contributor actions. Setting up how the frontend looked like as well as introducing some tools that could be used throughout the repository.
+This included an AsyncSelect which can make an apiCall to get its options rather than have to poll it on component mounting.
+
+Week 7
+Worked on my parts for sprint 3 and polished stuff from sprint 2

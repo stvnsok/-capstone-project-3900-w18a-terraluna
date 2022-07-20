@@ -10,7 +10,7 @@ import CreateRecipeCard from './components/NewRecipe/CreateRecipeCard';
 function App() {
   return (
     <BrowserRouter>
-      <div className="bg-tl-inactive-white min-h-screen min-w-full">
+      <div className="bg-tl-inactive-brown min-h-screen min-w-full">
         <div className='fixed w-full z-[1000]'>
           <ToastContainer
             position='top-center'

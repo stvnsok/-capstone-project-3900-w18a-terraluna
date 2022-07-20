@@ -13,7 +13,7 @@ const RecipeCard = ({
         return `${hours < 10 ? '0' : '' }${hours}:${minutes < 10 ? '0' : ''}${minutes} Hours`;
     }
 
-    return <div className=" shadow-md hover:shadow-lg max-w-xs h-[500px] rounded-md" style={{
+    return <div className=" shadow-md hover:shadow-lg max-w-xs h-[500px] rounded-md bg-tl-inactive-white" style={{
         transition: '0.3s'
     }}>
     <img src={recipe.imageUrl} alt="recipe" style={{
