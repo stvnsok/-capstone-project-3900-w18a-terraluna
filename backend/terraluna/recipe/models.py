@@ -183,7 +183,7 @@ class RequiredIngredient(db.Model):
     ingredient_id = db.Column(db.ForeignKey('ingredient.id'), primary_key=True)
 
     ingredient = db.relationship("Ingredient", back_populates="recipes")
-    recipe = db.relationship("Recipes", back_populates="required_ingredients")
+    recipe = db.relationship("Recipe", back_populates="required_ingredients")
 
     quantity = db.Column(db.Integer)
     units = db.Column(db.Text)
