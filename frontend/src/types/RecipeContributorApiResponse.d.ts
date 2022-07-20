@@ -10,7 +10,7 @@ interface DeleteRecipeApiResponse {
 
 interface NoMatchFrequencyApiResponse {
     data: {
-        ingredients: Ingredient[]
+        ingredientSets: NoMatchIngredients[]
     }
 }
 
