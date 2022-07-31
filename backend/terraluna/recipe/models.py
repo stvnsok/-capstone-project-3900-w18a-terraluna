@@ -2,252 +2,149 @@ from app import db, logger
 
 
 class Ingredient(db.Model):
-    """A Ingredient in the database"""
+    """An ingredient model."""
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, nullable=False)
-    recipes = db.relationship("RequiredIngredient", back_populates="ingredient")
+    recipes = db.relationship("RecipeIngredient", back_populates="ingredient")
 
     @staticmethod
     def create(name):
-        """Create a new ingredient model and add it to the database. 
+        """Create a new ingredient model and add it to the database.
 
         Args:
             name (str): Ingredient name.
 
         Returns:
-            Recipe: The new ingredient model.
+            Ingredient: The new ingredient model.
         """
-        # Create and add ingredient object to db
         ingredient = Ingredient(name=name)
         db.session.add(ingredient)
-
-        # Commit changes to database
         db.session.commit()
-        logger.debug("Added ingredient to DB: ingredient_id: {ingredient.id}")  # type: ignore
+        logger.debug("Added ingredient to DB: %s", ingredient)  # type: ignore
         return ingredient
-    
+
     def __repr__(self):
-        return f"""
-        <ingredient_id={self.id}>
-        <name={self.name}>
-        """
+        return f"<id={self.id}\tname={self.name}>"
+
 
 class Recipe(db.Model):
-    """A Recipe in the database"""
+    """A recipe model."""
 
     id = db.Column(db.Integer, primary_key=True)
+    contributor = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    status = db.Column(db.Text, nullable=False)  # draft, template, published
+
     name = db.Column(db.Text, nullable=False)
-    recipe_contributor = db.Column(db.Integer, nullable=False)
-    published = db.Column(db.Boolean, nullable=False)
-    recipe_photo = db.Column(db.Text)
-    recipe_video = db.Column(db.Text)
+    expected_duration = db.Column(db.Integer)  # minutes
+    meal_type = db.Column(db.ARRAY(db.Text))  # breakfast, lunch, dinner, ...
     description = db.Column(db.Text)
-    meal_type = db.Column(db.ARRAY(db.Text))
-    diet_type = db.Column(db.ARRAY(db.Text))
-    recipe_instructions = db.Column(db.Text)
-    timer_duration = db.Column(db.Integer)
-    timer_units = db.Column(db.Text)
-    required_ingredients = db.relationship("RequiredIngredient", back_populates="recipe")
+    diet_type = db.Column(db.ARRAY(db.Text))  # vegan, vegetarian, ...
+    instructions = db.Column(db.Text)
+    photo_url = db.Column(db.Text)
+    video_url = db.Column(db.Text)
+
+    ingredients = db.relationship("RecipeIngredient", back_populates="recipe")
 
     @staticmethod
-    def create(name, recipe_contributor, recipe_photo, recipe_video, description, meal_type, diet_type, 
-        recipe_instructions, timer_duration, timer_units, required_ingredients):
-        """Create a new recipe model and add it to the database. 
+    def create(
+        contributor,
+        status,
+        name,
+        expected_duration=None,
+        meal_type=None,
+        description=None,
+        diet_type=None,
+        instructions=None,
+        photo_url=None,
+        video_url=None,
+        ingredients=None,
+    ):
+        """Create a new recipe model and add it to the database.
+
+        Ingredients are also added to the RecipeIngredient association table.
 
         Args:
+            contributor (int): ID of recipe contributor.
+            status (str): Status of recipe (draft, template or published).
             name (str): Recipe name.
-            recipe_contributor (int): user_id of creator
-            recipe_photo (str): URL for recipe photo.
-            recipe_video (str): URL for recipe video.
-            description (str): Description of recipe.
-            meal_type (List(str)): Types of meals.
-            diet_type (List(str)): Types of diet.
-            recipe_instructions (str): Recipe instructions.
-            timer_duration (int): Cooking time quantity.
-            timer_units (str): Cooking time units.
-            required_ingredients (List(Dict)): ingredients required for recipe
-                [
-                    {
-                        'ingredient_id': int
-                        'quantity': int
-                        'units': str
-                    }
-                ]
-            
+            expected_duration (int, optional): Estimated cooking time duration
+                in minutes. Defaults to None.
+            meal_type (list of str, optional): Types of meal this recipe falls under.
+                Defaults to None.
+            description (str, optional): Description of recipe. Defaults to None.
+            diet_type (list of str, optional): Types of diet this recipe satisfies.
+                Defaults to None.
+            instructions (str, optional): Recipe instructions. Defaults to None.
+            photo_url (str, optional): URL for recipe photo. Defaults to None.
+            video_url (str, optional): URL for recipe video. Defaults to None.
+            ingredients (list of dict, optional): Ingredients required for this recipe.
+                Defaults to None.
+                    [
+                        {
+                            "ingredient_id": int
+                            "quantity": int
+                            "unit": str
+                        },
+                        ...
+                    ]
+
         Returns:
             Recipe: The new recipe model.
         """
-
-        # Create a recipe object and add to session
         recipe = Recipe(
-            name=name, recipe_contributor=recipe_contributor, published=False,
-            recipe_photo=recipe_photo, recipe_video=recipe_video, description=description,
-            meal_type=meal_type, diet_type=diet_type, recipe_instructions=recipe_instructions, 
-            timer_duration=timer_duration, timer_units=timer_units
+            contributor=contributor,
+            status=status,
+            name=name,
+            expected_duration=expected_duration,
+            meal_type=meal_type,
+            description=description,
+            diet_type=diet_type,
+            instructions=instructions,
+            photo_url=photo_url,
+            video_url=video_url,
         )
         db.session.add(recipe)
+        db.session.commit()
+        logger.debug("Added recipe to DB: %s", recipe)  # type: ignore
+
+        if ingredients is None:
+            return recipe
 
         # Add all required ingredients to session
-        RequiredIngredient.add_required_ingredients(recipe.id, required_ingredients)
+        for ingredient in ingredients:
+            db.session.add(
+                RecipeIngredient(
+                    recipe_id=recipe.id,
+                    # TODO: what if ingredient id does not exist
+                    ingredient_id=ingredient["ingredient_id"],
+                    quantity=ingredient["quantity"],
+                    unit=ingredient["unit"],
+                )
+            )
+            logger.debug("Added ingredient <%s> to recipe <%s>", ingredient["ingredient_id"], recipe.id)  # type: ignore
 
-        # Commit changes to database
         db.session.commit()
-        logger.debug(f"Added recipe to DB: id:{recipe.id}")  # type: ignore
-        return
-
-    def update(self, name, recipe_photo, recipe_video, description, meal_type, diet_type, 
-        recipe_instructions, timer_duration, timer_units, required_ingredients):
-        """Update recipe with new data.
-
-        Args:
-            name (str): Recipe name.
-            recipe_photo (str): URL for recipe photo.
-            recipe_video (str): URL for recipe video.
-            description (str): Description of recipe.
-            meal_type (List(str)): Types of meals.
-            diet_type (List(str)): Types of diet.
-            recipe_instructions (str): Recipe instructions.
-            timer_duration (int): Cooking time quantity.
-            timer_units (str): Cooking time units.
-            required_ingredients (List(Dict)): ingredients required for recipe
-                [
-                    {
-                        'ingredient_id': int
-                        'quantity': int
-                        'units': str
-                    }
-                ]
-            
-        Returns:
-            None
-        """
-        # Update all attributes to given new ones
-        self.name = name
-        self.recipe_photo = recipe_photo
-        self.recipe_video = recipe_video
-        self.description = description
-        self.meal_type = meal_type
-        self.diet_type = diet_type
-        self.recipe_instructions = recipe_instructions
-        self.timer_duration = timer_duration
-        self.timer_units = timer_units
-        # Update required ingredients for the recipe
-        RequiredIngredient.update(required_ingredients)
-
-        # Commit changes to database
-        db.session.commit()
-        logger.debug(f"Modified recipe in DB: id:{self.id}")  # type: ignore
-        return True
-    
-    def publish(self):
-        """Publish the recipe.
-
-        Args:
-            None
-            
-        Returns:
-            None
-        """
-        # Set recipe status to published
-        self.published = True
-        
-        # Commit changes to database
-        db.session.commit()
-        logger.debug(f"Set recipe to published in DB: id:{self.id}")  # type: ignore
-        return True
+        return recipe
 
     def __repr__(self):
-        return f"""
-        <recipe_id={self.id}>
-        <name={self.name}>
-        <recipe_contributor_id={self.recipe_contributor}>
-        <published={self.published}>
-        <recipe_photo={self.recipe_photo}>
-        <recipe_video={self.recipe_video}>
-        <description={self.description}>
-        <meal_type={self.meal_type}>
-        <diet_type={self.diet_type}>
-        <recipe_instructions={self.recipe_instructions}>
-        <timer_duration={self.timer_duration}>
-        <timer_units={self.timer_units}>"""
-        # 
-        # <required_ingredients={[ (ingredient.id, ingredient.ingredient_name) 
-        # for ingredient in RequiredIngredient.query.filter_by(recipe_id=self.recipe_id)]}>
-        
+        return f"<id={self.id}\tcontributor={self.contributor}\tstatus={self.status}\tname={self.name}\texpected_duration={self.expected_duration}\tmeal_type={self.meal_type}\tdescription={self.description}\tdiet_type={self.diet_type}\tphoto_url={self.photo_url}\tvideo_url={self.video_url}>"
 
-class RequiredIngredient(db.Model):
-    """Units and quantity of ingredients required for recipe"""
 
-    recipe_id = db.Column(db.ForeignKey('recipe.id'), primary_key=True)
-    ingredient_id = db.Column(db.ForeignKey('ingredient.id'), primary_key=True)
+class RecipeIngredient(db.Model):
+    """A many-to-many association table between Recipe and Ingredient.
 
-    ingredient = db.relationship("Ingredient", back_populates="recipes")
-    recipe = db.relationship("Recipe", back_populates="required_ingredients")
+    Contains additional data regarding the quantity and units of the ingredient required for
+    the recipe.
+    """
+
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"), primary_key=True)
+    ingredient_id = db.Column(
+        db.Integer, db.ForeignKey("ingredient.id"), primary_key=True
+    )
 
     quantity = db.Column(db.Integer)
-    units = db.Column(db.Text)
+    unit = db.Column(db.Text)
 
-    @staticmethod
-    def add_required_ingredients(recipe_id, required_ingredients):
-        """Add required ingredients for a recipe to the database
-
-        Args:
-            recipe_id (int): recipe to modified
-            required_ingredients (List(Dict)): ingredients required for recipe
-                [
-                    {
-                        'ingredient_id': int
-                        'quantity': int
-                        'units': str
-                    }
-                ]
-
-        Returns:
-            None
-        
-        """
-        if required_ingredients is not None:
-            for required_ingredient in required_ingredients:
-                ingredient_id = required_ingredient['ingredient_id']
-                quantity = required_ingredient['quantity']
-                units = required_ingredient['units']
-                row = RequiredIngredient(recipe_id=recipe_id, ingredient_id=ingredient_id,
-                    quantity=quantity, units=units)
-                db.session.add(row)
-
-    @staticmethod
-    def remove_all_recipe_ingredients(recipe_id):
-        """Remove all required ingredients for a recipe in the database
-
-        Args:
-            recipe_id (int): recipe to modified
-
-        Returns:
-            None
-        
-        """
-        RequiredIngredient.query.filter_by(recipe_id=recipe_id).delete()
-
-
-    @staticmethod
-    def update(recipe_id, required_ingredients):
-        """Update required ingredients for a recipe
-
-        Args:
-            recipe_id (int): recipe to modified
-            required_ingredients (List(Dict)): ingredients required for recipe
-                [
-                    {
-                        'ingredient_id': int
-                        'quantity': int
-                        'units': str
-                    }
-                ]
-
-        Returns:
-            None
-        
-        """
-        RequiredIngredient.remove_all_recipe_ingredients(recipe_id)
-        RequiredIngredient.add_required_ingredients(recipe_id, required_ingredients)
+    recipe = db.relationship("Recipe", back_populates="ingredients")
+    ingredient = db.relationship("Ingredient", back_populates="recipes")
