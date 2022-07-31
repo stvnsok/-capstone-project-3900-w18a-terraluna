@@ -18,7 +18,7 @@ const SlideOutRecipe = ({
         return `${hours < 10 ? '0' : '' }${hours}:${minutes < 10 ? '0' : ''}${minutes} Hours`;
     }
 
-    return <div className=" bg-tl-inactive-white min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
+    return <div className=" bg-tl-inactive-brown min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
         transition: '0.7s',
         width: '90%',
         marginRight: recipe ? '0' : '-90vw'
@@ -41,7 +41,7 @@ const SlideOutRecipe = ({
                         }
                     }}
                     text={"Use As Template"}
-                    className="mr-4 border border-solid border-tl-active-black bg-tl-inactive-white px-6 py-3 rounded-md"
+                    className="mr-4 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
                 />
                 <Button
                     onClick={() => {

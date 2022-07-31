@@ -12,7 +12,6 @@ interface Ingredient {
     name: string;
 }
 
-
 interface NoMatchIngredients {
-    
+    ingredients: Ingredient[]
 }

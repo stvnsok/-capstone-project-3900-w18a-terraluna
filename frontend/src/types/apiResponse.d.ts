@@ -1,0 +1,1 @@
+type ApiResponse<T> = T;

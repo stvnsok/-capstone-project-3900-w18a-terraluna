@@ -6,14 +6,15 @@ import Button from '../global/Button';
 import Select from 'react-select'
 import IngredientsList from './IngredientsList';
 import { useNavigate } from "react-router-dom";
+import TLSelect from '../global/AsyncSelect';
 
 interface recipeForm {
     name?: string,
     cookTime?:number
     description?:string
     recipeInstructions?:string[];
-    mealType?:string
-    dietType?:string
+    mealType?:string[];
+    dietType?:string[];
     timerDuration?:number[];
     timerUnits?:string;
     requiredIngredients?:Ingredient[];
@@ -27,6 +28,7 @@ export default function CreateRecipe () {
     const [image, setImage] = useState<File>();
     const [preview, setPreview] = useState<string>();
     const navigate = useNavigate();
+    const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
 
     
     // const inputFileRef = useRef<HTMLInputElement | null>(null);
@@ -70,6 +72,18 @@ export default function CreateRecipe () {
                 </div>
                 <div>
                     <label htmlFor = 'mealType'> Meal Type</label>
+                    <TLSelect
+                        onChange={(e) => {
+                            setMealType(e);
+                        }}
+                        header="Meal Type"
+                        multi={true}
+                        value={mealType!}
+                        options={['breakfast', 'lunch', 'dinner', 'snack'].map((mealType, index) => { 
+                            return { id: index, name: mealType }
+                        })}
+                        isAsync={false}
+                    />
                     <select
                         {...register('mealType', { required: true})} 
                         placeholder = 'Meal Type...'
@@ -216,7 +230,7 @@ export default function CreateRecipe () {
                         navigate(-1);
                     }}
                     text={"Go Back"}
-                    className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-white px-6 py-3 rounded-md"
+                    className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
                 />
                     <Button
                         text={"Create"}

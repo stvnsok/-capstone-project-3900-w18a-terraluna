@@ -16,6 +16,7 @@ module.exports = {
         'active-black': '#000000',
         'inactive-grey': '#8e8e8e',
         'active-grey': '#4d4d4d',
+        'inactive-brown': '#FFF2F2'
       }
     },
     fontFamily: {
