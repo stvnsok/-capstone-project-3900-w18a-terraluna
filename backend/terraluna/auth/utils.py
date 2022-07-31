@@ -13,11 +13,10 @@ def verify_username(username):
         username (str): Username to verify.
 
     Returns:
-        bool: `True` if valid, `False` otherwise.
+        bool: True if valid, False otherwise.
     """
-    if not re.fullmatch(r"[a-zA-Z0-9_][a-zA-Z0-9_.-]+", username):
-        return False
-    return True
+    regex = r"[a-zA-Z0-9_][a-zA-Z0-9_.-]+"
+    return re.fullmatch(regex, username) is not None
 
 
 def verify_email(email):
@@ -27,15 +26,14 @@ def verify_email(email):
         email (str): Email to verify.
 
     Returns:
-        bool: `True` if valid, `False` otherwise.
+        bool: True if valid, False otherwise.
 
     .. _emailregex.com:
         http://emailregex.com/
     """
+    # TODO: make consistent with frontend
     regex = r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"
-    if re.fullmatch(regex, email):
-        return True
-    return False
+    return re.fullmatch(regex, email) is not None
 
 
 def verify_password(password):
@@ -50,13 +48,11 @@ def verify_password(password):
         password (str): Password to verify.
 
     Returns:
-        bool: `True` if valid, `False` otherwise.
+        bool: True if valid, False otherwise.
     """
-    if (
-        len(password) < 8
-        or not re.search(r"[a-z]", password)
-        or not re.search(r"[A-Z]", password)
-        or not re.search(r"[0-9]", password)
-    ):
-        return False
-    return True
+    return (
+        len(password) >= 8
+        and re.search(r"[a-z]", password)
+        and re.search(r"[A-Z]", password)
+        and re.search(r"[0-9]", password)
+    )
