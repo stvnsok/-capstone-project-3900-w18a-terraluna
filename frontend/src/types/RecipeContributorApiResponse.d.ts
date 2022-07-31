@@ -3,25 +3,17 @@ import { EmptyApiResponse } from "./AuthApiResponse";
 interface CopyRecipeApiResponse extends EmptyApiResponse {}
 
 interface DeleteRecipeApiResponse {
-    data: {
-        id: number;
-    }
+    id: number;
 }
 
 interface NoMatchFrequencyApiResponse {
-    data: {
-        ingredients: Ingredient[]
-    }
+    ingredientSets: NoMatchIngredients[]
 }
 
 interface RecipesRecipeContributorsApiResponse {
-    data : {
-        recipes: Recipe[]
-    }
+    recipes: Recipe[]
 }
 
 interface NewRecipeApiResponse {
-    data: {
-        recipe: Recipe
-    }
+    recipe: Recipe
 }

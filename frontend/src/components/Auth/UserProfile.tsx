@@ -16,7 +16,7 @@ const UserProfile = ({
             <div>Username: {username}</div>
             <div>User Type: Recipe Contributor</div>
             <Button
-                 className='w-1/4 bg-tl-inactive-white border border-solid rounded border-tl-active-black mt-6 p-0.5 mb-4'
+                 className='w-1/4 bg-tl-inactive-brown border border-solid rounded border-tl-active-black mt-6 p-0.5 mb-4'
                  onClick={() => {
                     onLogOut();
                  }}

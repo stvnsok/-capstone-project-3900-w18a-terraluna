@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { HiFire, HiPlus } from 'react-icons/hi';
 import { toast } from 'react-toastify';
-import { getRecipesRecipeContributors } from '../../services/recipeContributor.service';
+import { getNoRecipeMatchRecipes, getRecipesRecipeContributors } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import NavBar from '../NavBar';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
 import { useNavigate } from "react-router-dom";
+import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 // import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
     const [pageNumber, setPageNumber] = useState<number>(0)
-    const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState< boolean>(false);
-    // const [CreateRecipeFormOpen, setCreateRecipeFormOpen] = useState<boolean>(false);
+    const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
+    const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const navigate = useNavigate();
-    // const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>([{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
@@ -63,12 +63,71 @@ const MyRecipes = () => {
     useEffect(() => {
         getRecipesRecipeContributors(pageNumber)
             .then(res => {
-                setRecipes(res.data.recipes);
+                setRecipes(res.recipes);
             })
             .catch(err => {
                 toast.error(err);
             })
     }, [pageNumber])
+
+    useEffect(() => {
+        getNoRecipeMatchRecipes()
+            .then(res => {
+                console.log("TODO" + res.ingredientSets)
+                setNoMatchIngredientSets([{
+                    ingredients: [{
+                        id: 0,
+                        name: 'Apple'
+                    }, {
+                        id: 1,
+                        name: 'Bannana'
+                    }, {
+                        id: 2,
+                        name: 'Chicken'
+                    }]
+                }, {
+                    ingredients: [{
+                        id: 0,
+                        name: 'Date'
+                    }, {
+                        id: 1,
+                        name: 'Egg'
+                    }, {
+                        id: 2,
+                        name: 'Fig'
+                    }]
+                }])
+            })
+            setNoMatchIngredientSets([{
+                ingredients: [{
+                    id: 0,
+                    name: 'Apple'
+                }, {
+                    id: 1,
+                    name: 'Bannana'
+                }, {
+                    id: 2,
+                    name: 'Chicken'
+                }]
+            }, {
+                ingredients: [{
+                    id: 0,
+                    name: 'Date'
+                }, {
+                    id: 1,
+                    name: 'Egg'
+                }, {
+                    id: 2,
+                    name: 'Fig'
+                }, {
+                    id: 3,
+                    name: 'Sugar'
+                }, {
+                    id: 4,
+                    name: 'ChickenBreast'
+                }]
+            }])
+    }, [])
 
 
     window.onscroll = function(_) {
@@ -89,7 +148,7 @@ const MyRecipes = () => {
                         /* Currently opens to new route for creating recipe but want to make it open a sliding window later*/
                         navigate('/new_recipe');
                     }}
-                    className="w-10 h-10 border border-solid border-tl-inactive-black rounded-md"
+                    className="w-10 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md"
                     text={<HiPlus size={22} className="m-auto"/>}
                 />
                 <div className='relative'>
@@ -97,10 +156,19 @@ const MyRecipes = () => {
                         onClick={() => {
                             setOpenNoMatchContextMenu(!openNoMatchContextMenu);
                         }}
-                        className="w-60 h-10 border border-solid border-tl-active-red rounded-md ml-4"
+                        className="w-60 h-10 border border-solid border-tl-active-red bg-tl-inactive-white rounded-md ml-4"
                         text={<React.Fragment><HiFire size={22} className="m-auto text-tl-active-red inline"/>Hottest Recipes Needed</React.Fragment>}
                     />
-                    {openNoMatchContextMenu && <div className='absolute right-0 top-12 rounded-md p-2 w-60 bg-tl-inactive-green'>hello</div>}
+                    {openNoMatchContextMenu && 
+                    <div 
+                        className='absolute'
+                    >
+                        {noMatchIngredientSets.map(noMatchIngredients => {
+                            return <NoMatchRecipeMenuItem
+                                noMatchIngredients={noMatchIngredients}
+                            />
+                        })}
+                    </div>}
                 </div>
             </div>
             <div>

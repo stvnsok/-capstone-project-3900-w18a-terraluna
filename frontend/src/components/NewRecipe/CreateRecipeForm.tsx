@@ -9,7 +9,7 @@ const RecipeForm = ({
     onClose: () => void
 }) => {
 
-    return <div className=" bg-tl-inactive-white min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
+    return <div className=" bg-tl-inactive-brown min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
         transition: '0.7s',
         width: '90%',
         marginRight:'-90vw'
@@ -27,7 +27,7 @@ const RecipeForm = ({
                 onClose();
             }}
             text={"Go Back"}
-            className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-white px-6 py-3 rounded-md"
+            className="mr-8 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
         />
 
         <Button

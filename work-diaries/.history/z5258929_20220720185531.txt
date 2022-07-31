@@ -32,14 +32,9 @@ Continued working on sprint 2 requirements
 
 
 Week 7
-Continued working on frontend for sprint 2,
-Attended a meeting with the group to check up on progress
-Completed assigned user stories for the sprint. 
+Continued working on frontend for sprint 2 and made some edits to api,
+Created a form to create recipes
 Drafted a skeleton for sprint 3 requirements
 
 
 Week 8
-Attended the retrospective B meeting to talk about the issues we encountered and what we could do to address these problems
-Brainstormed some ideas to try for the next sprint to improve the work process
-Wrote up the retrospective B document and submitted to the tutor.
-Started to work on improving the UI and aesthetic of our system. 
