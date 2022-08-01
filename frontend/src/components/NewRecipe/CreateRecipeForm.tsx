@@ -4,19 +4,21 @@ import CreateRecipeCard from './CreateRecipeCard';
 import Button from '../global/Button';
 
 const RecipeForm = ({
-    onClose
+    isOpen,
+    onClose,
 }: {
+    isOpen: boolean;
     onClose: () => void
 }) => {
 
-    return <div className=" bg-tl-inactive-brown min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
-        transition: '0.7s',
-        width: '90%',
-        marginRight:'-90vw'
-
-    }}>
-        {/* <div><HiX className='ml-4 cursor-pointer text-tl-inactive-grey' size={50} onClick={onClose}/></div> */}
-        <div className='w-full max-w-xs content-center'>
+    return <div
+        className=" bg-tl-inactive-brown min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" 
+        style={{
+            transition: '0.7s',
+            width: '90%',
+            marginRight: isOpen ? '0' : '-90vw'
+        }}>
+        <div className='w-full content-center'>
             <CreateRecipeCard/>
         </div>
 

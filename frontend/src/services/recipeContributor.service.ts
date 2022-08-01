@@ -29,3 +29,9 @@ export const createRecipe = async (
 ): Promise<NewRecipeApiResponse> => {
     return (await api.post('/recipe_contributors/new', {params: {recipe: recipe}})).data
 }
+
+export const getIngredients = async (
+    query: string
+): Promise<Ingredient[]> => {
+    return (await api.post('/ingredients', {params: {query}})).data
+}

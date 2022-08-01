@@ -25,3 +25,15 @@
     ),
     #ffffff !important;
 }
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@keyframes rockBackAndForth {
+    0%   {transform: rotate(0deg)}
+    33%   {transform: rotate(8deg)}
+    66%   {transform: rotate(-5deg)}
+    100%   {transform: rotate(3deg)}
+}
