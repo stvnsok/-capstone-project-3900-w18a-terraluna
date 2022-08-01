@@ -40,6 +40,7 @@ def query_ingredients():
             for ingredient in Ingredient.query.all() 
             if query in ingredient.name
         ]
+        # Truncate result if > 10
         if len(result) > 10:
             result = result[:10]
 

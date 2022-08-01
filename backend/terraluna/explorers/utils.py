@@ -1,9 +1,25 @@
 
-from terraluna.recipe.models import Recipe
+from terraluna.recipe.models import Recipe, RecipeIngredient
 
 from .error import *
 from .models import *
 
+
+def num_ingredients_missing(recipe_id, ingredient_ids):
+    """Given a list of ingredient_id, returns number of
+        ingredients missing to complete recipe
+    Args:
+        recipe_id (int): recipe_id
+        ingredient_ids (List<int>): ingredients
+    Returns:
+        int: number of ingredients missing
+    """
+    ingredientsRequired = [ r.ingredient_id for r in RecipeIngredient.query.filter_by(recipe_id=recipe_id)]
+    numMissing = 0
+    for ingredient_id in ingredientsRequired:
+        if ingredient_id not in ingredient_ids:
+            numMissing += 1
+    return numMissing
 
 def validate_recipe_id(recipe_id):
     """Check if recipe is valid and returns the Recipe object

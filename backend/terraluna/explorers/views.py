@@ -59,13 +59,20 @@ def pantry():
             })
         return Response(json.dumps(pantry), mimetype='application/json')
 
-    # 
+    # Given a list of ingredient_id, updates the UserPantry Table
     elif request.method == "PUT":
         pass
+        ##################################################
+        ##################################################
+        ##################################################
         # TODO:
     
 @recipe_explorers_bp.route("/search", methods=["GET"])
 def search():
+    ##################################################
+    ##################################################
+    ##################################################
+    # TODO:
     pass
 
 @recipe_explorers_bp.route("/recipe/<int:id>", methods=["GET"])
@@ -144,7 +151,12 @@ def list_savedRecipes():
 def func():
     """
     PUT: add recipe to user's saved recipes
+    DELETE: remove recipe from user's saved recipes
     """
+    ##################################################
+    ##################################################
+    ##################################################
+    # TODO:
     if request.method = "PUT":
         # Check that recipe_id exists and is published
         validate_recipe_id(id)
