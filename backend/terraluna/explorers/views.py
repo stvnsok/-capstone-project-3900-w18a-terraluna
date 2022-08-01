@@ -5,7 +5,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from terraluna.explorers.error import *
 from terraluna.explorers.models import *
 from terraluna.explorers.utils import *
-from terraluna.recipe.models import Recipe
+from terraluna.recipe.models import Recipe, Ingredient
 from terraluna.recipe.utils import (dict_required_ingredients,
                                     username_to_user_id)
 
@@ -18,16 +18,16 @@ def ingredient_categories():
     """Return a list of all ingredients"""
     result = [
         {
-            'name': category.name,
+            'name': category_name,
             'ingredients': [
                 {
-                    'ingredient_id': ingredient.id,
-                    'name': ingredient.name
+                    'ingredient_id': ingredient_id,
+                    'name': Ingredient.query.filter_by(id=ingredient_id).one()
                 }
-                for ingredient in category.ingredients
+                for ingredient_id in IngredientCategory.query.filter_by(name=category_name)
             ]
         } 
-        for category in IngredientCategory.query.all() 
+        for category_name in [row.name for row in db.session.query(IngredientCategory.name).distinct()] 
     ]
     return Response(json.dumps(result), mimetype='application/json')
 

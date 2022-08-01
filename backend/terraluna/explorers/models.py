@@ -2,20 +2,15 @@ import datetime
 
 from app import db, logger
 
-category_association_table = db.Table(
-    "category_association",
-    db.Base.metadata,
-    db.Column("ingredient_category_name", db.ForeignKey("ingredientcategory.name")),
-    db.Column("ingredient_id", db.ForeignKey("ingredient.id")),
-)
-
 class IngredientCategory(db.Model):
     """An Ingredient Category"""
     
     name = db.Column(db.Text, primary_key=True)
-    ingredients = db.relationship("Ingredient", secondary=category_association_table)
+    ingredient_id = db.Column(
+        db.Integer, db.ForeignKey("ingredient.id"), primary_key=True
+    )
 
-class UserPantry(db.model):
+class UserPantry(db.Model):
     """An explorer's pantry"""
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
@@ -31,7 +26,7 @@ class UserSavedRecipes(db.Model):
 class Comment(db.Model):
     """A comment on a recipe"""
 
-    id = db.column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     message = db.Column(db.Text)
@@ -58,9 +53,10 @@ class Comment(db.Model):
         db.session.commit()
         logger.debug("Added comment to DB: comment_id: {comment.id}")  # type: ignore
         return comment
-
+"""
 class IngredientFrequency(db.Model):
     pass
 
 class SearchFrequency(db.Model):
     pass
+"""

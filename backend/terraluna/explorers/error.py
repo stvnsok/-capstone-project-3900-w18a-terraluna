@@ -1,4 +1,3 @@
-from backend.error import Error404
 from error import *
 
 
