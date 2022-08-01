@@ -12,7 +12,6 @@ lettuce
 potato
 bacon
 onion
-bread
 english muffin
 cheddar
 mozzarella

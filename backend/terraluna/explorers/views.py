@@ -15,20 +15,25 @@ recipe_explorers_bp = Blueprint("recipe_explorers_bp", __name__)
 
 @recipe_explorers_bp.route("/ingredient_categories", methods=["GET"])
 def ingredient_categories():
-    """Return a list of all ingredients"""
-    result = [
-        {
-            'name': category_name,
-            'ingredients': [
+    """Return a list of all ingredients in categories"""
+    result = []
+    category_names = db.session.query(IngredientCategory.name).distinct()
+    for category_name in category_names:
+        ingredients = []
+        for ingredient_id in IngredientCategory.query.filter_by(name=category_name):
+            ingredient_name = Ingredient.query.filter_by(id=ingredient_id).one()
+            ingredients.append(
                 {
                     'ingredient_id': ingredient_id,
-                    'name': Ingredient.query.filter_by(id=ingredient_id).one()
+                    'name': ingredient_name
                 }
-                for ingredient_id in IngredientCategory.query.filter_by(name=category_name)
-            ]
-        } 
-        for category_name in [row.name for row in db.session.query(IngredientCategory.name).distinct()] 
-    ]
+            )
+        result.append({
+            'name': category_name,
+            'ingredients': ingredients
+            }
+        )
+        
     return Response(json.dumps(result), mimetype='application/json')
 
 @recipe_explorers_bp.route("/pantry", methods=["GET", "PUT"])
@@ -41,13 +46,16 @@ def pantry():
     # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
 
-    # Return list of all ingredients in the user's pantry
+    # GET: Return list of all ingredients in the user's pantry
     if request.method == "GET":
         pantry = []
-        for ingredient in UserPantry.query.filter_by(user_id=user_id):
+        for row in UserPantry.query.filter_by(user_id=user_id):
+            ingredient_id = row.ingredient_id
+            ingredient = Ingredient.query.filter_by(id=ingredient_id).one()
+            ingredient_name = ingredient.name
             pantry.append({
-                'ingredient_id': ingredient.id, 
-                'name': ingredient.name
+                'ingredient_id': ingredient_id, 
+                'name': ingredient_name
             })
         return Response(json.dumps(pantry), mimetype='application/json')
 
@@ -137,6 +145,9 @@ def func():
     """
     PUT: add recipe to user's saved recipes
     """
+    if request.method = "PUT":
+        # Check that recipe_id exists and is published
+        validate_recipe_id(id)
     pass
 
 
