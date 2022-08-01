@@ -28,6 +28,7 @@
 | HTTP Route | HTTP Method | Parameters | Return type |
 |---|---|---|---|
 | /ingredients | GET | { query } | { ingredients } |
+| /suggest_ingredients | GET | { "ingredients": [ingredient_id] } | { ingredients } |
 | /recipe | POST | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } | { recipe_id, name, recipePhoto_url, published, description } |
 | /my_recipes | GET | {} | { recipes } |
 | /my_recipes/{id} | GET | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } |
@@ -38,7 +39,6 @@
 | /recipe_explorers/ingredient_categories | GET | {} | { ingredientCategories } |
 | /recipe_explorers/pantry | GET | {} | { pantry } |
 | /recipe_explorers/pantry | PUT | { pantry } | { pantry } |
-| /recipe_explorers/pantry | DELETE | {} | { user_id } |
 | /recipe_explorers/search | GET | { "ingredients":[ingredient_id], "mealtype":[mealType], "dietType":[dietType], expectedDuration} | { recipes } |
 | /recipe_explorers/recipe/{id} | GET | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients, comments } |
 | /recipe_explorers/recipe/{id}/comment | POST | { message } | { comment_id } |
