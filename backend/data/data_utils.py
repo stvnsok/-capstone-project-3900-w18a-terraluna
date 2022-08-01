@@ -1,5 +1,9 @@
 import os
 
+def list_ingredient_category_files():
+    script_dir = os.path.dirname(__file__)
+    cat_folder = os.path.join(script_dir, "ingredient_categories")
+    return [ file for file in os.listdir(cat_folder) if file.endswith(".txt")]
 
 def data_file_to_lines(data_file_name):
     """Function used to access in backend/data folder from ANYWHERE
