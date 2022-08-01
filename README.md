@@ -41,7 +41,7 @@
 | /recipe_explorers/pantry | DELETE | {} | { user_id } |
 | /recipe_explorers/search | GET | { "ingredients":[ingredient_id], "mealtype":[mealType], "dietType":[dietType], expectedDuration} | { recipes } |
 | /recipe_explorers/recipe/{id} | GET | {} | { view_recipe_format including comments } |
-| /recipe_explorers/recipe/comment | POST | { message } | { comment_id } |
+| /recipe_explorers/recipe/{id}/comment | POST | { message } | { comment_id } |
 | /recipe_explorers/savedRecipes | GET | {} | { recipes } |
 | /recipe_explorers/savedRecipes/{id} | PUT | { pantry } | { recipe_id } |
 | /recipe_explorers/savedRecipes/{id} | DELETE | {} | { recipe_id } |
