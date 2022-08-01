@@ -43,5 +43,5 @@
 | /recipe_explorers/recipe/{id} | GET | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients, comments } |
 | /recipe_explorers/recipe/{id}/comment | POST | { message } | { comment_id } |
 | /recipe_explorers/savedRecipes | GET | {} | { recipes } |
-| /recipe_explorers/savedRecipes/{id} | PUT | { pantry } | { recipe_id } |
+| /recipe_explorers/savedRecipes/{id} | PUT | {} | { recipe_id } |
 | /recipe_explorers/savedRecipes/{id} | DELETE | {} | { recipe_id } |
