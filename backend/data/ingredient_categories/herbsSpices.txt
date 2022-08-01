@@ -1,0 +1,10 @@
+salt
+pepper
+cinanamon
+parsley
+cumin
+paprika
+tumeric
+cayenne
+onion powder
+garlic powder

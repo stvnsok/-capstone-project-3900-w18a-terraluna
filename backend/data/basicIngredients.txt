@@ -1,0 +1,35 @@
+egg
+butter
+chicken
+bread
+flour
+sugar
+olive oil
+vegetable oil
+apple
+tomato
+lettuce
+potato
+bacon
+onion
+bread
+english muffin
+cheddar
+mozzarella
+feta
+rice
+honey
+lemon
+strawberry
+blueberry
+sesame seed
+salmon
+canned tuna
+penne
+spaghetti
+fettuccine
+mayonaise
+vinegar
+white vinegar
+balsamic vinegar
+chocolate
