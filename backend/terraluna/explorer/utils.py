@@ -4,7 +4,7 @@ from .error import *
 from .models import *
 
 
-def id_to_valid_recipe(id):
+def recipe_id_to_published_recipe(id):
     """
     Check if recipe is valid and returns the Recipe object
     i.e. exists and is published otherwise raise an exception
