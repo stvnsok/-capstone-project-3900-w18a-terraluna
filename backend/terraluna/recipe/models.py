@@ -175,6 +175,8 @@ class Recipe(db.Model):
             Recipe: The edited recipe model.
         """
         recipe = Recipe.query.filter_by(id=id).first()
+        if recipe.status == "Template":
+            recipe.status = "Draft"
         recipe.name = name
         recipe.expected_duration_mins = expected_duration_mins
         recipe.meal_types = meal_types
