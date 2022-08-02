@@ -6,6 +6,10 @@ export const getRecipes = async (
     return (await api.get('/recipes', { params: { ingredients: JSON.stringify({ingredients}) } })).data
 }
 
+export const getRecipesFavourites = async (): Promise<{recipes: Recipe[]}> => {
+    return (await api.get('/recipes/favourite')).data
+}
+
 export const favoriteRecipe = async (
     id?: number
 ): Promise<{recipes: Recipe[]}> => {

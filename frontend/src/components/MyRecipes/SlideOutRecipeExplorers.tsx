@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { getRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import { BsCircleFill } from 'react-icons/bs';
-import { favoriteRecipe } from '../../services/recipeExplore.service';
+import { addReview, favoriteRecipe } from '../../services/recipeExplore.service';
 import { Modal } from '../global/Modal';
 
 const SlideOutRecipeExplorers = ({
@@ -31,8 +31,9 @@ const SlideOutRecipeExplorers = ({
 
     const [currentStep, setCurrentStep] = useState<number>(1);
     const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
-    const [hoveredStar, setHoveredStar] = useState<number>(1);
-    const [setStar, setSetStar] = useState<number>();
+    const [hoveredStar, setHoveredStar] = useState<[1,2,3,4,5][number]>(1);
+    const [setStar, setSetStar] = useState<[1,2,3,4,5][number]>();
+    const [review, setReview] = useState<string>('');
 
     const getAverageReview = () => {
         if (!fullRecipe || !fullRecipe.reviews || fullRecipe.reviews.length === 0) return 0
@@ -50,10 +51,14 @@ const SlideOutRecipeExplorers = ({
     }
 
     useEffect(() => {
+        triggerGetRecipe()
+    }, [recipe])
+
+    const triggerGetRecipe = () => {
         if (recipe?.id) getRecipe(recipe.id).then(res => {
             setFullRecipe(res.recipe)
         })
-    }, [recipe])
+    }
 
     return <div className=" bg-tl-inactive-brown min-h-full fixed top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
         transition: '0.7s',
@@ -75,29 +80,42 @@ const SlideOutRecipeExplorers = ({
                                 size={100}
                                 className={`text-tl-active-yellow ${setStar ? index < setStar ?  'text-tl-active-yellow' : 'text-tl-inactive-yellow'  : index < hoveredStar ? 'text-tl-active-yellow' : 'text-tl-inactive-yellow'}`}
                                 onMouseEnter={() => {
-                                    setHoveredStar(star);
+                                    setHoveredStar(star as [1,2,3,4,5][number]);
                                 }}
                                 onClick={() => {
-                                    setSetStar(star);
+                                    setSetStar(star as [1,2,3,4,5][number]);
                                 }}
                             />
                         })}
                     </div>
                     <div className='text-2xl font-semibold'>Leave A Review!</div>
-                    <textarea className='w-full mt-2 p-5' style={{
-                        height: 'calc(100% - 190px)'
-                    }}></textarea>
+                    <textarea 
+                        className='w-full mt-2 p-5' 
+                        style={{
+                            height: 'calc(100% - 190px)'
+                        }}
+                        value={review}
+                        onChange={(e) => {
+                            setReview(e.target.value);
+                        }}
+                    ></textarea>
                     <div className='grid grid-cols-2 gap-5'>
                         <Button
                             onClick={() => {
                                 if (recipe) setOpenReviewModal(false);
+                                
                             }}
                             text={"Cancel"}
                             className=" bg-tl-inactive-white px-6 py-3 rounded-md shadow-md w-full"
                         />
                         <Button
                             onClick={() => {
-                                if (recipe) setOpenReviewModal(false);
+                                if (setStar) addReview(review, setStar, recipe?.id).then(_ => {
+                                    triggerGetRecipe();
+                                    setOpenReviewModal(false);
+                                    setSetStar(undefined);
+                                    setReview('');
+                                })
                             }}
                             text={"Post"}
                             className="bg-tl-inactive-green px-6 py-3 rounded-md shadow-md w-full"
@@ -118,7 +136,7 @@ const SlideOutRecipeExplorers = ({
                             if (recipe) setOpenReviewModal(true);
                         }}
                         text={"Leave A Review"}
-                        className="mr-16 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
+                        className="mr-16 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
                     />
                     <Button
                         onClick={() => {
