@@ -3,77 +3,39 @@ import { HiFire, HiPlus } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { getNoRecipeMatchRecipes, getRecipesRecipeContributors } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
-import NavBar from '../NavBar';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
 import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
+import NavBar from '../NavBar';
 
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
     const [isCreateRecipeOpen, setIsCreateRecipeOpen] = useState<boolean>(false);
-    const [pageNumber, setPageNumber] = useState<number>(0)
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
+    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>();
     const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
-    const [recipes, setRecipes] = useState<Recipe[]>([{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner', 'Lunch'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner', 'Lunch', 'Breakfast'],
-        dietType: ['Vegetarian'],
-        status: "Published"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Template"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    }]);
+    const [recipes, setRecipes] = useState<Recipe[]>();
 
     useEffect(() => {
-        getRecipesRecipeContributors(pageNumber)
+        getRecipesRecipeContributors()
             .then(res => {
                 setRecipes(res.recipes);
             })
             .catch(err => {
                 toast.error(err);
             })
-    }, [pageNumber])
+    }, [])
+
+    const triggerGetRecipes = () => {
+        getRecipesRecipeContributors()
+            .then(res => {
+                setRecipes(res.recipes);
+            })
+            .catch(err => {
+                toast.error(err);
+            })
+    }
 
     useEffect(() => {
         getNoRecipeMatchRecipes()
@@ -134,13 +96,6 @@ const MyRecipes = () => {
             }])
     }, [])
 
-
-    window.onscroll = function(_) {
-        if ((window.innerHeight + window.scrollY) + 1000 >= document.body.offsetHeight) {
-            setPageNumber(pageNumber + 1);
-        }
-    };
-
     return (
     <React.Fragment>
         <NavBar/>
@@ -178,18 +133,19 @@ const MyRecipes = () => {
 
             </div>
         </div>
-        <div className={`grid grid-flow-col gap-6 pl-10`}>
+        <div className={`grid grid-cols-7 gap-6 pl-10`}>
             {recipes && recipes.map(recipe => { return (
-                <div
-                    className='cursor-pointer'
-                    onClick={() => {
-                        setSlideOutRecipe(recipe)
-                        setIsCreateRecipeOpen(false)
-                    }}
-                >
-                    <RecipeCard 
-                        recipe={recipe}
-                    />
+                <div>
+                    <div >
+                        <RecipeCard 
+                            recipe={recipe}
+                            onClick={() => {
+                                setSlideOutRecipe(recipe)
+                                setIsCreateRecipeOpen(false)
+                            }}
+                        />
+                        
+                    </div>
                 </div>
             )})}
         </div>
@@ -199,13 +155,23 @@ const MyRecipes = () => {
             onClose={() => {
                 setSlideOutRecipe(undefined)
             }}
+            onEdit={(recipe) => {
+                setIsCreateRecipeOpen(true);
+                setFullRecipe(recipe)
+                setSlideOutRecipe(undefined)
+            }}
+            onPublish={() => {
+                triggerGetRecipes()
+            }}
         />
 
         <CreateRecipeForm
             isOpen={isCreateRecipeOpen}
             onClose={() => {
                 setIsCreateRecipeOpen(false)
+                triggerGetRecipes()
             }}
+            fullRecipe={fullRecipe}
         />
     </React.Fragment> 
 )}

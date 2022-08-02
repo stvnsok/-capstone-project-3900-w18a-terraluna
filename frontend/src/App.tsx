@@ -1,10 +1,10 @@
-import NavBar from './components/NavBar';
 import './index.css';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MyRecipes from './components/MyRecipes/MyRecipes';
+import ExploreRecipes from './components/ExploreRecipes/ExploreRecipes';
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
           />
         </div>
         <Routes>
-          <Route path="/" element={<NavBar/>} />
+          <Route path="/" element={<ExploreRecipes/>} />
           <Route path="/my_recipes" element={<MyRecipes />} />
         </Routes>
       </div>

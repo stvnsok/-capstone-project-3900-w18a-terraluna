@@ -40,7 +40,6 @@ const ChangeEmailForm = () => {
             title={'New Email'}
         />
         {errorList?.email && <div className="text-tl-inactive-red">{errorList.email}</div>}
-        <div className="mt-2">Note: You can only change your email once every 30 days.</div>
         <Button
             className='w-1/4 bg-tl-inactive-green border border-solid rounded border-tl-active-green mt-6 p-0.5 mb-4'
             onClick={() => {

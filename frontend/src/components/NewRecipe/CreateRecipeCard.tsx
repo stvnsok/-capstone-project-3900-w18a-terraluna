@@ -3,29 +3,32 @@ import { BsCloudUpload } from 'react-icons/bs';
 import { HiOutlinePlusCircle, HiOutlineTrash, HiXCircle } from 'react-icons/hi';
 import TLSelect from '../global/AsyncSelect';
 import TextInput from '../global/TextInput';
-import { createRecipe, getIngredients } from '../../services/recipeContributor.service';
+import { createRecipe, getIngredients, getSuggestedIngredient, updateRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import { toast } from 'react-toastify';
 
-type IngredientInput = Partial<Ingredient> & {
+export type IngredientDetails = Partial<Ingredient> & {
     quantity?: number;
     units?: string;
 }
 
-interface Step {
-    instructions: string;
+export interface Step {
+    instruction: string;
     video?: File;
+    videoUrl?: string
 }
 
-export default function CreateRecipe ({closeFunction}: {
+export default function CreateRecipe ({closeFunction, fullRecipe}: {
     closeFunction: () => void
+    fullRecipe?: Partial<RecipeDetails>
 }) {
 
     const [image, setImage] = useState<File>();
     const [preview, setPreview] = useState<string>();
+    const [imageUrl, setImageUrl] = useState<string>();
     const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
     const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
-    const [ingredients, setIngredients] = useState<IngredientInput[]>([{
+    const [ingredients, setIngredients] = useState<IngredientDetails[]>([{
         name: undefined,
         id: -1
     }]);
@@ -34,7 +37,13 @@ export default function CreateRecipe ({closeFunction}: {
     const [hours, setHours] = useState<number | ''>('')
     const [minutes, setMinutes] = useState<number | ''>('')
     const [steps, setSteps] = useState<Step[]>([])
-    // const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([]);
+    const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([{
+        id: 1,
+        name: "Water"
+    }, {
+        id: 2, 
+        name: "Chicken"
+    }]);
 
     const payload = () => {
         const formData = new FormData();
@@ -46,9 +55,9 @@ export default function CreateRecipe ({closeFunction}: {
         formData.append('dietType', JSON.stringify({dietType: dietType.map(diet => { return diet.name })}));
 
         formData.append('ingredients', JSON.stringify({ingredients: ingredients.filter(ingredient => ingredient.id !== -1)}));
-        const validSteps = steps.filter(step => step.instructions !== '')
+        const validSteps = steps.filter(step => step.instruction !== '')
 
-        formData.append('instructions', JSON.stringify({instructions: validSteps.map(x => x.instructions)}))
+        formData.append('instructions', JSON.stringify({instructions: validSteps.map(x => x.instruction)}))
         validSteps.forEach((step, index) => {
             if (step.video) formData.append('video'+index, step.video)
         })
@@ -56,6 +65,14 @@ export default function CreateRecipe ({closeFunction}: {
     }
     
     // const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+    const dietTypeOptions = ['vegan', 'vegetarian', 'gluten-free', 'dairy-free', 'nut-free', 'Halal'].map((dietType, index) => { 
+        return { id: index, name: dietType }
+    })
+
+    const mealTypeOptions = ['breakfast', 'lunch', 'dinner', 'snack'].map((mealType, index) => { 
+        return { id: index, name: mealType }
+    })
 
     const clear = () => {
         setImage(undefined);
@@ -82,6 +99,30 @@ export default function CreateRecipe ({closeFunction}: {
         }
       }, [image]);
 
+    useEffect(() => {
+        const validIngredients = ingredients.filter(ingredients => !!ingredients.id && ingredients.id !== -1 )
+        getSuggestedIngredient(validIngredients.map(ingredient => { return ingredient.id! }))
+            .then(res => setRecommendedIngredients(res.ingredients))
+            .catch(() => console.error("Couldn't get suggested ingredient"))
+    }, [ingredients])
+
+    useEffect(() => {
+        if (fullRecipe !== undefined) {
+            if (fullRecipe.name) setName(fullRecipe.name)
+            if (fullRecipe.cookTime) setHours(Math.floor(fullRecipe.cookTime/60));
+            if (fullRecipe.cookTime) setMinutes(fullRecipe.cookTime % 60);
+            if (fullRecipe.description) setDescription(fullRecipe.description);
+            if (fullRecipe.imageUrl) setImageUrl(fullRecipe.imageUrl);
+            if (fullRecipe.steps) setSteps(fullRecipe.steps.map(step => { return {
+                instruction: step.instruction,
+                videoUrl: step.videoUrl
+            }}));
+            if (fullRecipe.dietType) setDietType(dietTypeOptions.filter(x => fullRecipe.dietType?.includes(x.name)));
+            if (fullRecipe.mealType) setMealType(mealTypeOptions.filter(x => fullRecipe.mealType?.includes(x.name)));
+            if (fullRecipe.ingredients) setIngredients(fullRecipe.ingredients);
+        }
+    }, [fullRecipe])
+
 
     return <React.Fragment>
         <div className='fixed flex justify-between z-[100] border-b border-solid p-3 bg-tl-inactive-green'
@@ -89,7 +130,7 @@ export default function CreateRecipe ({closeFunction}: {
                 width: 'calc(90vw)'
             }}
         >
-            <h2 className='px-10 pt-5 font-semibold text-2xl'> Create Recipe</h2>
+            <h2 className='px-10 pt-5 font-semibold text-2xl'> {fullRecipe ? "Edit" : "Create"} Recipe</h2>
             <div className='my-auto'>
                 <Button
                     onClick={() => {
@@ -102,15 +143,28 @@ export default function CreateRecipe ({closeFunction}: {
 
                 <Button
                     onClick={() => {
-                        createRecipe(payload()).then(res => {
-                            clear();
-                            closeFunction();
-                            console.log(res);
-                        }).catch(() => {
-                            toast.error("Failed to create Recipe")
-                        });
+                        if (!fullRecipe) {
+                            createRecipe(payload()).then(() => {
+                                clear();
+                                closeFunction();
+                            }).catch(() => {
+                                toast.error("Failed to create Recipe")
+                            });
+                        } else {
+                            const formData = payload();
+                            if (fullRecipe.id) {
+                                formData.append('id', fullRecipe.id.toString())
+                                updateRecipe(fullRecipe.id, formData).then(() => {
+                                    clear();
+                                    closeFunction();
+                                }).catch(() => {
+                                    toast.error("Failed to save Recipe")
+                                })
+                            }
+
+                        }
                     }}
-                    text={"Create"}
+                    text={fullRecipe ? "Save" : "Create"}
                     className="mr-18 border border-solid  bg-tl-inactive-green px-6 py-3 rounded-md"
                 />
             </div>
@@ -120,10 +174,10 @@ export default function CreateRecipe ({closeFunction}: {
         <div className = 'w-full grid grid-cols-2 p-10 gap-x-10 gap-y-5 mt-16'>
             <div>
                 <div className=''>
-                    {preview ? 
+                    {preview || imageUrl ? 
                         <React.Fragment>
                             <div className='mt-10 relative mx-auto'>
-                                <img src = {preview} alt = 'recipeImage' height={400} width={400} className='mx-auto relative border border-solid p-5 rounded-md bg-tl-active-white'
+                                <img src = {imageUrl ? `http://localhost:5000/uploads?name=${imageUrl}` : preview} alt = 'recipeImage' height={400} width={400} className='mx-auto relative border border-solid p-5 rounded-md bg-tl-active-white'
                                     style={{
                                         transform: 'rotate(5deg)',
                                         animation: "2075.86ms ease 0ms 1 normal forwards running rockBackAndForth",
@@ -140,6 +194,7 @@ export default function CreateRecipe ({closeFunction}: {
                                     }}
                                     onClick={() => {
                                         setPreview(undefined);
+                                        setImageUrl(undefined)
                                     }}
                                     alt="removeImagePin"
                                 /> 
@@ -216,9 +271,7 @@ export default function CreateRecipe ({closeFunction}: {
                         header="Meal Type"
                         multi={true}
                         value={mealType}
-                        options={['breakfast', 'lunch', 'dinner', 'snack'].map((mealType, index) => { 
-                            return { id: index, name: mealType }
-                        })}
+                        options={mealTypeOptions}
                         isAsync={false}
                     />
                 </div>
@@ -230,9 +283,7 @@ export default function CreateRecipe ({closeFunction}: {
                         header="Diet Type"
                         multi={true}
                         value={dietType}
-                        options={['vegan', 'vegetarian', 'gluten-free', 'dairy-free', 'nut-free', 'Halal'].map((dietType, index) => { 
-                            return { id: index, name: dietType }
-                        })}
+                        options={dietTypeOptions}
                         isAsync={false}
                     />
                 </div>
@@ -325,29 +376,44 @@ export default function CreateRecipe ({closeFunction}: {
                         }}
                     >
                         <HiOutlinePlusCircle className='text-tl-active-green inline' size={40}/>
-                        <span className=' text-lg ml-2 text-tl-active-green'>Add Ingredient!</span>
+                        <span className=' text-lg ml-2 text-tl-active-green'>Add Ingredient! </span>
                     </span>
+                    {recommendedIngredients.length > 0 && <span className='ml-2'>Do you want to add? -</span>}
+                    {recommendedIngredients && recommendedIngredients.map(ingredient => {return <div 
+                        className='inline bg-tl-inactive-green text-tl-inactive-black rounded-sm px-2 py-1 hover:bg-tl-active-green hover:text-tl-active-grey cursor-pointer ml-2'
+                        onClick={() => {
+                            setIngredients(prev => [...prev, {
+                                id: ingredient.id,
+                                name: ingredient.name
+                            }])
+                            setRecommendedIngredients([])
+                        }}
+                    >
+                        {ingredient.name}
+                    </div>})}
                 </div>
                 <label htmlFor = 'Instruction'> Recipe Instructions</label>
                 {steps && steps.map((step, index) => {
                     return (
                         <div className='grid grid-cols-2 mt-2'>
                             <textarea className='p-2 rounded-md focus:shadow-lg border-opacity-0 focus:outline-none' rows={9}
+                                value={step.instruction}
                                 onChange={(e) => {
                                     let tmp = [...steps];
-                                    tmp[index].instructions = e.target.value;
+                                    tmp[index].instruction = e.target.value;
                                     setSteps(tmp);
                                 }}
                             />
-                            {step.video ? 
+                            {step.video || step.videoUrl ? 
                                 <React.Fragment>
                                     <div className='relative ml-0'>
-                                        <video controls src = {URL.createObjectURL(step.video)} height={232} width={410} className='ml-4 relative border border-solid rounded-md bg-tl-active-white'/>
+                                        <video controls src = {step.videoUrl ? `http://localhost:5000/uploads?name=${step.videoUrl}` : URL.createObjectURL(step.video!)} height={232} width={410} className='ml-4 relative border border-solid rounded-md bg-tl-active-white'/>
                                         <HiXCircle
                                             className='top-0 left-4 absolute cursor-pointer text-tl-inactive-red bg-tl-active-black rounded-full'
                                             onClick={() => {
                                                 let tmp = [...steps];
                                                 tmp[index].video = undefined;
+                                                tmp[index].videoUrl = undefined;
                                                 setSteps(tmp);
                                             }}
                                             size={20}
@@ -390,7 +456,7 @@ export default function CreateRecipe ({closeFunction}: {
                         className=' cursor-pointer'
                         onClick={() => {
                             setSteps(prev => [...prev, {
-                                instructions: ''
+                                instruction: ''
                             }])
                         }}
                     >

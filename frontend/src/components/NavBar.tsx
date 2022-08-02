@@ -3,20 +3,26 @@ import { HiLogout, HiOutlineHeart, HiOutlineNewspaper, HiOutlineUser } from 'rea
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginWithToken } from '../services/auth.service';
+import { getIngredients } from '../services/recipeContributor.service';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
+import TLSelect from './global/AsyncSelect';
 
-const NavBar = () => {
+const NavBar = ({onIngredientSearch}: {
+    onIngredientSearch?: (ingredients: Ingredient[]) => void;
+}) => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [username, setUsername] = useState<string>();
     const navigator = useNavigate()
-
+    
     const triggerSetUsername = (username: string) => {
         setUsername(username);
     }
+
+    const [ingredients, setIngredients] = useState<Ingredient[]>([])
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
@@ -25,6 +31,10 @@ const NavBar = () => {
             setIsLoggedIn(true);
         }).catch(() => toast.error("Could not log in"))
     }, [])
+
+    useEffect(() => {
+        if (onIngredientSearch) onIngredientSearch(ingredients);
+    }, [ingredients])
 
     return (
         <React.Fragment>
@@ -57,8 +67,22 @@ const NavBar = () => {
                 }}
             />}
             <div 
-                className='w-full bg-tl-inactive-green h-[300px] flex justify-end'
-            >
+                className='w-full bg-tl-inactive-green h-[300px] flex justify-between'
+            >   
+                <div className='w-9/12 mx-auto my-10'>
+                    <TLSelect
+                        name="Ingredient"
+                        header="Ingredient"
+                        value={ingredients} 
+                        onChange={(val: Ingredient[]) => {
+                            setIngredients(val);
+                        }}
+                        apiCall={getIngredients}
+                        apiCallKey="ingredients"
+                        isAsync
+                        multi
+                    />
+                </div>
                 <span 
                     className='mr-20 cursor-pointer h-6 relative'
                     onClick={() => {

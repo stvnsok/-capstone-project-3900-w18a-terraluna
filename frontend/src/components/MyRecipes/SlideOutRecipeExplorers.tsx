@@ -2,19 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { HiChevronLeft, HiChevronRight, HiOutlineClock, HiOutlineCreditCard, HiOutlineXCircle, HiX } from 'react-icons/hi';
 import { AiFillStar, AiOutlineCheckCircle, AiOutlineCopyrightCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
-import { createRecipeFromTemplate, deleteRecipe, getRecipe, publishRecipe } from '../../services/recipeContributor.service';
+import { getRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import { BsCircleFill } from 'react-icons/bs';
+import { favoriteRecipe } from '../../services/recipeExplore.service';
 
-const SlideOutRecipe = ({
+const SlideOutRecipeExplorers = ({
     recipe,
     onClose,
-    onEdit,
     onPublish,
 }: {
     recipe?: Recipe;
     onClose: () => void
-    onEdit: (fullRecipe: Partial<RecipeDetails>) => void
     onPublish: () => void
 }) => {
     const minutesToHoursPipe = (time: number) => {
@@ -38,61 +37,7 @@ const SlideOutRecipe = ({
         return (total / fullRecipe.reviews.length).toPrecision(3);
     }
 
-    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>({
-        ...recipe,
-        ingredients: [{
-            id: 1,
-            name: 'Chicken',
-            quantity: 30,
-            units: 'leg'
-        }],
-        reviews: [{
-            review: "This was a good recipe",
-            stars: 4
-        }, {
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 1
-        },{
-            review: "This was a good recipe",
-            stars: 4
-        },{
-            review: "This was a good recipe",
-            stars: 5
-        }, {
-            review: "This was a good recipe",
-            stars: 4
-        }, {
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 1
-        },{
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 5
-        }, {
-            review: "This was a good recipe",
-            stars: 4
-        }, {
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 1
-        },{
-            review: "This was a good recipe",
-            stars: 4
-        },{
-            review: "This was a good recipe",
-            stars: 5
-        },]
-    });
+    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>({});
 
     const getStatusIcon = (status: Recipe["status"]) => {
         if (status === 'Draft') return <HiOutlineXCircle size={32}/>    
@@ -117,55 +62,13 @@ const SlideOutRecipe = ({
             <div className='justify-between flex'>
                 <h2 className='ml-16 font-semibold text-4xl'>{recipe?.name}</h2>
                 <div>
-                    {(fullRecipe.status ?? recipe?.status) === "Draft" && <Button
-                        onClick={() => {
-                            if (recipe) {
-                                publishRecipe(recipe.id)
-                                    .then(res => {
-                                        toast.success('Successfully published ' + recipe.name);
-                                        setFullRecipe(res.recipe)
-                                        onPublish()
-                                    })
-                                    .catch(err => {
-                                        toast.error(err.response.data.description);
-                                    })
-                            }
-                        }}
-                        text={"Publish"}
-                        className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
-                    />}
-                    {(fullRecipe.status ?? recipe?.status) !== "Published" && <Button
-                        onClick={() => {
-                            if (fullRecipe) {
-                                onEdit(fullRecipe)
-                            }
-                        }}
-                        text={"Edit"}
-                        className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
-                    />}
-                    {(fullRecipe.status ?? recipe?.status) !== "Template" && <Button
-                        onClick={() => {
-                            if (recipe) {
-                                createRecipeFromTemplate(recipe.id)
-                                    .then(_ => {
-                                        toast.success('Successfully created a copy of ' + fullRecipe.name ?? recipe.name);
-                                        onPublish();
-                                        onClose();
-                                    })
-                                    .catch(err => {
-                                        toast.error(err);
-                                    })
-                            }
-                        }}
-                        text={"Use As Template"}
-                        className="mr-4 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
-                    />}
+                    
                     <Button
                         onClick={() => {
                             if (recipe) {
-                                deleteRecipe(recipe.id)
+                                favoriteRecipe(recipe.id)
                                     .then(_ => {
-                                        toast.success('Successfully deleted ' + recipe.name)
+                                        toast.success('Successfully favorited ' + recipe.name)
                                         onPublish();
                                         onClose();
                                     })
@@ -174,8 +77,8 @@ const SlideOutRecipe = ({
                                     })
                             }
                         }}
-                        text={"Delete"}
-                        className="mr-16 bg-tl-inactive-red px-6 py-3 rounded-md shadow-md"
+                        text={"Favorite"}
+                        className="mr-16 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                     />
                     
                 </div>
@@ -334,4 +237,4 @@ const SlideOutRecipe = ({
     </div>
 }
 
-export default SlideOutRecipe;
+export default SlideOutRecipeExplorers;

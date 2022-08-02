@@ -16,6 +16,8 @@ module.exports = {
         'active-black': '#000000',
         'inactive-grey': '#8e8e8e',
         'active-grey': '#4d4d4d',
+        'inactive-yellow': '#fffec7',
+        'active-yellow': '  #fffc47',
         'inactive-brown': '#FFF2F2'
       }
     },
