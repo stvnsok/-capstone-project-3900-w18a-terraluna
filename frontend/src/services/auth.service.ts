@@ -9,8 +9,8 @@ export const login = (
     }))
 }
 
-export const loginWithToken = (): Promise<LoginApiResponse> => {
-    return (api.get('auth/login'))
+export const loginWithToken = (access_token: string): Promise<LoginApiResponse> => {
+    return (api.get('auth/login', {params: {access_token}} ))
 }
 
 export const register = (
