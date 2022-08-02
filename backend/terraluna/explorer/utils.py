@@ -1,4 +1,4 @@
-from terraluna.recipe.models import Comment, Recipe, RecipeIngredient
+from terraluna.recipe.models import *
 
 from .error import *
 from .models import *
