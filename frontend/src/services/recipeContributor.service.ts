@@ -32,7 +32,7 @@ export const createRecipe = async (
 
 export const getIngredients = async (
     query: string
-): Promise<Ingredient[]> => {
+): Promise<{ ingredients: Ingredient[] }> => {
     return (await api.get('/ingredients', {params: {query}})).data
 }
 
