@@ -9,11 +9,13 @@ import { BsCircleFill } from 'react-icons/bs';
 const SlideOutRecipe = ({
     recipe,
     onClose,
-    onEdit
+    onEdit,
+    onPublish,
 }: {
     recipe?: Recipe;
     onClose: () => void
     onEdit: (fullRecipe: Partial<RecipeDetails>) => void
+    onPublish: () => void
 }) => {
     const minutesToHoursPipe = (time: number) => {
         const hours = Math.floor(time/60);
@@ -119,8 +121,10 @@ const SlideOutRecipe = ({
                         onClick={() => {
                             if (recipe) {
                                 publishRecipe(recipe.id)
-                                    .then(_ => {
+                                    .then(res => {
                                         toast.success('Successfully published ' + recipe.name);
+                                        setFullRecipe(res.recipe)
+                                        onPublish()
                                     })
                                     .catch(err => {
                                         toast.error(err);

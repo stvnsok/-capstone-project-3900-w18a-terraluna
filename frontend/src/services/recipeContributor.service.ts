@@ -44,8 +44,8 @@ export const updateRecipe = async (
 
 export const publishRecipe = async (
     id: number
-): Promise<NewRecipeApiResponse> => {
-    return (await api.patch(`/recipe/${id}/publish`)).data
+): Promise<{recipe: RecipeDetails}> => {
+    return (await api.put(`/my_recipes/${id}/publish`)).data
 }
 
 export const getIngredients = async (

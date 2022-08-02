@@ -208,6 +208,9 @@ const MyRecipes = () => {
                 setFullRecipe(recipe)
                 setSlideOutRecipe(undefined)
             }}
+            onPublish={() => {
+                triggerGetRecipes()
+            }}
         />
 
         <CreateRecipeForm

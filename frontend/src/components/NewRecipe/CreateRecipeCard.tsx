@@ -48,8 +48,7 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
     const payload = () => {
         const formData = new FormData();
         formData.append('name', name);
-        if (imageUrl) formData.append('image', `http://localhost:5000/uploads?name=${imageUrl}`)
-        else if (image) formData.append('image', image);
+        if (image) formData.append('image', image);
         formData.append('description', description);
         formData.append('expectedDuration', hours === "" && minutes === "" ? "" : (((hours === "" ? 0 : hours) * 60) + (minutes === "" ? 0 : minutes)).toString());
         formData.append('mealType', JSON.stringify({mealType: mealType.map(meal => { return meal.name })}));
