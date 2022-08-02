@@ -38,29 +38,19 @@ export default function CreateRecipe ({closeFunction}: {
     const payload = () => {
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('image', image ?? '');
+        formData.append('image', image ?? '', "Photo");
         formData.append('description', description);
         formData.append('expectedDuration', (((hours === "" ? 0 : hours) * 60) + (minutes === "" ? 0 : minutes)).toString());
-        formData.append('mealType', JSON.stringify(mealType));
-        formData.append('dietType', JSON.stringify(dietType));
+        formData.append('mealType', JSON.stringify(mealType.map(meal => { return meal.name })));
+        formData.append('dietType', JSON.stringify(dietType.map(diet => { return diet.name })));
 
         formData.append('ingredients', JSON.stringify(ingredients.filter(ingredient => ingredient.id !== -1)));
-        for (const step of steps) {
+        steps.filter(step => step.instructions !== '').forEach((step, index) => {
             formData.append('instruction[]', step.instructions);
-            formData.append('video[]', step.video ?? "");
-        }
-        
-        formData.forEach((entry, key) => {
-            console.log("KEY: " + key)
-            console.log("VALUE: " + entry)
-        });
+            if (step.video) formData.append('video[]', step.video, "Video"+index);
+        })
         return formData 
     }
-    
-    useEffect(() => {
-
-    }, [ingredients])
-
     
     // const inputFileRef = useRef<HTMLInputElement | null>(null);
 
