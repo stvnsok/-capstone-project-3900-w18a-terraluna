@@ -5,12 +5,13 @@ from flask.wrappers import Response
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 
-from terraluna.explorer.error import *
-from terraluna.explorer.models import *
-from terraluna.explorer.utils import *
-from terraluna.recipe.models import Ingredient, Recipe
-from terraluna.recipe.utils import username_to_user_id
-from utils import get_data
+from terraluna.recipe.models import *
+from terraluna.recipe.utils import *
+from utils import *
+
+from .error import *
+from .models import *
+from .utils import *
 
 explorer_bp = Blueprint("explorer_bp", __name__)
 """Blueprint: A Blueprint for all recipe explorer routes."""
@@ -148,57 +149,29 @@ def recipe_view(id):
 
 @explorer_bp.route("/recipes/<int:id>/review", methods=["POST"])
 @jwt_required()
-def recipe_comment(id):
-    """Comment on the recipe"""
-
+def add_recipe_review(id):
+    """Add a comment/review to a recipe."""
     data = request.get_json()
     message, stars = get_data(data, "review", "stars")
 
-    # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
-
-    # Check that the message is not empty
-    if message == None or message.strip() == "":
-        raise InvalidComment
-
-    # Create a comment entry in the database
     comment = Comment.create(
         recipe_id=id, user_id=user_id, stars=stars, message=message
     )
-    ####################################
-    # NEED TO CHANGE TO ADD STARS TO CREATIONS FUNCTION
-
     return jsonify(comment_id=comment.id)
 
 
 @explorer_bp.route("/recipes/favourite", methods=["GET"])
-@jwt_required(fresh=True)
-def list_savedRecipes():
-    """Return a list of all recipes saved by the user"""
-
-    # Retrieve current user from token
+@jwt_required()
+def get_recipe_favourites():
+    """Return a list of all recipes saved by the user."""
     user_id = username_to_user_id(get_jwt_identity())
 
-    recipes = []
-    query = (
-        db.session.query(UserSavedRecipes, Recipe)
-        .filter_by(UserSavedRecipes.recipe_id == Recipe.id)
-        .filter_by(UserSavedRecipes.user_id == user_id)
-    )
-    for row in query:
-        recipe = Recipe.query.filter_by(id=row.recipe_id).one()
-        recipes.append(
-            {
-                ######################################## NEED TO CHANGE
-                "id": recipe.id,
-                "name": recipe.name,
-                "recipePhoto_url": recipe.recipe_photo,
-                "status": recipe.status,
-                "description": recipe.description,
-            }
-        )
-
-    return jsonify
+    saved_recipes = [
+        saved_recipe.recipe_id
+        for saved_recipe in UserSavedRecipes.query.filter_by(user_id=user_id).all()
+    ]
+    return jsonify(recipes=[recipe.jsonify() for recipe in saved_recipes])
 
 
 @explorer_bp.route("/recipes/<int:id>/favourite", methods=["PUT", "DELETE"])
@@ -209,42 +182,20 @@ def update_recipe_favourites(id):
     PUT: Add recipe to user's favourited recipes.
     DELETE: Remove recipe from user's favourited recipes.
     """
-
-    # Check that recipe_id exists and is published and get the Recipe object
-    recipe = recipe_id_to_published_recipe(id)
-
-    # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
 
-    # PUT: add recipe to user's saved recipes
+    # PUT: Add recipe to user's favourited recipes.
     if request.method == "PUT":
-        # If the user has not the recipe is not saved, save the recipe
         if (
-            UserSavedRecipes.query.filter_by(user_id=user_id)
-            .filter_by(recipe_id=id)
-            .first()
+            UserSavedRecipes.query.filter_by(user_id=user_id, recipe_id=id).first()
             is not None
         ):
-            db.session.add(UserSavedRecipes(user_id, id))
-            db.commit()
-            logger.debug("Recipe " + id + " saved")  # type: ignore
-        else:
-            logger.debug("Recipe " + id + " already saved")  # type: ignore
-
+            db.session.add(UserSavedRecipes(user_id=user_id, recipe_id=id))
+            db.session.commit()
         return "", 204
 
-    # DELETE: remove recipe from user's saved recipes
+    # DELETE: Remove recipe from user's favourited recipes.
     elif request.method == "DELETE":
-        # DELETE FROM SAVED RECIPES TABLE
-        pass
-        if (
-            UserSavedRecipes.query.filter_by(user_id=user_id)
-            .filter_by(recipe_id=id)
-            .delete()
-        ):
-            logger.debug("Recipe " + id + " unsaved")  # type: ignore
-        else:
-            logger.debug("Recipe " + id + " not in saved recipes")  # type: ignore
-        db.commit()
-
+        UserSavedRecipes.query.filter_by(user_id=user_id, recipe_id=id).delete()
+        db.session.commit()
         return "", 204
