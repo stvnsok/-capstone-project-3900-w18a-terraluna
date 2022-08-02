@@ -6,6 +6,7 @@ import { getRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import { BsCircleFill } from 'react-icons/bs';
 import { favoriteRecipe } from '../../services/recipeExplore.service';
+import { Modal } from '../global/Modal';
 
 const SlideOutRecipeExplorers = ({
     recipe,
@@ -29,6 +30,9 @@ const SlideOutRecipeExplorers = ({
     }
 
     const [currentStep, setCurrentStep] = useState<number>(1);
+    const [openReviewModal, setOpenReviewModal] = useState<boolean>(false);
+    const [hoveredStar, setHoveredStar] = useState<number>(1);
+    const [setStar, setSetStar] = useState<number>();
 
     const getAverageReview = () => {
         if (!fullRecipe || !fullRecipe.reviews || fullRecipe.reviews.length === 0) return 0
@@ -57,12 +61,65 @@ const SlideOutRecipeExplorers = ({
         marginRight: recipe ? '0' : '-90vw'
 
     }}>
+        <Modal
+            isOpen={openReviewModal}
+            closeFunction={() => {
+                setOpenReviewModal(false);
+            }}
+        > 
+            <div className='p-5 shadow-md rounded-md bg-tl-inactive-white w-[500px] h-[600px]'>
+                <div className='w-full h-full'>
+                    <div className='flex'>
+                        {[1,2,3,4,5].map((star, index) => {
+                            return <AiFillStar
+                                size={100}
+                                className={`text-tl-active-yellow ${setStar ? index < setStar ?  'text-tl-active-yellow' : 'text-tl-inactive-yellow'  : index < hoveredStar ? 'text-tl-active-yellow' : 'text-tl-inactive-yellow'}`}
+                                onMouseEnter={() => {
+                                    setHoveredStar(star);
+                                }}
+                                onClick={() => {
+                                    setSetStar(star);
+                                }}
+                            />
+                        })}
+                    </div>
+                    <div className='text-2xl font-semibold'>Leave A Review!</div>
+                    <textarea className='w-full mt-2 p-5' style={{
+                        height: 'calc(100% - 190px)'
+                    }}></textarea>
+                    <div className='grid grid-cols-2 gap-5'>
+                        <Button
+                            onClick={() => {
+                                if (recipe) setOpenReviewModal(false);
+                            }}
+                            text={"Cancel"}
+                            className=" bg-tl-inactive-white px-6 py-3 rounded-md shadow-md w-full"
+                        />
+                        <Button
+                            onClick={() => {
+                                if (recipe) setOpenReviewModal(false);
+                            }}
+                            text={"Post"}
+                            className="bg-tl-inactive-green px-6 py-3 rounded-md shadow-md w-full"
+                        />
+
+                    </div>
+
+                </div>
+            </div>
+        </Modal>
         <div className='w-full content-center max-h-screen overflow-y-auto'>
             <div><HiX className='ml-4 cursor-pointer text-tl-inactive-grey' size={50} onClick={onClose}/></div>
             <div className='justify-between flex'>
                 <h2 className='ml-16 font-semibold text-4xl'>{recipe?.name}</h2>
                 <div>
-                    
+                    <Button
+                        onClick={() => {
+                            if (recipe) setOpenReviewModal(true);
+                        }}
+                        text={"Leave A Review"}
+                        className="mr-16 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
+                    />
                     <Button
                         onClick={() => {
                             if (recipe) {
