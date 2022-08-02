@@ -9,5 +9,5 @@ export const getRecipes = async (
 export const favoriteRecipe = async (
     id?: number
 ): Promise<{recipes: Recipe[]}> => {
-    return (await api.put(`/recipes/${id}/favorite`)).data
+    return (await api.put(`/recipes/${id}/favourite`)).data
 }
