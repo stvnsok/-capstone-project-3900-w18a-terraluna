@@ -117,7 +117,7 @@ const SlideOutRecipe = ({
             <div className='justify-between flex'>
                 <h2 className='ml-16 font-semibold text-4xl'>{recipe?.name}</h2>
                 <div>
-                    <Button
+                    {recipe?.status === "Draft" && <Button
                         onClick={() => {
                             if (recipe) {
                                 publishRecipe(recipe.id)
@@ -131,7 +131,7 @@ const SlideOutRecipe = ({
                         }}
                         text={"Publish"}
                         className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
-                    />
+                    />}
                     <Button
                         onClick={() => {
                             if (recipe) {
@@ -180,15 +180,12 @@ const SlideOutRecipe = ({
                     </div>
                     <div>
                         <div className='font-semibold text-3xl'>Meal Types</div>
-                        <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{recipe.name}</span></div>
-                        <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
-                        <div className='mt-8 flex'>{getStatusIcon(recipe.status)}<span className='ml-4 text-xl'>{recipe.status}</span></div>
+                        {recipe.mealType.map(mealType => { return <div className='mt-8 flex'><BsCircleFill size={16} className=" text-tl-inactive-red my-auto"/> <span className='ml-4 text-xl'>{mealType}</span></div>})}
+                        
                     </div>
                     <div>
                         <div className='font-semibold text-3xl'>Diet Types</div>
-                        <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{recipe.name}</span></div>
-                        <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
-                        <div className='mt-8 flex'>{getStatusIcon(recipe.status)}<span className='ml-4 text-xl'>{recipe.status}</span></div>
+                        {recipe.dietType.map(dietType => { return <div className='mt-8 flex'><BsCircleFill size={16} className=" text-tl-inactive-blue my-auto"/> <span className='ml-4 text-xl'>{dietType}</span></div>})}
                     </div>
                     {fullRecipe && <React.Fragment>
                         <div className='col-span-2 mt-24'>
@@ -282,7 +279,7 @@ const SlideOutRecipe = ({
                             </div>
                         </div>}
                     </React.Fragment>}
-                    {fullRecipe.reviews && <React.Fragment>
+                    {fullRecipe.reviews && recipe.status === "Published" && <React.Fragment>
                         <div className='col-span-3 grid grid-cols-2 gap-5 mt-4'>
                             <div>
                                 {fullRecipe.reviews.map((review, index) => {
