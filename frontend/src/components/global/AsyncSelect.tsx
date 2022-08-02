@@ -13,6 +13,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     isAsync,
     options,
     apiCall,
+    apiCallKey
 }: {
     value?: IsMulti extends true ? T[] : T;
     onChange: (val: IsMulti extends true ? T[] : T) => void;
@@ -23,12 +24,13 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     menuText?: (value: T) => string;
     isAsync?: IsAsync;
     options?: IsAsync extends false ? T[] : undefined;
-    apiCall?: (query: string) => Promise<T[]>
+    apiCall?: (query: string) => Promise<{[key: string] : T[]}>
+    apiCallKey?: string
 }) => {
     const promiseOptions = (query: string, callback: (options: T[]) => void) => {
-        if (apiCall) {
+        if (apiCall && apiCallKey) {
             apiCall(query).then(res => {
-                callback(res);
+                callback(res[apiCallKey]);
             })
         }
     }
