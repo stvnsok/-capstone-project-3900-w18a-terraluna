@@ -159,6 +159,14 @@ def publish_recipe(id):
     pass
 
 
+@recipe_bp.route("/my_recipes/<id>", methods=["GET"])
+@jwt_required()
+def get_recipe(id):
+    """Get the full details of a single recipe."""
+    recipe = Recipe.query.filter_by(id=id).first()
+    return jsonify(recipe=recipe.jsonify_extended())
+
+
 @recipe_bp.route("/my_recipes", methods=["GET"])
 @jwt_required()
 def my_recipes():
