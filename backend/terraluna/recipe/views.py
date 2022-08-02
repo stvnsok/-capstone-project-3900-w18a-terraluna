@@ -143,28 +143,42 @@ def create_recipe():
     return jsonify(recipe=recipe.jsonify()), 201
 
 
-@recipe_bp.route("/my_recipes/<id>", methods=["DELETE"])
-@jwt_required()
-def delete_recipe(id):
-    """Delete a recipe."""
-    Recipe.delete(id)
-    return ("", 204)
-
-
-@recipe_bp.route("/my_recipes/<id>", methods=["PUT"])
-@jwt_required()
-def publish_recipe(id):
-    """Publish a recipe. Recipes cannot be published unless all entries are completed,
-    except videos per instruction are optional."""
-    pass
-
-
 @recipe_bp.route("/my_recipes/<id>", methods=["GET"])
 @jwt_required()
 def get_recipe(id):
     """Get the full details of a single recipe."""
     recipe = Recipe.query.filter_by(id=id).first()
     return jsonify(recipe=recipe.jsonify_extended())
+
+
+@recipe_bp.route("/my_recipes/<id>", methods=["PUT"])
+@jwt_required()
+def edit_recipe(id):
+    """Edit a recipe."""
+    pass
+
+
+@recipe_bp.route("/my_recipes/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_recipe(id):
+    """Delete a recipe."""
+    Recipe.delete(id)
+    return "", 204
+
+
+@recipe_bp.route("/my_recipes/<id>/publish", methods=["PUT"])
+@jwt_required()
+def publish_recipe(id):
+    """Publish a recipe. Recipes cannot be published unless all entries are completed,
+    except videos per instruction are optional."""
+    Recipe.publish(id)
+    return "", 204
+
+
+@recipe_bp.route("/my_recipes/<id>/copy", methods=["POST"])
+@jwt_required()
+def copy_recipe(id):
+    pass
 
 
 @recipe_bp.route("/my_recipes", methods=["GET"])

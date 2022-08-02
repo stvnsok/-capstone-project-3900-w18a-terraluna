@@ -4,6 +4,8 @@ from sqlalchemy import func
 
 from app import db, logger
 
+from .error import *
+
 
 class Ingredient(db.Model):
     """An ingredient model."""
@@ -152,8 +154,23 @@ class Recipe(db.Model):
 
         Args:
             id (int): Id of recipe draft to publish.
+
+        Raises:
+            IncompleteRecipeError: If expected duration, description, instructions,
+                photo or ingredients do not exist.
         """
-        Recipe.query.filter_by(id=id).first().status = "Published"
+        recipe = Recipe.query.filter_by(id=id).first()
+
+        if (
+            recipe.expected_duration_mins is None
+            or recipe.description is None
+            or recipe.instructions is None
+            or recipe.photo_url is None
+            or not recipe.ingredients
+        ):
+            raise IncompleteRecipeError
+
+        recipe.status = "Published"
         db.session.commit()
 
     def jsonify(self):
