@@ -159,7 +159,7 @@ def recipe_comment(id):
         raise InvalidComment
 
     # Create a comment entry in the database
-    comment = Comment.create(recipe_id=id, stars=5, user_id=user_id, message=message)
+    comment = Comment.create(recipe_id=id, user_id=user_id, message=message)
     ####################################
     # NEED TO CHANGE TO ADD STARS TO CREATIONS FUNCTION
 

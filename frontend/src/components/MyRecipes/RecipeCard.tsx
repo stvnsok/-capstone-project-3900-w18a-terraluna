@@ -4,9 +4,11 @@ import { HiNewspaper, HiOutlineClock } from 'react-icons/hi';
 const RecipeCard = ({
     recipe,
     onClick,
+    view = "contributor"
 }: {
     recipe: Recipe;
-    onClick: () => void
+    onClick: () => void;
+    view?: string;
 }) => {
 
     const minutesToHoursPipe = (time: number) => {
@@ -32,7 +34,7 @@ const RecipeCard = ({
         borderRadius: '6px 6px 0px 0px',
     }}/>
     <div className="px-0.5 py-4">
-      <h4 className='px-4'><b>{recipe.name}</b>{getRecipeStatusChip(recipe.status)}</h4>
+      <h4 className='px-4'><b>{recipe.name}</b>{view === "contributor" && getRecipeStatusChip(recipe.status)}</h4>
       <div className='px-4 mt-5 flex'><HiOutlineClock size={24}/> <span className='ml-4'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
       <div className='px-4 mt-5 flex'><HiNewspaper size={24}/> <span className='ml-4'>{recipe.description}</span></div>
     </div>

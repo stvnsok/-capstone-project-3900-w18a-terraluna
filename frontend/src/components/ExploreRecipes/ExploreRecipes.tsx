@@ -30,6 +30,7 @@ const ExploreRecipes = () => {
     <React.Fragment>
         <NavBar onIngredientSearch={(ingredients) => {
             triggerGetRecipes(ingredients.map(x => x.id))
+            console.log(ingredients.map(x => x.id))
         }}/>
         <div className={`grid grid-cols-7 gap-6 pl-10`}>
             {recipes && recipes.map(recipe => { return (
@@ -41,6 +42,7 @@ const ExploreRecipes = () => {
                                 setSlideOutRecipe(recipe)
                                 setIsCreateRecipeOpen(false)
                             }}
+                            view="explorer"
                         />
                         
                     </div>
