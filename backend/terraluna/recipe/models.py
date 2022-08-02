@@ -228,11 +228,18 @@ class Recipe(db.Model):
         Args:
             id (int): Id of recipe draft to publish.
 
+        Returns:
+            Recipe: The published recipe model.
+
         Raises:
             IncompleteRecipeError: If expected duration, description, instructions,
                 photo or ingredients do not exist.
+            CannotPublishATemplateRecipe: If recipe status is Template.
         """
         recipe = Recipe.query.filter_by(id=id).first()
+
+        if not recipe.status == "Draft":
+            raise CannotPublishATemplateRecipe
 
         if (
             recipe.expected_duration_mins is None
@@ -245,6 +252,7 @@ class Recipe(db.Model):
 
         recipe.status = "Published"
         db.session.commit()
+        return recipe
 
     def jsonify(self):
         return {
