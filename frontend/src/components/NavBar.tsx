@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiLogout, HiOutlineHeart, HiOutlineNewspaper, HiOutlineUser } from 'react-icons/hi'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { loginWithToken } from '../services/auth.service';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
 
@@ -15,6 +17,13 @@ const NavBar = () => {
     const triggerSetUsername = (username: string) => {
         setUsername(username);
     }
+
+    useEffect(() => {
+        const access_token = localStorage.getItem('access_token');
+        if (access_token) loginWithToken().then(res => {
+            setUsername(res.data.username)
+        }).catch(() => toast.error("Could not log in"))
+    }, [])
 
     return (
         <React.Fragment>
