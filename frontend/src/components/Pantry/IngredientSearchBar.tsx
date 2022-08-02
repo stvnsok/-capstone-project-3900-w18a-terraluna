@@ -7,11 +7,11 @@ import Paper from '@mui/material/Paper';
 
 export default function SearchBar (){
 
-    const [searchResults, setSearchResults] = useState<string[]>();
+    // const [searchResults, setSearchResults] = useState<string[]>();
     const [search, setSearch] = useState<string>();
 
     useEffect(() => {
-        if (!search) return setSearchResults([]);
+        // if (!search) return setSearchResults([]);
         /*
             make API call to set search values
 

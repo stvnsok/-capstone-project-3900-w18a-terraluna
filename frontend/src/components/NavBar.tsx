@@ -3,6 +3,9 @@ import { HiLogout, HiOutlineHeart, HiOutlineNewspaper, HiOutlineUser } from 'rea
 import { useNavigate } from 'react-router-dom';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
+import RecipeSearchBar from './global/Search/RecipeSearchBar';
+import { AiOutlineMenu } from 'react-icons/ai';
+import Button from './global/Button';
 
 const NavBar = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
@@ -11,7 +14,7 @@ const NavBar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [username, setUsername] = useState<string>();
     const navigator = useNavigate()
-
+    
     const triggerSetUsername = (username: string) => {
         setUsername(username);
     }
@@ -46,7 +49,19 @@ const NavBar = () => {
             />}
             <div 
                 className='w-full bg-tl-inactive-green h-[300px] flex justify-end'
-            >
+            >   
+                <div>
+                    <Button
+                        onClick={() => {
+                        }}
+                        className="w-10 h-10 border border-solid bg-tl-inactive-white rounded-md ml-4"
+                        text={<React.Fragment><AiOutlineMenu size={22}/></React.Fragment>}
+                    />
+                </div>
+                <div className = "md:flex md:justify-center mb-6">
+                    <RecipeSearchBar/>
+                </div>
+
                 <span 
                     className='mr-20 cursor-pointer h-6 relative'
                     onClick={() => {

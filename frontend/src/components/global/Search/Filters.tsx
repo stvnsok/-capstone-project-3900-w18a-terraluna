@@ -5,8 +5,8 @@ import { RangeSlider } from './RangeSlider';
 
 
 export const Filters = () => {
-    const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
-    const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
+    // const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
+    // const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
     const [flag, setFlag] = useState<boolean>(true); 
 
     const handleClick = () => {
@@ -14,8 +14,8 @@ export const Filters = () => {
     };
 
     const clear = () => {
-        setMealType([]);
-        setDietType([]);
+        // setMealType([]);
+        // setDietType([]);
         setFlag(!flag);
     }
 

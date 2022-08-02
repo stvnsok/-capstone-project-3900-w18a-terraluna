@@ -7,7 +7,7 @@ export default function RecipeSearchBar () {
     return ( 
         <Paper
             component='form'
-            sx = {{ display: 'flex', alignItems: 'center', padding: '2px 4px', height: 'fit-content', width: 1000, marginTop: '0.5rem'} }
+            sx = {{ display: 'flex', alignItems: 'center', padding: '2px 4px', height: 'fit-content', width: 800, marginTop: '0.5rem'} }
         >
             <InputBase
                 placeholder='Search for Recipes'
