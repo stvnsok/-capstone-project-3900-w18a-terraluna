@@ -75,6 +75,16 @@ const MyRecipes = () => {
             })
     }, [])
 
+    const triggerGetRecipes = () => {
+        getRecipesRecipeContributors()
+            .then(res => {
+                setRecipes(res.recipes);
+            })
+            .catch(err => {
+                toast.error(err);
+            })
+    }
+
     useEffect(() => {
         getNoRecipeMatchRecipes()
             .then(res => {
@@ -204,6 +214,7 @@ const MyRecipes = () => {
             isOpen={isCreateRecipeOpen}
             onClose={() => {
                 setIsCreateRecipeOpen(false)
+                triggerGetRecipes()
             }}
             fullRecipe={fullRecipe}
         />
