@@ -12,7 +12,6 @@ import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
     const [isCreateRecipeOpen, setIsCreateRecipeOpen] = useState<boolean>(false);
-    const [pageNumber, setPageNumber] = useState<number>(0)
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
     const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>([{
@@ -66,14 +65,14 @@ const MyRecipes = () => {
     }]);
 
     useEffect(() => {
-        getRecipesRecipeContributors(pageNumber)
+        getRecipesRecipeContributors()
             .then(res => {
                 setRecipes(res.recipes);
             })
             .catch(err => {
                 toast.error(err);
             })
-    }, [pageNumber])
+    }, [])
 
     useEffect(() => {
         getNoRecipeMatchRecipes()
@@ -133,13 +132,6 @@ const MyRecipes = () => {
                 }]
             }])
     }, [])
-
-
-    window.onscroll = function(_) {
-        if ((window.innerHeight + window.scrollY) + 1000 >= document.body.offsetHeight) {
-            setPageNumber(pageNumber + 1);
-        }
-    };
 
     return (
     <React.Fragment>

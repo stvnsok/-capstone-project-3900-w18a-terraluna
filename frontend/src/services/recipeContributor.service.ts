@@ -19,10 +19,9 @@ export const getNoRecipeMatchRecipes = async (
 }
 
 export const getRecipesRecipeContributors = async (
-        pageNumber: number,
         query?: string
     ): Promise<RecipesRecipeContributorsApiResponse> => {
-    return (await api.get('/my_recipes', { params: { pageNumber, query } })).data
+    return (await api.get('/my_recipes', { params: { query: query ?? '' } })).data
 }
 
 export const createRecipe = async (
