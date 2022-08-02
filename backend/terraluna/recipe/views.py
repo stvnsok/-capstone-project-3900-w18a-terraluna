@@ -66,7 +66,7 @@ def ingredient_suggestions():
     return jsonify(ingredients=get_ingredient_suggestions(ingredients))
 
 
-@recipe_bp.route("/recipe", methods=["POST"])
+@recipe_bp.route("/my_recipes", methods=["POST"])
 @jwt_required()
 def create_recipe():
     """Create a new recipe draft.
