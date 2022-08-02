@@ -20,7 +20,7 @@ const NavBar = () => {
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
-        if (access_token) loginWithToken().then(res => {
+        if (access_token) loginWithToken(access_token).then(res => {
             setUsername(res.data.username)
         }).catch(() => toast.error("Could not log in"))
     }, [])
