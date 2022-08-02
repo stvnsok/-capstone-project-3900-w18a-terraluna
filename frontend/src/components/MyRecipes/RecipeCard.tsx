@@ -24,6 +24,7 @@ const RecipeCard = ({
     <div className="px-0.5 py-4">
       <h4 className='px-4'><b>{recipe.name}</b></h4>
       <div className='px-4 mt-5 flex'><HiOutlineClock size={24}/> <span className='ml-4'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
+      <div className='px-4 mt-5 flex'><HiOutlineClock size={24}/> <span className='ml-4'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
     </div>
   </div>
 }
