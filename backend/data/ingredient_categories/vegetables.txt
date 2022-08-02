@@ -1,0 +1,24 @@
+Vegetables
+garlic
+onion
+bell pepper
+carrot
+tomato
+potato
+cucumber
+spinach
+sweet potato
+broccoli
+pumpkin
+cabbage
+cauliflower
+asparagus
+kale
+arugula
+eggplant
+lettuce
+beetroot
+olives
+black olives
+bean sprouts
+yam

@@ -45,7 +45,9 @@ def handle_exception(e):
 
 
 from terraluna.auth.views import auth_bp
+from terraluna.explorer.views import explorer_bp
 from terraluna.recipe.views import recipe_bp
 
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(recipe_bp)
+app.register_blueprint(explorer_bp)
