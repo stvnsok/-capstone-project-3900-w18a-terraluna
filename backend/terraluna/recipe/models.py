@@ -79,12 +79,12 @@ class Recipe(db.Model):
                 in minutes. Defaults to None.
             meal_types (list of str, optional): Types of meal this recipe falls under.
                 Defaults to None.
-            diet_type (list of str, optional): Types of diet this recipe satisfies.
+            diet_types (list of str, optional): Types of diet this recipe satisfies.
                 Defaults to None.
             description (str, optional): Description of recipe. Defaults to None.
             instructions (list of str, optional): Recipe instructions. Defaults to None.
             photo_url (str, optional): URL for recipe photo. Defaults to None.
-            video_urls (list of str, optional): URL for recipe instruction videos. Defaults to None.
+            video_urls (list of str, optional): URLs for recipe instruction videos. Defaults to None.
             ingredients (list of dict, optional): Ingredients required for this recipe.
                 Defaults to None.
                     [
@@ -131,6 +131,79 @@ class Recipe(db.Model):
                 )
             )
             logger.debug("Added ingredient <%s> to recipe <%s>", ingredient["id"], recipe.id)  # type: ignore
+
+        db.session.commit()
+        return recipe
+
+    @staticmethod
+    def edit(
+        id,
+        name,
+        expected_duration_mins,
+        meal_types,
+        diet_types,
+        description,
+        instructions,
+        photo_url,
+        video_urls,
+        ingredients,
+    ):
+        """Edit an existing recipe.
+
+        Args:
+            id (int): ID of recipe to edit.
+            name (str): New recipe name.
+            expected_duration_mins (int): New estimated cooking time duration in minutes.
+            meal_types (list of str): New types of meal this recipe falls under.
+            diet_types (list of str): New types of diet this recipe satisfies.
+            description (str): New description of recipe.
+            instructions (list of str): New recipe instructions.
+            photo_url (str): New URL for recipe photo.
+            video_urls (list of str): New URLs for recipe instruction videos.
+            ingredients (list of dict): New ingredients required for this recipe.
+                    [
+                        {
+                            "id": int,
+                            "name": str,
+                            "quantity": int,
+                            "units": str
+                        },
+                        ...
+                    ]
+
+        Returns:
+            Recipe: The edited recipe model.
+        """
+        recipe = Recipe.query.filter_by(id=id).first()
+        recipe.name = name
+        recipe.expected_duration_mins = expected_duration_mins
+        recipe.meal_types = meal_types
+        recipe.diet_types = diet_types
+        recipe.description = description
+        recipe.instructions = instructions
+        recipe.photo_url = photo_url
+        recipe.video_urls = video_urls
+        db.session.commit()
+
+        if ingredients is None:
+            return recipe
+
+        # Drop old ingredients
+        db.session.query(RecipeIngredient).filter(
+            RecipeIngredient.recipe_id == recipe.id
+        ).delete()
+        db.session.commit()
+
+        # Add all new ingredients to session
+        for ingredient in ingredients:
+            db.session.add(
+                RecipeIngredient(
+                    recipe_id=recipe.id,
+                    ingredient_id=ingredient["id"],
+                    quantity=ingredient["quantity"],
+                    unit=ingredient["units"],
+                )
+            )
 
         db.session.commit()
         return recipe
