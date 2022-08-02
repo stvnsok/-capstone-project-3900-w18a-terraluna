@@ -6,14 +6,14 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MyRecipes from './components/MyRecipes/MyRecipes';
 import CreateRecipeCard from './components/NewRecipe/CreateRecipeCard';
-import RecipeSearchBar from './components/global/Search/RecipeSearchBar';
+import SearchBar from './components/global/SearchBar';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="bg-tl-inactive-brown min-h-screen min-w-full">
+        <SearchBar />
         <div className='fixed w-full z-[1000]'>
-          <RecipeSearchBar/>
           <ToastContainer
             position='top-center'
             autoClose={3000}
