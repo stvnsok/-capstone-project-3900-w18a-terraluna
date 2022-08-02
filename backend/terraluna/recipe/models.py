@@ -10,6 +10,8 @@ from .error import *
 class Ingredient(db.Model):
     """An ingredient model."""
 
+    __table_args__ = {"extend_existing": True}
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, nullable=False)
     recipes = db.relationship("RecipeIngredient", back_populates="ingredient")
@@ -36,6 +38,8 @@ class Ingredient(db.Model):
 
 class Recipe(db.Model):
     """A recipe model."""
+
+    __table_args__ = {"extend_existing": True}
 
     id = db.Column(db.Integer, primary_key=True)
     contributor = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -351,6 +355,8 @@ class RecipeIngredient(db.Model):
     the recipe.
     """
 
+    __table_args__ = {"extend_existing": True}
+
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"), nullable=False)
     ingredient_id = db.Column(
@@ -366,6 +372,8 @@ class RecipeIngredient(db.Model):
 
 class Comment(db.Model):
     """A comment/review on a recipe."""
+
+    __table_args__ = {"extend_existing": True}
 
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"), nullable=False)
