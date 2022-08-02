@@ -1,7 +1,7 @@
 from error import *
 
 
-def check_json(data, *args):
+def get_data(data, *args):
     if not data or any(data.get(arg) is None for arg in args):
         raise Error400
 

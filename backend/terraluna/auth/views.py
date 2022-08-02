@@ -51,7 +51,7 @@ def register():
     Generates a new access/refresh token pair.
     """
     data = request.get_json()
-    username, email, password = check_json(data, "username", "email", "password")
+    username, email, password = get_data(data, "username", "email", "password")
 
     # Register user
     user = User.register(username, email, password)
@@ -76,7 +76,7 @@ def login():
     Generates a new access/refresh token pair.
     """
     data = request.get_json()
-    username_or_email, password = check_json(data, "username_or_email", "password")
+    username_or_email, password = get_data(data, "username_or_email", "password")
 
     # Login user
     user = User.login(username_or_email, password)
@@ -111,7 +111,7 @@ def logout():
 def reset_username():
     """Reset a user's username to a valid unique username. Fresh access token required."""
     data = request.get_json()
-    new_username = check_json(data, "new_username")
+    (new_username,) = get_data(data, "new_username")
 
     # Reset username
     old_username = get_jwt_identity()
@@ -125,7 +125,7 @@ def reset_username():
 def reset_email():
     """Reset a user's email to a valid unique email. Fresh access token required."""
     data = request.get_json()
-    new_email = check_json(data, "new_email")
+    (new_email,) = get_data(data, "new_email")
 
     # Reset email
     username = get_jwt_identity()
@@ -139,7 +139,7 @@ def reset_email():
 def reset_password():
     """Reset a user's password to a valid password. Fresh access token required."""
     data = request.get_json()
-    old_password, new_password = check_json(data, "old_password", "new_password")
+    old_password, new_password = get_data(data, "old_password", "new_password")
 
     # Reset password
     username = get_jwt_identity()
