@@ -41,7 +41,7 @@ const SlideOutRecipe = ({
                         }
                     }}
                     text={"Publish"}
-                    className="mr-4 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
+                    className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                 />
                 <Button
                     onClick={() => {
@@ -56,7 +56,7 @@ const SlideOutRecipe = ({
                         }
                     }}
                     text={"Use As Template"}
-                    className="mr-4 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
+                    className="mr-4 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
                 />
                 <Button
                     onClick={() => {
@@ -71,7 +71,7 @@ const SlideOutRecipe = ({
                         }
                     }}
                     text={"Delete"}
-                    className="mr-16 border border-solid border-tl-active-red bg-tl-inactive-red px-6 py-3 rounded-md"
+                    className="mr-16 bg-tl-inactive-red px-6 py-3 rounded-md shadow-md"
                 />
                 
             </div>
