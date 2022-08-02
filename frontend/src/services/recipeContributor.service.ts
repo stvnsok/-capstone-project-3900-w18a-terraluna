@@ -45,7 +45,7 @@ export const getIngredients = async (
 export const getSuggestedIngredient = async (
     ingredients: number[]
 ): Promise<{ ingredients: Ingredient[] }> => {
-    return (await api.get('/recipe/suggested_ingredients', {params: {ingredients: JSON.stringify({ingredients: ingredients})}})).data
+    return (await api.get('/recipe/ingredient_suggestions', {params: {ingredients: JSON.stringify({ingredients: ingredients})}})).data
 }
 
 
