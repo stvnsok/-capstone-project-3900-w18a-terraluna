@@ -25,17 +25,23 @@
 | (outputs only) named exactly **comments** | List of dictionaries, where each dictionary contains types { comment_id, name, message, time } |
 
 ### Interface
-| HTTP Route | HTTP Method | Parameters | Return type | Exceptions | Description |
+| HTTP Route | HTTP Method | Description | Args/Form/JSON | Response | Errors |
 |---|---|---|---|---|---|
-| /ingredients | GET | { query } | { ingredients } |  |  |
-| /recipe | POST | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } | { recipe_id, name, recipePhoto_url, published, description } |  |  |
-| /my_recipes | GET | {} | { recipes } |  |  |
-| /my_recipes/{id} | GET | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } |  |  |
-| /my_recipes/{id} | PUT | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } | { recipe_id, name, recipePhoto_url, published, description } |  |  |
-| /my_recipes/{id} | DELETE | {} | { recipe_id } |  |  |
-| /my_recipe/{id}/copy | POST | {} | { recipe_id, name, recipePhoto_url, published, description } |  |  |
-| /my_recipe/{id}/publish | PUT | { recipe_id } | { recipe_id, name, recipePhoto_url, published, description } |  |  |
-| recipe_explorers/ingredient_categories | GET | {} | { ingredientCategories } |  |  |
-| recipe_explorers/search | GET | { ...smth... } | { recipes } |  |  |
-| recipe_explorers/recipe/view | GET | { recipe_id } | { view_recipe_format including comments } |  |  |
-| recipe_explorers/recipe/comment | POST | { recipe_id, message } | { comment_id } |  |  |
+| **/ingredients** | GET | Return up to 10 matching ingredients (based on frequency in recipes). Empty query returns up to 10 most frequently used ingredients | Args<pre>{<br>  "query": "wa"<br>}</pre> | <pre>{<br>    "ingredients": [<br>        {"id": 1, "name": "water"},<br>        ...<br>    ]<br>}</pre> | |
+| /suggest_ingredients | GET | | { "ingredients": [ingredient_id] } | { ingredients } | |
+| **/recipe** | POST | Create a new recipe *draft* | Form<pre>{<br>    "name": "Pasta",<br>    "description": "Pasta recipe",<br>    "expectedDuration": "1922",<br>    "mealType": {"mealType": ["lunch", "dinner"]},<br>    "dietType": {"dietType": ["vegetarian", "nut-free"]},<br>    "ingredients": {"ingredients": [<br>        {<br>            "id": 1,<br>            "name": "Water",<br>            "quantity": 5,<br>            "units": "ml"<br>        },<br>        ...<br>    ]},<br>    "instructions": {"instructions": ["Step 1", "Step 2", "Step 3", ...]}<br>}</pre>Files<pre>{<br>    "image": (binary),<br>    "video0": (binary),<br>    "video2": (binary), /* video for instruction step 3 */<br>    ...<br>}</pre> | <pre>{<br>    "recipe": {<br>        "id": 1,<br>        "status": "Draft",<br>        "name": "Pasta",<br>        "cookTime": 50,<br>        "mealType": ["lunch"],<br>        "dietType": ["vegan"],<br>        "description": "Pasta recipe",<br>        "instructions": ["Step 1", "Step 2"],<br>        "imageUrl": "/home/bob/images/cat.jpg"<br>    }<br>}</post> | |
+| /my_recipes | GET | | {} | { recipes } | |
+| /my_recipes/{id} | GET | | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } | |
+| /my_recipes/{id} | PUT | | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients } | { recipe_id, name, recipePhoto_url, published, description } | |
+| /my_recipes/{id} | DELETE | | {} | { recipe_id } | |
+| /my_recipe/{id}/copy | POST | | {} | { recipe_id, name, recipePhoto_url, published, description } | |
+| /my_recipe/{id}/publish | PUT | | {} | { recipe_id, name, recipePhoto_url, published, description } | |
+| /recipe_explorers/ingredient_categories | GET | | {} | { ingredientCategories } | |
+| /recipe_explorers/pantry | GET | | {} | { pantry } | |
+| /recipe_explorers/pantry | PUT | | { pantry } | { pantry } | |
+| /recipe_explorers/search | GET | | { "ingredients":[ingredient_id], "mealtype":[mealType], "dietType":[dietType], expectedDuration} | { recipes } | |
+| /recipe_explorers/recipe/{id} | GET | | {} | { name, recipePhoto_url, recipeVideo_url, description, mealType, dietType, recipeInstructions, expectedDuration, requiredIngredients, comments } | |
+| /recipe_explorers/recipe/{id}/comment | POST | | { message } | { comment_id } | |
+| /recipe_explorers/savedRecipes | GET | | {} | { recipes } | |
+| /recipe_explorers/savedRecipes/{id} | PUT | | {} | { recipe_id } | |
+| /recipe_explorers/savedRecipes/{id} | DELETE | | {} | { recipe_id } | |
