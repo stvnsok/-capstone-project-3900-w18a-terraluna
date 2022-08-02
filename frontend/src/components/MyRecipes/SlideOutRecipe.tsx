@@ -42,15 +42,6 @@ const SlideOutRecipe = ({
             quantity: 30,
             units: 'leg'
         }],
-        steps: [{
-            instruction: 'step1',
-            videoUrl: 'hi'
-        }, {
-            instruction: 'step2',
-        }, {
-            instruction: 'step3',
-            videoUrl: 'hi'
-        }],
         reviews: [{
             review: "This was a good recipe",
             stars: 4

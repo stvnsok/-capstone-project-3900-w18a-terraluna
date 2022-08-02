@@ -3,8 +3,10 @@ import { HiOutlineClock } from 'react-icons/hi';
 
 const RecipeCard = ({
     recipe,
+    onClick,
 }: {
     recipe: Recipe;
+    onClick: () => void
 }) => {
 
     const minutesToHoursPipe = (time: number) => {
@@ -13,9 +15,11 @@ const RecipeCard = ({
         return `${hours < 10 ? '0' : '' }${hours}:${minutes < 10 ? '0' : ''}${minutes} Hours`;
     }
 
-    return <div className=" shadow-md hover:shadow-lg max-w-xs h-[500px] rounded-md bg-tl-inactive-white" style={{
+    return <div className=" shadow-md hover:shadow-lg max-w-xs h-[500px] rounded-md bg-tl-inactive-white cursor-pointer" style={{
         transition: '0.3s'
-    }}>
+    }}
+        onClick={onClick}
+    >
     <img src={`http://localhost:5000/uploads?name=${recipe.imageUrl}`} alt="recipe" style={{
         width: '100%',
         height: '50%',

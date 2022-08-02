@@ -172,16 +172,17 @@ const MyRecipes = () => {
         </div>
         <div className={`grid grid-flow-col gap-6 pl-10`}>
             {recipes && recipes.map(recipe => { return (
-                <div
-                    className='cursor-pointer'
-                    onClick={() => {
-                        setSlideOutRecipe(recipe)
-                        setIsCreateRecipeOpen(false)
-                    }}
-                >
-                    <RecipeCard 
-                        recipe={recipe}
-                    />
+                <div>
+                    <div >
+                        <RecipeCard 
+                            recipe={recipe}
+                            onClick={() => {
+                                setSlideOutRecipe(recipe)
+                                setIsCreateRecipeOpen(false)
+                            }}
+                        />
+                        
+                    </div>
                 </div>
             )})}
         </div>
