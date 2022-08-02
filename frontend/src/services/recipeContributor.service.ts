@@ -4,7 +4,7 @@ import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NewRecipeApiResponse, N
 export const createRecipeFromTemplate = async (
     id: number
 ): Promise<CopyRecipeApiResponse> => {
-    return (await api.post(`/recipe/${id}/copy`)).data
+    return (await api.post(`/my_recipes/${id}/copy`)).data
 }
 
 export const deleteRecipe = async (
@@ -27,7 +27,7 @@ export const getRecipesRecipeContributors = async (
 export const createRecipe = async (
     formData: FormData
 ): Promise<NewRecipeApiResponse> => {
-    return (await api.post('/recipe', formData)).data
+    return (await api.post('/my_recipes', formData)).data
 }
 
 export const getRecipe = async (
