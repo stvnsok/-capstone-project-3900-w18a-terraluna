@@ -1,8 +1,10 @@
 import json
+import os
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
+from werkzeug.utils import secure_filename
 
 from app import app, db, logger
 from error import *
@@ -54,27 +56,67 @@ def create_recipe():
         meal_types,
         diet_types,
         description,
-        instruction,
+        instructions,
         ingredients,
     ) = get_data(
         data,
         "name",
-        "expectedDuration",
-        "mealType",
-        "dietType",
+        "expectedDuration",  # "182" or ""
+        "mealType",  # "{"mealType": ['lunch', 'dinner']}"
+        "dietType",  # "{"dietType": ['vegetarian', 'nut-free']}"
         "description",
-        "instruction",
-        "ingredients",
+        "instructions",  # "{"instructions": ['step 1', 'step 2']}"
+        "ingredients",  # "{"ingredients": [{"id": 1, "name": "Water", "quantity": 1, "units": "L"}]}"
     )
 
+    # Type changes
+    name = name or None
+    expected_duration_mins = (
+        int(expected_duration_mins) if expected_duration_mins else None
+    )
+    meal_types = json.loads(meal_types)["mealType"] or None
+    diet_types = json.loads(diet_types)["dietType"] or None
+    description = description or None
+    instructions = json.loads(instructions)["instructions"] or None
+    ingredients = json.loads(ingredients)["ingredients"] or None
+
+    # Save files
     files = request.files
-    (photo_file,) = get_data(files, "image")
 
-    for file in files:
-        pass
+    photo_url = None
+    video_urls = [""] * len(instructions) if instructions else []
+    for input_name in files:
+        # Input tag name: "image", "video0"
+        # FileStorage.filename: original filenames
+        file = files[input_name]
+        if not file.filename:
+            continue  # TODO
 
-    # Retrieve current user from token
-    contributor = username_to_user_id(get_jwt_identity())
+        filename = secure_filename(file.filename)
+        if input_name == "image":
+            photo_url = os.path.join(app.config["PHOTO_UPLOAD_FOLDER"], filename)
+            file.save(photo_url)
+        else:
+            video_url = os.path.join(app.config["VIDEO_UPLOAD_FOLDER"], filename)
+            video_urls[int(input_name[-1])] = video_url
+            file.save(video_url)
+
+    # Create recipe
+    recipe = Recipe.create(
+        contributor=username_to_user_id(get_jwt_identity()),
+        status="Draft",
+        name=name,
+        expected_duration_mins=expected_duration_mins,
+        meal_types=meal_types,
+        diet_types=diet_types,
+        description=description,
+        instructions=instructions,
+        photo_url=photo_url,
+        video_urls=video_urls or None,
+        ingredients=ingredients,
+    )
+
+    return jsonify(recipe=recipe.jsonify())
 
 
 ###############################################################################
