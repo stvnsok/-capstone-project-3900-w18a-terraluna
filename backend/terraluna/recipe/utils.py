@@ -82,12 +82,12 @@ def get_ingredient_suggestions(ingredients):
 
     filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
     suggested_recipe_ingredients = {
-        recipe_ingredient.ingredient_id
+        recipe_ingredient.ingredient
         for recipe_ingredient in RecipeIngredient.query.filter(or_(*filter_list)).all()
     }
 
     return [
-        ingredient
+        {"id": ingredient.id, "name": ingredient.name}
         for ingredient in suggested_recipe_ingredients
         if ingredient not in ingredients
     ][
