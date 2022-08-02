@@ -30,7 +30,7 @@ const MyRecipes = () => {
         cookTime: 300,
         mealType: ['Dinner', 'Lunch', 'Breakfast'],
         dietType: ['Vegetarian'],
-        status: "Draft"
+        status: "Published"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
@@ -38,7 +38,7 @@ const MyRecipes = () => {
         cookTime: 300,
         mealType: ['Dinner'],
         dietType: ['Vegetarian'],
-        status: "Draft"
+        status: "Template"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
@@ -149,6 +149,7 @@ const MyRecipes = () => {
                 <Button
                     onClick={() => {
                         setIsCreateRecipeOpen(true);
+                        setSlideOutRecipe(undefined);
                     }}
                     className="w-10 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md"
                     text={<HiPlus size={22} className="m-auto"/>}
@@ -181,9 +182,10 @@ const MyRecipes = () => {
             {recipes && recipes.map(recipe => { return (
                 <div
                     className='cursor-pointer'
-                    onClick={() =>
+                    onClick={() => {
                         setSlideOutRecipe(recipe)
-                    }
+                        setIsCreateRecipeOpen(false)
+                    }}
                 >
                     <RecipeCard 
                         recipe={recipe}

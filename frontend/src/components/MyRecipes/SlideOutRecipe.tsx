@@ -1,5 +1,6 @@
 import React from 'react'
-import { HiX } from 'react-icons/hi';
+import { HiOutlineClock, HiOutlineCreditCard, HiOutlineXCircle, HiX } from 'react-icons/hi';
+import { AiOutlineCheckCircle, AiOutlineCopyrightCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { createRecipeFromTemplate, deleteRecipe, publishRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
@@ -16,6 +17,12 @@ const SlideOutRecipe = ({
         const hours = Math.floor(time/60);
         const minutes = time%60;
         return `${hours < 10 ? '0' : '' }${hours}:${minutes < 10 ? '0' : ''}${minutes} Hours`;
+    }
+
+    const getStatusIcon = (status: Recipe["status"]) => {
+        if (status === 'Draft') return <HiOutlineXCircle size={32}/>    
+        if (status === 'Published') return <AiOutlineCheckCircle size={32}/>
+        if (status === 'Template') return <AiOutlineCopyrightCircle size={32}/>
     }
 
     return <div className=" bg-tl-inactive-brown min-h-full absolute top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
@@ -64,6 +71,7 @@ const SlideOutRecipe = ({
                             deleteRecipe(recipe.id)
                                 .then(_ => {
                                     toast.success('Successfully deleted ' + recipe.name)
+                                    onClose();
                                 })
                                 .catch(err => {
                                     toast.error(err)
@@ -76,7 +84,35 @@ const SlideOutRecipe = ({
                 
             </div>
         </div>
-        {minutesToHoursPipe(100)}
+        {recipe && <div className='p-10 grid grid-cols-5 gap-5'>
+            <div>
+                <img width={400} height={400} src={recipe.imageUrl} alt="recipeImage"/>
+            </div>
+            <div className='col-span-1'>
+                <div>
+                    <div className='font-semibold text-3xl'>Details</div>
+                    <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{recipe.name}</span></div>
+                    <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
+                    <div className='mt-8 flex'>{getStatusIcon(recipe.status)}<span className='ml-4 text-xl'>{recipe.status}</span></div>
+                </div>
+            </div>
+            <div className='col-span-1'>
+                <div>
+                    <div className='font-semibold text-3xl'>Meal Types</div>
+                    <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{recipe.name}</span></div>
+                    <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
+                    <div className='mt-8 flex'>{getStatusIcon(recipe.status)}<span className='ml-4 text-xl'>{recipe.status}</span></div>
+                </div>
+            </div>
+            <div className='col-span-1'>
+                <div>
+                    <div className='font-semibold text-3xl'>Diet Types</div>
+                    <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{recipe.name}</span></div>
+                    <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(recipe.cookTime)}</span></div>
+                    <div className='mt-8 flex'>{getStatusIcon(recipe.status)}<span className='ml-4 text-xl'>{recipe.status}</span></div>
+                </div>
+            </div>
+        </div>}
     </div>
 }
 
