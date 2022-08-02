@@ -135,10 +135,25 @@ class Recipe(db.Model):
 
     @staticmethod
     def delete(id):
+        """Delete a recipe from the database.
+
+        Args:
+            id (int): Id of recipe to delete
+        """
         db.session.query(RecipeIngredient).filter(
             RecipeIngredient.recipe_id == id
         ).delete()
         db.session.query(Recipe).filter(Recipe.id == id).delete()
+        db.session.commit()
+
+    @staticmethod
+    def publish(id):
+        """Publish a draft recipe.
+
+        Args:
+            id (int): Id of recipe draft to publish.
+        """
+        Recipe.query.filter_by(id=id).first().status = "Published"
         db.session.commit()
 
     def jsonify(self):

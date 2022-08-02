@@ -48,6 +48,10 @@ def ingredients():
 
 @recipe_bp.route("/recipe/ingredient_suggestions", methods=["GET"])
 def ingredient_suggestions():
+    """Suggest ingredients to add to a recipe. An ingredient is suggested
+    if it is not in the current recipe but in another recipe that contains all
+    the current ingredients and more.
+    """
     data = request.args
     (ingredients,) = get_data(data, "ingredients")
     ingredients = json.loads(ingredients)["ingredients"]
@@ -129,15 +133,40 @@ def create_recipe():
         ingredients=ingredients,
     )
 
-    return jsonify(recipe=recipe.jsonify())
+    return jsonify(recipe=recipe.jsonify()), 201
 
 
-@recipe_bp.route("/recipe/<id>", methods=["DELETE"])
+@recipe_bp.route("/my_recipes/<id>", methods=["DELETE"])
 @jwt_required()
 def delete_recipe(id):
     """Delete a recipe."""
     Recipe.delete(id)
     return ("", 204)
+
+
+@recipe_bp.route("/my_recipes/<id>", methods=["PUT"])
+@jwt_required()
+def publish_recipe(id):
+    """Publish a recipe. Recipes cannot be published unless all entries are completed,
+    except videos per instruction are optional."""
+    pass
+
+
+@recipe_bp.route("/my_recipes", methods=["GET"])
+@jwt_required()
+def my_recipes():
+    """Get all of the user's recipes with an optional query on the recipe name."""
+    data = request.args
+    (query,) = get_data(data, "query")
+
+    recipes = (
+        Recipe.query.filter_by(contributor=username_to_user_id(get_jwt_identity()))
+        .filter(Recipe.name.ilike(f"%{''.join(query.split())}%"))
+        .all()
+    )
+
+    recipe_details = [recipe.jsonify() for recipe in recipes]
+    return jsonify(recipes=recipe_details)
 
 
 ###############################################################################
