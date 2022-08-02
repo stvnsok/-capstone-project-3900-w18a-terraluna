@@ -38,7 +38,7 @@ def get_ready_recipes():
         ]
 
         if not absent_necessary_ingredients:
-            ready_recipes.append(recipe.id)
+            ready_recipes.append(recipe)
 
     return jsonify(recipes=[recipe.jsonify() for recipe in ready_recipes])
 
