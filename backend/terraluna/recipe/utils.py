@@ -9,6 +9,18 @@ from .error import *
 from .models import *
 
 
+def username_to_user_id(username):
+    """Given a username, returns the corresponding user id.
+
+    Args:
+        username (str): Username to convert.
+
+    Returns:
+        int: Corresponding id of given username.
+    """
+    return User.query.filter_by(username=username).first().id
+
+
 def ingredient_search(query):
     return Ingredient.query.filter(
         Ingredient.name.ilike(f"%{''.join(query.split())}%")
@@ -32,18 +44,6 @@ def most_popular_n_ingredients(n):
             ingredient_counts, key=ingredient_counts.get, reverse=True  # type: ignore
         )
     ][:n]
-
-
-def username_to_user_id(username):
-    """Given a username, returns the corresponding user id.
-
-    Args:
-        username (str): Username to convert.
-
-    Returns:
-        int: Corresponding id of given username.
-    """
-    return User.query.filter_by(username=username).first().id
 
 
 def get_ingredient_suggestions(ingredients):

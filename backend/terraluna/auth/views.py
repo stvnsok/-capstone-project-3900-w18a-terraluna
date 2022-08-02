@@ -109,7 +109,7 @@ def logout():
     type = token["type"]
     RevokedToken.create(jti, type)
     logger.debug("User logged out (%s): %s", type, username)  # type: ignore
-    return {}
+    return ("", 204)
 
 
 @auth_bp.route("/reset/username", methods=["PUT"])
@@ -122,7 +122,6 @@ def reset_username():
     # Reset username
     old_username = get_jwt_identity()
     user = User.reset_username(old_username, new_username)
-
     return jsonify(username=user.username)
 
 
@@ -136,8 +135,7 @@ def reset_email():
     # Reset email
     username = get_jwt_identity()
     User.reset_email(username, new_email)
-
-    return {}
+    return ("", 204)
 
 
 @auth_bp.route("/reset/password", methods=["PUT"])
@@ -150,8 +148,7 @@ def reset_password():
     # Reset password
     username = get_jwt_identity()
     User.reset_password(username, old_password, new_password)
-
-    return {}
+    return ("", 204)
 
 
 # TODO: This is a test route, delete later

@@ -46,6 +46,15 @@ def ingredients():
     )
 
 
+@recipe_bp.route("/recipe/ingredient_suggestions", methods=["GET"])
+def ingredient_suggestions():
+    data = request.args
+    (ingredients,) = get_data(data, "ingredients")
+    ingredients = json.loads(ingredients)["ingredients"]
+    ingredients = [int(id) for id in ingredients]
+    return jsonify(ingredients=get_ingredient_suggestions(ingredients))
+
+
 @recipe_bp.route("/recipe", methods=["POST"])
 @jwt_required()
 def create_recipe():
@@ -123,67 +132,15 @@ def create_recipe():
     return jsonify(recipe=recipe.jsonify())
 
 
-@recipe_bp.route("/recipe/ingredient_suggestions", methods=["GET"])
-def ingredient_suggestions():
-    data = request.args
-    (ingredients,) = get_data(data, "ingredients")
-    ingredients = json.loads(ingredients)["ingredients"]
-    ingredients = [int(id) for id in ingredients]
-    return jsonify(ingredients=get_ingredient_suggestions(ingredients))
+@recipe_bp.route("/recipe/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_recipe(id):
+    """Delete a recipe."""
+    Recipe.delete(id)
+    return ("", 204)
 
 
 ###############################################################################
-
-# @recipe_bp.route("/recipe/new", methods=["POST"])
-# @jwt_required(fresh=True)
-# def new_recipe():
-#     """Add a new recipe and return new recipe_id"""
-
-#     # Get dict of input from front end
-#     data = request.get_json()
-
-#     # Check for Malformed Requests
-#     if not data:
-#         raise Error400
-
-#     name = data.get("name")
-#     recipe_photo = data.get("recipePhoto_url")
-#     recipe_video = data.get("recipeVideo_url")
-#     description = data.get("description")
-#     meal_type = data.get("mealType")
-#     diet_type = data.get("dietType")
-#     recipe_instructions = data.get("recipeInstructions")
-#     timer_duration = data.get("timerDuration")
-#     timer_units = data.get("timerUnits")
-#     required_ingredients = data.get("requiredIngredients")
-#     logger.debug("Data payload retrieved")  # type: ignore
-
-#     # Check for valid recipe name
-#     if not verify_recipe_name(name):
-#         raise InvalidRecipeNameFormatError
-#     else:
-#         name = name.strip()
-
-#     # Retrieve current user from token
-#     recipe_contributor = username_to_user_id(get_jwt_identity())
-#     logger.debug("User retrieved")  # type: ignore
-
-#     recipe = Recipe.create(
-#         name=name,
-#         recipe_contributor=recipe_contributor,
-#         recipe_photo=recipe_photo,
-#         recipe_video=recipe_video,
-#         description=description,
-#         meal_type=meal_type,
-#         diet_type=diet_type,
-#         recipe_instructions=recipe_instructions,
-#         timer_duration=timer_duration,
-#         timer_units=timer_units,
-#         required_ingredients=required_ingredients,
-#     )
-
-#     logger.debug("Created recipe: %s", recipe)  # type: ignore
-#     return jsonify(recipe_id=recipe.id)
 
 
 # @recipe_bp.route("/recipes", methods=["GET"])
