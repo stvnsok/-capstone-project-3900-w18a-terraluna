@@ -48,6 +48,11 @@ export const getSuggestedIngredient = async (
     return (await api.get('/recipe/ingredient_suggestions', {params: {ingredients: JSON.stringify({ingredients: ingredients})}})).data
 }
 
+export const getMedia = async (
+    url: string
+): Promise<any> => {
+    return (await api.get('/uploads', {params: { name: url }})).data
+}
 
 
 //1. How many recipes does the current ingredient set match - A;

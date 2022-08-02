@@ -19,7 +19,6 @@ recipe_bp = Blueprint("recipe_bp", __name__)
 
 
 @recipe_bp.route("/uploads", methods=["GET"])
-@jwt_required()
 def get_upload():
     data = request.args
     (name,) = get_data(data, "name")

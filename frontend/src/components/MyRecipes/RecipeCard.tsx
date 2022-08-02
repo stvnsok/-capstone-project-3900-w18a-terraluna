@@ -16,7 +16,7 @@ const RecipeCard = ({
     return <div className=" shadow-md hover:shadow-lg max-w-xs h-[500px] rounded-md bg-tl-inactive-white" style={{
         transition: '0.3s'
     }}>
-    <img src={recipe.imageUrl} alt="recipe" style={{
+    <img src={`http://localhost:5000/uploads?name=${recipe.imageUrl}`} alt="recipe" style={{
         width: '100%',
         height: '50%',
         borderRadius: '6px 6px 0px 0px'
