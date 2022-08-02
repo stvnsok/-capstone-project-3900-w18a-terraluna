@@ -213,7 +213,7 @@ class Recipe(db.Model):
         """Delete a recipe from the database.
 
         Args:
-            id (int): Id of recipe to delete
+            id (int): Id of recipe to delete.
         """
         db.session.query(RecipeIngredient).filter(
             RecipeIngredient.recipe_id == id
@@ -253,6 +253,43 @@ class Recipe(db.Model):
         recipe.status = "Published"
         db.session.commit()
         return recipe
+
+    @staticmethod
+    def copy(id):
+        """Copy a recipe.
+
+        Recipe name is appended with " Copy" and status is set to "Template".
+
+        Args:
+            id (int): Id of recipe to copy.
+
+        Returns:
+            Recipe: The copied recipe model.
+        """
+        source = Recipe.query.filter_by(id=id).first()
+        ingredients = [
+            {
+                "id": ingredient.ingredient_id,
+                "name": ingredient.ingredient.name,
+                "quantity": ingredient.quantity,
+                "units": ingredient.unit,
+            }
+            for ingredient in source.ingredients
+        ]
+
+        return Recipe.create(
+            contributor=source.contributor,
+            status="Template",
+            name=source.name + " Copy",
+            expected_duration_mins=source.expected_duration_mins,
+            meal_types=source.meal_types,
+            diet_types=source.diet_types,
+            description=source.description,
+            instructions=source.instructions,
+            photo_url=source.photo_url,
+            video_urls=source.video_urls,
+            ingredients=ingredients,
+        )
 
     def jsonify(self):
         return {
