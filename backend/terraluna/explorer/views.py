@@ -170,11 +170,7 @@ def add_recipe_review(id):
 def get_recipe_favourites():
     """Return a list of all recipes saved by the user."""
     user_id = username_to_user_id(get_jwt_identity())
-
-    saved_recipes = [
-        saved_recipe.recipe_id
-        for saved_recipe in UserSavedRecipes.query.filter_by(user_id=user_id).all()
-    ]
+    saved_recipes = UserSavedRecipes.query.filter_by(user_id=user_id).all()
     return jsonify(recipes=[recipe.jsonify() for recipe in saved_recipes])
 
 
