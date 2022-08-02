@@ -318,8 +318,6 @@ class Recipe(db.Model):
             for recipe_ingredient in self.ingredients
         ]
 
-        print(self.instructions)
-        print(self.video_urls)
         if self.instructions:
             steps = [
                 {"instruction": self.instructions[i], "videoUrl": self.video_urls[i]}
