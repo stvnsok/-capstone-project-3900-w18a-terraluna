@@ -3,16 +3,16 @@ import { BsCloudUpload } from 'react-icons/bs';
 import { HiOutlinePlusCircle, HiOutlineTrash, HiXCircle } from 'react-icons/hi';
 import TLSelect from '../global/AsyncSelect';
 import TextInput from '../global/TextInput';
-import { createRecipe, getIngredients } from '../../services/recipeContributor.service';
+import { createRecipe, getIngredients, getSuggestedIngredient } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import { toast } from 'react-toastify';
 
-type IngredientInput = Partial<Ingredient> & {
+export type IngredientDetails = Partial<Ingredient> & {
     quantity?: number;
     units?: string;
 }
 
-interface Step {
+export interface Step {
     instructions: string;
     video?: File;
 }
@@ -25,7 +25,7 @@ export default function CreateRecipe ({closeFunction}: {
     const [preview, setPreview] = useState<string>();
     const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
     const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
-    const [ingredients, setIngredients] = useState<IngredientInput[]>([{
+    const [ingredients, setIngredients] = useState<IngredientDetails[]>([{
         name: undefined,
         id: -1
     }]);
@@ -34,7 +34,13 @@ export default function CreateRecipe ({closeFunction}: {
     const [hours, setHours] = useState<number | ''>('')
     const [minutes, setMinutes] = useState<number | ''>('')
     const [steps, setSteps] = useState<Step[]>([])
-    // const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([]);
+    const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([{
+        id: 1,
+        name: "Water"
+    }, {
+        id: 2, 
+        name: "Chicken"
+    }]);
 
     const payload = () => {
         const formData = new FormData();
@@ -81,6 +87,13 @@ export default function CreateRecipe ({closeFunction}: {
           setPreview('');
         }
       }, [image]);
+
+    useEffect(() => {
+        const validIngredients = ingredients.filter(ingredients => !!ingredients.id && ingredients.id !== -1 )
+        getSuggestedIngredient(validIngredients.map(ingredient => { return ingredient.id! }))
+            .then(res => setRecommendedIngredients(res.ingredients))
+            .catch(() => console.error("Couldn't get suggested ingredient"))
+    }, [ingredients])
 
 
     return <React.Fragment>
@@ -325,8 +338,21 @@ export default function CreateRecipe ({closeFunction}: {
                         }}
                     >
                         <HiOutlinePlusCircle className='text-tl-active-green inline' size={40}/>
-                        <span className=' text-lg ml-2 text-tl-active-green'>Add Ingredient!</span>
+                        <span className=' text-lg ml-2 text-tl-active-green'>Add Ingredient! </span>
                     </span>
+                    {recommendedIngredients.length > 0 && <span className='ml-2'>Do you want to add? -</span>}
+                    {recommendedIngredients && recommendedIngredients.map(ingredient => {return <div 
+                        className='inline bg-tl-inactive-green text-tl-inactive-black rounded-sm px-2 py-1 hover:bg-tl-active-green hover:text-tl-active-grey cursor-pointer ml-2'
+                        onClick={() => {
+                            setIngredients(prev => [...prev, {
+                                id: ingredient.id,
+                                name: ingredient.name
+                            }])
+                            setRecommendedIngredients([])
+                        }}
+                    >
+                        {ingredient.name}
+                    </div>})}
                 </div>
                 <label htmlFor = 'Instruction'> Recipe Instructions</label>
                 {steps && steps.map((step, index) => {

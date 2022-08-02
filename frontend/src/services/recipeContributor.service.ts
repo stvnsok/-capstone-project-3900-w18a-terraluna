@@ -42,6 +42,12 @@ export const getIngredients = async (
     return (await api.get('/ingredients', {params: {query}})).data
 }
 
+export const getSuggestedIngredient = async (
+    ingredients: number[]
+): Promise<{ ingredients: Ingredient[] }> => {
+    return (await api.get('/recipe/suggested_ingredients', {params: {ingredients: JSON.stringify({ingredients: ingredients})}})).data
+}
+
 
 
 //1. How many recipes does the current ingredient set match - A;
@@ -49,3 +55,5 @@ export const getIngredients = async (
 // New Recipes Unlocked
 // NumberOfRecipesMatched(Ingedients[]) => number
 // 
+//1. Find Recipes where current Ingredients is a subset of those recipes' ingredients
+//2. Find most common ingre
