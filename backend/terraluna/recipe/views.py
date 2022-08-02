@@ -18,9 +18,11 @@ recipe_bp = Blueprint("recipe_bp", __name__)
 """Blueprint: A Blueprint for all recipe and ingredient routes."""
 
 
-@recipe_bp.route("/uploads/<name>", methods=["GET"])
+@recipe_bp.route("/uploads", methods=["GET"])
 @jwt_required()
-def get_upload(name):
+def get_upload():
+    data = request.args
+    (name,) = get_data(data, "name")
     return send_file(name)
 
 
