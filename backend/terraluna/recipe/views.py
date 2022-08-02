@@ -155,6 +155,7 @@ def get_recipe(id):
 @jwt_required()
 def edit_recipe(id):
     """Edit a recipe."""
+    # TODO: refactor this
     data = request.form
     (
         name,
@@ -190,8 +191,8 @@ def edit_recipe(id):
     # TODO: improvement delete old files
     files = request.files
 
-    photo_url = None
-    video_urls = [""] * len(instructions) if instructions else []
+    photo_url = Recipe.query.filter_by(id=id).first().photo_url
+    video_urls = Recipe.query.filter_by(id=id).first().video_urls
     for input_name in files:
         # Input tag name: "image", "video0"
         # FileStorage.filename: original filenames
@@ -243,6 +244,24 @@ def publish_recipe(id):
 @recipe_bp.route("/my_recipes/<id>/copy", methods=["POST"])
 @jwt_required()
 def copy_recipe(id):
+    """Copy a recipe."""
+    # TODO: refactor this
+    # source = Recipe.query.filter_by(id=id).first()
+    # recipe = Recipe.create(
+    #     contributor=username_to_user_id(get_jwt_identity()),
+    #     status="Draft",
+    #     name=name,
+    #     expected_duration_mins=expected_duration_mins,
+    #     meal_types=meal_types,
+    #     diet_types=diet_types,
+    #     description=description,
+    #     instructions=instructions,
+    #     photo_url=photo_url,
+    #     video_urls=video_urls or None,
+    #     ingredients=ingredients,
+    # )
+
+    # return jsonify(recipe=recipe.jsonify()), 201
     pass
 
 
