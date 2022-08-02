@@ -36,13 +36,13 @@ class Recipe(db.Model):
     status = db.Column(db.Text, nullable=False)  # draft, template, published
 
     name = db.Column(db.Text, nullable=False)
-    expected_duration = db.Column(db.Integer)  # minutes
-    meal_type = db.Column(db.ARRAY(db.Text))  # breakfast, lunch, dinner, ...
+    expected_duration_mins = db.Column(db.Integer)  # minutes
+    meal_types = db.Column(db.ARRAY(db.Text))  # breakfast, lunch, dinner, ...
+    diet_types = db.Column(db.ARRAY(db.Text))  # vegan, vegetarian, ...
     description = db.Column(db.Text)
-    diet_type = db.Column(db.ARRAY(db.Text))  # vegan, vegetarian, ...
-    instructions = db.Column(db.Text)
+    instructions = db.Column(db.ARRAY(db.Text))
     photo_url = db.Column(db.Text)
-    video_url = db.Column(db.Text)
+    video_urls = db.Column(db.ARRAY(db.Text))  # one per instruction
 
     ingredients = db.relationship("RecipeIngredient", back_populates="recipe")
 
@@ -51,13 +51,13 @@ class Recipe(db.Model):
         contributor,
         status,
         name,
-        expected_duration=None,
-        meal_type=None,
+        expected_duration_mins=None,
+        meal_types=None,
+        diet_types=None,
         description=None,
-        diet_type=None,
         instructions=None,
         photo_url=None,
-        video_url=None,
+        video_urls=None,
         ingredients=None,
     ):
         """Create a new recipe model and add it to the database.
@@ -96,13 +96,13 @@ class Recipe(db.Model):
             contributor=contributor,
             status=status,
             name=name,
-            expected_duration=expected_duration,
-            meal_type=meal_type,
+            expected_duration_mins=expected_duration_mins,
+            meal_types=meal_types,
+            diet_types=diet_types,
             description=description,
-            diet_type=diet_type,
             instructions=instructions,
             photo_url=photo_url,
-            video_url=video_url,
+            video_urls=video_urls,
         )
         db.session.add(recipe)
         db.session.commit()
@@ -119,7 +119,7 @@ class Recipe(db.Model):
                     # TODO: what if ingredient id does not exist
                     ingredient_id=ingredient["ingredient_id"],
                     quantity=ingredient["quantity"],
-                    unit=ingredient["unit"],
+                    unit=ingredient["units"],
                 )
             )
             logger.debug("Added ingredient <%s> to recipe <%s>", ingredient["ingredient_id"], recipe.id)  # type: ignore
@@ -128,7 +128,8 @@ class Recipe(db.Model):
         return recipe
 
     def __repr__(self):
-        return f"<id={self.id}\tcontributor={self.contributor}\tstatus={self.status}\tname={self.name}\texpected_duration={self.expected_duration}\tmeal_type={self.meal_type}\tdescription={self.description}\tdiet_type={self.diet_type}\tphoto_url={self.photo_url}\tvideo_url={self.video_url}>"
+        return ""
+        # return f"<id={self.id}\tcontributor={self.contributor}\tstatus={self.status}\tname={self.name}\texpected_duration={self.expected_duration}\tmeal_type={self.meal_type}\tdescription={self.description}\tdiet_type={self.diet_type}\tphoto_url={self.photo_url}\tvideo_url={self.video_url}>"
 
 
 class RecipeIngredient(db.Model):
@@ -138,9 +139,10 @@ class RecipeIngredient(db.Model):
     the recipe.
     """
 
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"), nullable=False)
     ingredient_id = db.Column(
-        db.Integer, db.ForeignKey("ingredient.id"), primary_key=True
+        db.Integer, db.ForeignKey("ingredient.id"), nullable=False
     )
 
     quantity = db.Column(db.Integer)
