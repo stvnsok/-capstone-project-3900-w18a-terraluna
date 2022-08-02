@@ -181,7 +181,7 @@ const MyRecipes = () => {
 
             </div>
         </div>
-        <div className={`grid grid-flow-col gap-6 pl-10`}>
+        <div className={`grid grid-cols-7 gap-6 pl-10`}>
             {recipes && recipes.map(recipe => { return (
                 <div>
                     <div >

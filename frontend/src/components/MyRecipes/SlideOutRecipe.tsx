@@ -127,7 +127,7 @@ const SlideOutRecipe = ({
                                         onPublish()
                                     })
                                     .catch(err => {
-                                        toast.error(err);
+                                        toast.error(err.response.data.description);
                                     })
                             }
                         }}
@@ -179,7 +179,7 @@ const SlideOutRecipe = ({
             </div>
             {recipe && <div className='p-10 grid grid-cols-4 gap-5'>
                 <div>
-                    <img width={400} height={400} src={`http://localhost:5000/uploads?name=${recipe.imageUrl}`} alt="recipeImage"/>
+                    <img width={400} height={400} src={recipe.imageUrl ? `http://localhost:5000/uploads?name=${recipe.imageUrl}` : 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png'} alt="recipeImage"/>
                     {fullRecipe.ingredients && fullRecipe.ingredients.map(ingredient => { return <div className='mt-8 flex'><BsCircleFill size={12} className='my-auto text-tl-active-green'/> <span className='ml-4 text-md'>{ingredient.name} - {ingredient.quantity} {ingredient.units}</span></div>})}
                 </div>
                 <div className='col-span-3 grid grid-cols-3'>
