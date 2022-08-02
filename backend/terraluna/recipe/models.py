@@ -181,7 +181,7 @@ class Recipe(db.Model):
 
         steps = [
             {"instruction": self.instructions[i], "videoUrl": self.video_urls[i]}
-            for i in range(func.cardinality(self.instructions))
+            for i in range(len(self.instructions))
         ]
 
         reviews = [
