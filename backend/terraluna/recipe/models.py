@@ -186,7 +186,7 @@ class Recipe(db.Model):
         recipe.description = description
         recipe.instructions = instructions
         recipe.photo_url = photo_url
-        recipe.video_urls = video_urls or None
+        recipe.video_urls = video_urls
         db.session.commit()
 
         if ingredients is None:
@@ -318,6 +318,8 @@ class Recipe(db.Model):
             for recipe_ingredient in self.ingredients
         ]
 
+        print(self.instructions)
+        print(self.video_urls)
         if self.instructions:
             steps = [
                 {"instruction": self.instructions[i], "videoUrl": self.video_urls[i]}

@@ -192,6 +192,10 @@ def edit_recipe(id):
 
     photo_url = Recipe.query.filter_by(id=id).first().photo_url
     video_urls = Recipe.query.filter_by(id=id).first().video_urls
+    if instructions and video_urls:
+        video_urls.extend([""] * (len(instructions) - len(video_urls)))
+    elif instructions and video_urls is None:
+        video_urls = [""] * len(instructions)
     for input_name in files:
         # Input tag name: "image", "video0"
         # FileStorage.filename: original filenames
