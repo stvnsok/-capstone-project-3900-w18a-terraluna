@@ -123,7 +123,7 @@ def recipe_view(id):
     """Return details of the recipe"""
 
     # Check that recipe_id exists and is published and get the Recipe object
-    recipe = id_to_valid_recipe(id)
+    recipe = recipe_id_to_published_recipe(id)
 
     ########################
     # TODO: Change this to fit new recipe model
@@ -146,13 +146,13 @@ def recipe_view(id):
     return Response(json.dumps(response), mimetype="application/json")
 
 
-@explorer_bp.route("/recipe/<int:id>/comment", methods=["POST"])
-@jwt_required(fresh=True)
+@explorer_bp.route("/recipes/<int:id>/review", methods=["POST"])
+@jwt_required()
 def recipe_comment(id):
     """Comment on the recipe"""
 
     data = request.get_json()
-    (message,) = get_data(data, "message")
+    message, stars = get_data(data, "review", "stars")
 
     # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
@@ -162,7 +162,9 @@ def recipe_comment(id):
         raise InvalidComment
 
     # Create a comment entry in the database
-    comment = Comment.create(recipe_id=id, user_id=user_id, message=message)
+    comment = Comment.create(
+        recipe_id=id, user_id=user_id, stars=stars, message=message
+    )
     ####################################
     # NEED TO CHANGE TO ADD STARS TO CREATIONS FUNCTION
 
@@ -209,7 +211,7 @@ def update_recipe_favourites(id):
     """
 
     # Check that recipe_id exists and is published and get the Recipe object
-    recipe = id_to_valid_recipe(id)
+    recipe = recipe_id_to_published_recipe(id)
 
     # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
