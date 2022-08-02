@@ -151,34 +151,6 @@ def search():
     pass
 
 
-@explorer_bp.route("/recipe/<int:id>", methods=["GET"])
-def recipe_view(id):
-    """Return details of the recipe"""
-
-    # Check that recipe_id exists and is published and get the Recipe object
-    recipe = recipe_id_to_published_recipe(id)
-
-    ########################
-    # TODO: Change this to fit new recipe model
-    # You can copy directly from "/my_recipes/{id}" GET route and add 'comments' key
-    ########################
-    response = {
-        "name": recipe.name,
-        "recipePhoto_url": recipe.photo_url,
-        "recipeVideo_url": recipe.video_url,
-        "description": recipe.description,
-        "mealType": recipe.meal_type,
-        "dietType": recipe.diet_type,
-        "recipeInstructions": recipe.instructions,
-        "expectedDuration": recipe.expectedDuration,
-        "required_ingredients": {},  # dict_required_ingredients(id),
-        "comments": dict_recipe_comments(id),
-    }
-
-    logger.debug("Recipe details returned: %s", recipe)  # type: ignore
-    return Response(json.dumps(response), mimetype="application/json")
-
-
 @explorer_bp.route("/recipes/<int:id>/review", methods=["POST"])
 @jwt_required()
 def add_recipe_review(id):
