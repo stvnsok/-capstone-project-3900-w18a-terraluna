@@ -182,7 +182,7 @@ class Recipe(db.Model):
         recipe.description = description
         recipe.instructions = instructions
         recipe.photo_url = photo_url
-        recipe.video_urls = video_urls
+        recipe.video_urls = video_urls or None
         db.session.commit()
 
         if ingredients is None:
