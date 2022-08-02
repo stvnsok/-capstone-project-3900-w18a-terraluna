@@ -30,6 +30,12 @@ export const createRecipe = async (
     return (await api.post('/recipe', formData)).data
 }
 
+export const getRecipe = async (
+    id: number
+): Promise<{recipe: RecipeDetails}> => {
+    return (await api.get(`/my_recipes/${id}`)).data
+}
+
 export const publishRecipe = async (
     id: number
 ): Promise<NewRecipeApiResponse> => {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiChevronLeft, HiChevronRight, HiOutlineClock, HiOutlineCreditCard, HiOutlineXCircle, HiX } from 'react-icons/hi';
 import { AiFillStar, AiOutlineCheckCircle, AiOutlineCopyrightCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
-import { createRecipeFromTemplate, deleteRecipe, publishRecipe } from '../../services/recipeContributor.service';
+import { createRecipeFromTemplate, deleteRecipe, getRecipe, publishRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 import { BsCircleFill } from 'react-icons/bs';
 
@@ -34,7 +34,7 @@ const SlideOutRecipe = ({
         return (total / fullRecipe.reviews.length).toPrecision(3);
     }
 
-    const [fullRecipe] = useState<Partial<RecipeDetails>>({
+    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>({
         ...recipe,
         ingredients: [{
             id: 1,
@@ -104,6 +104,12 @@ const SlideOutRecipe = ({
         if (status === 'Published') return <AiOutlineCheckCircle size={32}/>
         if (status === 'Template') return <AiOutlineCopyrightCircle size={32}/>
     }
+
+    useEffect(() => {
+        if (recipe?.id) getRecipe(recipe.id).then(res => {
+            setFullRecipe(res.recipe)
+        })
+    }, [recipe])
 
     return <div className=" bg-tl-inactive-brown min-h-full fixed top-0 right-0 border-l border-solid border-tl-inactive-grey" style={{
         transition: '0.7s',
@@ -198,7 +204,7 @@ const SlideOutRecipe = ({
                                     <div className={`p-5 shadow-md rounded-md bg-tl-inactive-white ${fullRecipe.steps?.at(currentStep - 1)?.videoUrl ? 'col-span-1' : 'col-span-2'}`}>
                                         {fullRecipe.steps?.at(currentStep - 1)?.instruction}
                                     </div>
-                                    {fullRecipe.steps?.at(currentStep - 1)?.videoUrl && <video src={fullRecipe.steps.at(currentStep - 1)?.videoUrl} controls className='mx-auto shadow-md rounded-md w-full'/>}
+                                    {fullRecipe.steps?.at(currentStep - 1)?.videoUrl && <video src={`http://localhost:5000/uploads?name=${fullRecipe.steps.at(currentStep - 1)?.videoUrl}`} controls className='mx-auto shadow-md rounded-md w-full'/>}
                                 </div>
                                 <HiChevronRight size={50} className={`ml-auto my-auto ${currentStep >= (fullRecipe.steps?.length ?? 0) ? 'text-tl-inactive-grey' : 'cursor-pointer'}`} onClick={() => {
                                     if (currentStep >= (fullRecipe.steps?.length ?? 0)) return;
