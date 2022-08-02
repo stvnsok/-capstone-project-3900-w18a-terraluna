@@ -4,13 +4,13 @@ import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NewRecipeApiResponse, N
 export const createRecipeFromTemplate = async (
     id: number
 ): Promise<CopyRecipeApiResponse> => {
-    return (await api.post(`/recipe_contributors/recipe/${id}/copy`)).data
+    return (await api.post(`/recipe/${id}/copy`)).data
 }
 
 export const deleteRecipe = async (
     id: number
 ): Promise<DeleteRecipeApiResponse> => {
-    return (await api.delete(`/recipe_contributors/recipe/${id}/delete`)).data
+    return (await api.delete(`/recipe/${id}/delete`)).data
 }
 
 export const getNoRecipeMatchRecipes = async (
@@ -33,7 +33,7 @@ export const createRecipe = async (
 export const publishRecipe = async (
     id: number
 ): Promise<NewRecipeApiResponse> => {
-    return (await api.patch('/recipe', id)).data
+    return (await api.patch(`/recipe/${id}/publish`)).data
 }
 
 export const getIngredients = async (

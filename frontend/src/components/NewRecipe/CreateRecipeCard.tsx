@@ -5,6 +5,7 @@ import TLSelect from '../global/AsyncSelect';
 import TextInput from '../global/TextInput';
 import { createRecipe, getIngredients } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
+import { toast } from 'react-toastify';
 
 type IngredientInput = Partial<Ingredient> & {
     quantity?: number;
@@ -101,7 +102,13 @@ export default function CreateRecipe ({closeFunction}: {
 
                 <Button
                     onClick={() => {
-                        createRecipe(payload());
+                        createRecipe(payload()).then(res => {
+                            clear();
+                            closeFunction();
+                            console.log(res);
+                        }).catch(() => {
+                            toast.error("Failed to create Recipe")
+                        });
                     }}
                     text={"Create"}
                     className="mr-18 border border-solid  bg-tl-inactive-green px-6 py-3 rounded-md"
@@ -111,12 +118,7 @@ export default function CreateRecipe ({closeFunction}: {
         </div>
         
         <div className = 'w-full grid grid-cols-2 p-10 gap-x-10 gap-y-5 mt-16'>
-            <div></div>
-            <div className='fixed'
-                style={{
-                    width: 'calc(42vw)'
-                }}
-            >
+            <div>
                 <div className=''>
                     {preview ? 
                         <React.Fragment>
