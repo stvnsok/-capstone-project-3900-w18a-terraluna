@@ -217,13 +217,10 @@ def change_saved_recipes(id):
             UserSavedRecipes.query.filter_by(user_id=user_id)
             .filter_by(recipe_id=id)
             .first()
-            is not None
+            is None
         ):
-            db.session.add(UserSavedRecipes(user_id, id))
-            db.commit()
-            logger.debug("Recipe " + id + " saved")  # type: ignore
-        else:
-            logger.debug("Recipe " + id + " already saved")  # type: ignore
+            db.session.add(UserSavedRecipes(user_id=user_id, recipe_id=id))
+            db.session.commit()
 
         return "", 204
 
