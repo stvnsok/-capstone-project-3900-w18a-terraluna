@@ -1,7 +1,7 @@
 import React from 'react'
 import { HiX } from 'react-icons/hi';
 import { toast } from 'react-toastify';
-import { createRecipeFromTemplate, deleteRecipe } from '../../services/recipeContributor.service';
+import { createRecipeFromTemplate, deleteRecipe, publishRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 
 const SlideOutRecipe = ({
@@ -31,6 +31,21 @@ const SlideOutRecipe = ({
                 <Button
                     onClick={() => {
                         if (recipe) {
+                            publishRecipe(recipe.id)
+                                .then(_ => {
+                                    toast.success('Successfully published ' + recipe.name);
+                                })
+                                .catch(err => {
+                                    toast.error(err);
+                                })
+                        }
+                    }}
+                    text={"Publish"}
+                    className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
+                />
+                <Button
+                    onClick={() => {
+                        if (recipe) {
                             createRecipeFromTemplate(recipe.id)
                                 .then(_ => {
                                     toast.success('Successfully created a copy of ' + recipe.name);
@@ -41,7 +56,7 @@ const SlideOutRecipe = ({
                         }
                     }}
                     text={"Use As Template"}
-                    className="mr-4 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
+                    className="mr-4 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
                 />
                 <Button
                     onClick={() => {
@@ -56,7 +71,7 @@ const SlideOutRecipe = ({
                         }
                     }}
                     text={"Delete"}
-                    className="mr-16 border border-solid border-tl-active-red bg-tl-inactive-red px-6 py-3 rounded-md"
+                    className="mr-16 bg-tl-inactive-red px-6 py-3 rounded-md shadow-md"
                 />
                 
             </div>

@@ -6,58 +6,63 @@ import Button from '../global/Button';
 import NavBar from '../NavBar';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
-import { useNavigate } from "react-router-dom";
 import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
-// import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
+import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
+    const [isCreateRecipeOpen, setIsCreateRecipeOpen] = useState<boolean>(false);
     const [pageNumber, setPageNumber] = useState<number>(0)
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
     const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
-    const navigate = useNavigate();
     const [recipes, setRecipes] = useState<Recipe[]>([{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        mealType: ['Dinner', 'Lunch'],
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        mealType: ['Dinner', 'Lunch', 'Breakfast'],
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        mealType: ['Dinner'],
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        mealType: ['Dinner'],
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        mealType: ['Dinner'],
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
-        mealType: 'Dinner',
-        dietType: 'Vegetarian'
+        mealType: ['Dinner'],
+        dietType: ['Vegetarian'],
+        status: "Draft"
     }]);
 
     useEffect(() => {
@@ -97,7 +102,7 @@ const MyRecipes = () => {
                         name: 'Fig'
                     }]
                 }])
-            })
+            }).catch(err => console.log(err))
             setNoMatchIngredientSets([{
                 ingredients: [{
                     id: 0,
@@ -143,10 +148,7 @@ const MyRecipes = () => {
             <div className='flex'>
                 <Button
                     onClick={() => {
-                        // setCreateRecipeFormOpen(true);
-
-                        /* Currently opens to new route for creating recipe but want to make it open a sliding window later*/
-                        navigate('/new_recipe');
+                        setIsCreateRecipeOpen(true);
                     }}
                     className="w-10 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md"
                     text={<HiPlus size={22} className="m-auto"/>}
@@ -197,12 +199,12 @@ const MyRecipes = () => {
             }}
         />
 
-        {/* <CreateRecipeForm
-            //open={CreateRecipeFormOpen}
+        <CreateRecipeForm
+            isOpen={isCreateRecipeOpen}
             onClose={() => {
-                setCreateRecipeFormOpen(false)
+                setIsCreateRecipeOpen(false)
             }}
-        /> */}
+        />
     </React.Fragment> 
 )}
 

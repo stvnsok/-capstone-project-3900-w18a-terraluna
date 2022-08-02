@@ -3,8 +3,13 @@ interface Recipe {
     name: string;
     cookTime: number;
     imageUrl?: string;
-    mealType: string;
-    dietType: string;
+    mealType: string[];
+    dietType: string[];
+    status: "Draft" | "Published" | "Template";
+}
+
+interface RecipeDetails extends Recipe {
+    ingredients: Ingredient[]
 }
 
 interface Ingredient {
