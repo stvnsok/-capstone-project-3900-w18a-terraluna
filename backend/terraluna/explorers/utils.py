@@ -1,8 +1,9 @@
 
-from terraluna.recipe.models import Recipe, RecipeIngredient
+from terraluna.recipe.models import Recipe, RecipeIngredient, Comment
 
 from .error import *
 from .models import *
+
 
 def id_to_valid_recipe(id):
     """

@@ -32,7 +32,7 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     message = db.Column(db.Text)
     time = db.Column(db.Time)
-    recipe = db.relationship("Recipe", backref="comments")
+    recipe = db.relationship("Recipe", back_populates="comments")
 
     @staticmethod
     def create(recipe_id, user_id, message):

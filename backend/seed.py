@@ -26,12 +26,12 @@ def load_basic_ingredients(test_users=False, test_recipes=False):
                 {
                     'ingredient_id': 4, #bread
                     'quantity': 999,
-                    'unit': "this is a unit"
+                    'units': "this is a unit"
                 },
                 {
                     'ingredient_id': 2, #butter
                     'quantity': 111,
-                    'unit': "this is a unit recipe1 ing 2"
+                    'units': "this is a unit recipe1 ing 2"
                 }
             ]
         )
@@ -42,7 +42,7 @@ def load_basic_ingredients(test_users=False, test_recipes=False):
                 {
                     'ingredient_id': 2, #butter
                     'quantity': 888,
-                    'unit': "this is a unit2"
+                    'units': "this is a unit2"
                 }
             ]
         )
@@ -53,7 +53,7 @@ def load_basic_ingredients(test_users=False, test_recipes=False):
                 {
                     'ingredient_id': 8, #vegetable oil
                     'quantity': 777,
-                    'unit': "this is a unit3"
+                    'units': "this is a unit3"
                 }
             ]
         )
@@ -78,12 +78,12 @@ def load_basic_categories(test_users=False, test_recipes=False):
                 {
                     'ingredient_id': 4, #bread
                     'quantity': 999,
-                    'unit': "this is a unit"
+                    'units': "this is a unit"
                 },
                 {
                     'ingredient_id': 2, #butter
                     'quantity': 111,
-                    'unit': "this is a unit recipe1 ing 2"
+                    'units': "this is a unit recipe1 ing 2"
                 }
             ]
         )
@@ -94,7 +94,7 @@ def load_basic_categories(test_users=False, test_recipes=False):
                 {
                     'ingredient_id': 2, #butter
                     'quantity': 888,
-                    'unit': "this is a unit2"
+                    'units': "this is a unit2"
                 }
             ]
         )
@@ -104,7 +104,7 @@ def load_basic_categories(test_users=False, test_recipes=False):
             [
                 {
                     'ingredient_id': 8, #vegetable oil
-                    'quantity': 777,
+                    'quantitys': 777,
                     'unit': "this is a unit3"
                 }
             ]

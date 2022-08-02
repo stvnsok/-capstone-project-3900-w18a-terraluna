@@ -2,6 +2,7 @@ import json
 
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from utils import get_data
 from terraluna.explorers.error import *
 from terraluna.explorers.models import *
 from terraluna.explorers.utils import *
@@ -61,18 +62,24 @@ def pantry():
         ).filter_by(UserPantry.user_id==user_id)
         for row in query:
             pantry.append({
-                'ingredient_id': row.Ingredient.id, 
+                'id': row.Ingredient.id, 
                 'name': row.Ingredient.name
             })
         return jsonify(pantry=pantry)
 
     # PUT: Given a list of ingredient_id, updates the UserPantry Table
     elif request.method == "PUT":
-        pass
-        ##################################################
-        ##################################################
-        ##################################################
-        # TODO:
+
+        data = request.get_json()
+        (ingredients, ) = get_data(data, "ingredients")
+
+        # Clear pantry
+        UserPantry.query.filter_by(user_id=user_id).delete()
+
+        # Add new ingredients
+        for ingredient_id in ingredients:
+            db.session.add(UserPantry(user_id, ingredient_id))
+        db.commit()
     
 @recipe_explorers_bp.route("/search", methods=["GET"])
 def search():
@@ -115,26 +122,22 @@ def recipe_view(id):
 def recipe_comment(id):
     """Comment on the recipe"""
     
-    # Check that recipe_id exists and is published and get the Recipe object
-    recipe = validate_recipe_id(id)
+    data = request.get_json()
+    (message, ) = get_data(data, "message")
 
     # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
-
-    # Get dict of input from front end 
-    data = request.get_json()
-
-    # Check for Malformed Requests
-    if not data:
-        raise Error400
-
-    message = data.get("message")
 
     # Check that the message is not empty
     if message == None or message.strip() == "":
         raise InvalidComment
 
-    Comment.create(recipe__id=id, user_id=user_id, message=message)
+    # Create a comment entry in the database
+    comment = Comment.create(recipe_id=id, user_id=user_id, message=message) 
+    ####################################
+    # NEED TO CHANGE TO ADD STARS TO CREATIONS FUNCTION
+
+    return jsonify(comment_id=comment.id)
 
 @recipe_explorers_bp.route("/savedRecipes", methods=["GET"])
 @jwt_required(fresh=True)
@@ -145,33 +148,57 @@ def list_savedRecipes():
     user_id = username_to_user_id(get_jwt_identity())
 
     recipes = []
-    for row in UserSavedRecipes.query.filter_by(user_id=user_id):
+    query = db.session.query(
+            UserSavedRecipes, Recipe
+        ).filter_by(UserSavedRecipes.recipe_id == Recipe.id
+        ).filter_by(UserSavedRecipes.user_id==user_id)
+    for row in query:
         recipe = Recipe.query.filter_by(id=row.recipe_id).one()
         recipes.append({
-            'recipe_id': recipe.id,
+            ######################################## NEED TO CHANGE
+            'id': recipe.id,
             'name': recipe.name,
             'recipePhoto_url': recipe.recipe_photo,
             'status': recipe.status,
             'description': recipe.description,
         })
     
-    return Response(json.dumps(recipes), mimetype='application/json')
+    return jsonify
 
 @recipe_explorers_bp.route("/savedRecipes/<int:id>", methods=["PUT", "DELETE"])
 @jwt_required(fresh=True)
-def func():
+def change_saved_recipes(id):
     """
     PUT: add recipe to user's saved recipes
     DELETE: remove recipe from user's saved recipes
     """
-    ##################################################
-    ##################################################
-    ##################################################
-    # TODO:
-    if request.method = "PUT":
-        # Check that recipe_id exists and is published
-        validate_recipe_id(id)
-    pass
+
+    # Check that recipe_id exists and is published and get the Recipe object
+    recipe = id_to_valid_recipe(id)
+
+    # Retrieve current user from token
+    user_id = username_to_user_id(get_jwt_identity())
+
+    # PUT: add recipe to user's saved recipes
+    if request.method == "PUT":
+        # If the user has not the recipe is not saved, save the recipe
+        if UserSavedRecipes.query().filter_by(user_id=user_id).filter_by(recipe_id=id).first() is not None:
+            db.session.add(UserSavedRecipes(user_id, id))
+            db.commit()
+            logger.debug("Recipe " + id + " saved")  # type: ignore
+        else:
+            logger.debug("Recipe " + id + " already saved")  # type: ignore
+
+    # DELETE: remove recipe from user's saved recipes
+    elif request.method == "DELETE":
+        # DELETE FROM SAVED RECIPES TABLE
+        pass
+        if UserSavedRecipes.query().filter_by(user_id=user_id).filter_by(recipe_id=id).delete():
+            logger.debug("Recipe " + id + " unsaved")  # type: ignore
+        else:
+            logger.debug("Recipe " + id + " not in saved recipes")  # type: ignore
+        db.commit()
+        
 
 
     
