@@ -117,11 +117,11 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
                 instruction: step.instruction,
                 videoUrl: step.videoUrl
             }}));
-            if (fullRecipe.dietType) setDietType(dietType.filter(x => fullRecipe.mealType?.includes(x.name)));
+            if (fullRecipe.dietType) setDietType(dietTypeOptions.filter(x => fullRecipe.dietType?.includes(x.name)));
             if (fullRecipe.mealType) setMealType(mealTypeOptions.filter(x => fullRecipe.mealType?.includes(x.name)));
             if (fullRecipe.ingredients) setIngredients(fullRecipe.ingredients);
         }
-    }, [fullRecipe])
+    }, [fullRecipe, dietTypeOptions, mealTypeOptions])
 
 
     return <React.Fragment>
