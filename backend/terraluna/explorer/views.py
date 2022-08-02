@@ -5,12 +5,13 @@ from flask.wrappers import Response
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 
-from terraluna.explorer.error import *
-from terraluna.explorer.models import *
-from terraluna.explorer.utils import *
-from terraluna.recipe.models import Ingredient, Recipe
-from terraluna.recipe.utils import username_to_user_id
-from utils import get_data
+from terraluna.recipe.models import *
+from terraluna.recipe.utils import *
+from utils import *
+
+from .error import *
+from .models import *
+from .utils import *
 
 explorer_bp = Blueprint("explorer_bp", __name__)
 """Blueprint: A Blueprint for all recipe explorer routes."""
@@ -19,27 +20,59 @@ explorer_bp = Blueprint("explorer_bp", __name__)
 @explorer_bp.route("/recipes", methods=["GET"])
 @jwt_required()
 def get_ready_recipes():
-    """Get list of published recipes that can be made based on the given list on ingredients."""
+    """Get list of published recipes that can be made based on the given list on ingredients.
+
+    Optional filters can be applied to the search results. Can filter by a maximum cooking
+    time, meal types and diet types.
+
+    Returned recipes match *any* given meal type and match *all* given diet types.
+    """
     data = request.args
-    (pantry_ingredients,) = get_data(data, "ingredients")
+    (pantry_ingredients, meal_types, diet_types, cook_time) = get_data(
+        data, "ingredients", "mealType", "dietType", "cookTime"
+    )
     pantry_ingredients = json.loads(pantry_ingredients)["ingredients"]
     pantry_ingredients = [int(id) for id in pantry_ingredients]
+    meal_types = json.loads(meal_types)["mealType"]
+    diet_types = json.loads(diet_types)["dietType"]
+    cook_time = int(cook_time) if cook_time else None
+    cook_time = cook_time if cook_time != -1 else None  # -1 => 3 hours+ => no filter
 
     ready_recipes = []
     for recipe in Recipe.query.all():
+        # Check recipe is published
         if recipe.status != "Published":
             continue
 
+        # Check if recipe takes too long to make
+        if cook_time and recipe.expected_duration_mins > cook_time:
+            continue
+
+        # Check if recipe has any correct meal type
+        if meal_types and not any(
+            meal_type in recipe.meal_types for meal_type in meal_types
+        ):
+            continue
+
+        # Check if recipe has all correct diet types
+        if diet_types and not all(
+            diet_type in recipe.diet_types for diet_type in diet_types
+        ):
+            continue
+
+        # Check recipe's necessary ingredients
         necessary_ingredients = [
             ingredient.ingredient_id for ingredient in recipe.ingredients
         ]
 
+        # Check recipe's necessary ingredients that are not in pantry
         absent_necessary_ingredients = [
             ingredient
             for ingredient in necessary_ingredients
             if ingredient not in pantry_ingredients
         ]
 
+        # If there are no missing necessary ingredients, we can make this recipe
         if not absent_necessary_ingredients:
             ready_recipes.append(recipe)
 
@@ -118,87 +151,31 @@ def search():
     pass
 
 
-@explorer_bp.route("/recipe/<int:id>", methods=["GET"])
-def recipe_view(id):
-    """Return details of the recipe"""
-
-    # Check that recipe_id exists and is published and get the Recipe object
-    recipe = recipe_id_to_published_recipe(id)
-
-    ########################
-    # TODO: Change this to fit new recipe model
-    # You can copy directly from "/my_recipes/{id}" GET route and add 'comments' key
-    ########################
-    response = {
-        "name": recipe.name,
-        "recipePhoto_url": recipe.photo_url,
-        "recipeVideo_url": recipe.video_url,
-        "description": recipe.description,
-        "mealType": recipe.meal_type,
-        "dietType": recipe.diet_type,
-        "recipeInstructions": recipe.instructions,
-        "expectedDuration": recipe.expectedDuration,
-        "required_ingredients": {},  # dict_required_ingredients(id),
-        "comments": dict_recipe_comments(id),
-    }
-
-    logger.debug("Recipe details returned: %s", recipe)  # type: ignore
-    return Response(json.dumps(response), mimetype="application/json")
-
-
 @explorer_bp.route("/recipes/<int:id>/review", methods=["POST"])
 @jwt_required()
-def recipe_comment(id):
-    """Comment on the recipe"""
-
+def add_recipe_review(id):
+    """Add a comment/review to a recipe."""
     data = request.get_json()
     message, stars = get_data(data, "review", "stars")
 
-    # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
-
-    # Check that the message is not empty
-    if message == None or message.strip() == "":
-        raise InvalidComment
-
-    # Create a comment entry in the database
     comment = Comment.create(
         recipe_id=id, user_id=user_id, stars=stars, message=message
     )
-    ####################################
-    # NEED TO CHANGE TO ADD STARS TO CREATIONS FUNCTION
-
     return jsonify(comment_id=comment.id)
 
 
 @explorer_bp.route("/recipes/favourite", methods=["GET"])
-@jwt_required(fresh=True)
-def list_savedRecipes():
-    """Return a list of all recipes saved by the user"""
-
-    # Retrieve current user from token
+@jwt_required()
+def get_recipe_favourites():
+    """Return a list of all recipes saved by the user."""
     user_id = username_to_user_id(get_jwt_identity())
 
-    recipes = []
-    query = (
-        db.session.query(UserSavedRecipes, Recipe)
-        .filter_by(UserSavedRecipes.recipe_id == Recipe.id)
-        .filter_by(UserSavedRecipes.user_id == user_id)
-    )
-    for row in query:
-        recipe = Recipe.query.filter_by(id=row.recipe_id).one()
-        recipes.append(
-            {
-                ######################################## NEED TO CHANGE
-                "id": recipe.id,
-                "name": recipe.name,
-                "recipePhoto_url": recipe.recipe_photo,
-                "status": recipe.status,
-                "description": recipe.description,
-            }
-        )
-
-    return jsonify
+    saved_recipes = [
+        saved_recipe.recipe_id
+        for saved_recipe in UserSavedRecipes.query.filter_by(user_id=user_id).all()
+    ]
+    return jsonify(recipes=[recipe.jsonify() for recipe in saved_recipes])
 
 
 @explorer_bp.route("/recipes/<int:id>/favourite", methods=["PUT", "DELETE"])
@@ -209,39 +186,20 @@ def update_recipe_favourites(id):
     PUT: Add recipe to user's favourited recipes.
     DELETE: Remove recipe from user's favourited recipes.
     """
-
-    # Check that recipe_id exists and is published and get the Recipe object
-    recipe = recipe_id_to_published_recipe(id)
-
-    # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
 
-    # PUT: add recipe to user's saved recipes
+    # PUT: Add recipe to user's favourited recipes.
     if request.method == "PUT":
-        # If the user has not the recipe is not saved, save the recipe
         if (
-            UserSavedRecipes.query.filter_by(user_id=user_id)
-            .filter_by(recipe_id=id)
-            .first()
-            is None
+            UserSavedRecipes.query.filter_by(user_id=user_id, recipe_id=id).first()
+            is not None
         ):
             db.session.add(UserSavedRecipes(user_id=user_id, recipe_id=id))
             db.session.commit()
-
         return "", 204
 
-    # DELETE: remove recipe from user's saved recipes
+    # DELETE: Remove recipe from user's favourited recipes.
     elif request.method == "DELETE":
-        # DELETE FROM SAVED RECIPES TABLE
-        pass
-        if (
-            UserSavedRecipes.query.filter_by(user_id=user_id)
-            .filter_by(recipe_id=id)
-            .delete()
-        ):
-            logger.debug("Recipe " + id + " unsaved")  # type: ignore
-        else:
-            logger.debug("Recipe " + id + " not in saved recipes")  # type: ignore
-        db.commit()
-
+        UserSavedRecipes.query.filter_by(user_id=user_id, recipe_id=id).delete()
+        db.session.commit()
         return "", 204

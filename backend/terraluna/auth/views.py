@@ -9,7 +9,6 @@ from flask_jwt_extended.utils import (
 from flask_jwt_extended.view_decorators import jwt_required
 
 from app import jwt, logger
-from error import *
 from utils import *
 
 from .error import *

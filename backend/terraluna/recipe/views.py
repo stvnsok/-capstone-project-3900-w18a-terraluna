@@ -6,8 +6,7 @@ from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 from werkzeug.utils import secure_filename
 
-from app import app, db, logger
-from error import *
+from app import app
 from utils import *
 
 from .error import *

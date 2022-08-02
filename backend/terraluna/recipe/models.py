@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from sqlalchemy import func
-
 from app import db, logger
 
 from .error import *
