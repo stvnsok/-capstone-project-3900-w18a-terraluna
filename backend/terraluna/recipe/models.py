@@ -173,7 +173,7 @@ class Recipe(db.Model):
             {
                 "id": recipe_ingredient.ingredient_id,
                 "name": recipe_ingredient.ingredient.name,
-                "units": recipe_ingredient.units,
+                "units": recipe_ingredient.unit,
                 "quantity": recipe_ingredient.quantity,
             }
             for recipe_ingredient in self.ingredients
