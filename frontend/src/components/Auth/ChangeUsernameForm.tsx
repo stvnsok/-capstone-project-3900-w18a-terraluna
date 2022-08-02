@@ -45,7 +45,6 @@ const ChangeUsernameForm = ({
             title={'New Username'}
         />
         {errorList?.username && <div className="text-tl-inactive-red">{errorList.username}</div>}
-        <div className="mt-2">Note: You can only change your username once every 30 days.</div>
         <Button
             className='w-1/4 bg-tl-inactive-green border border-solid rounded border-tl-active-green mt-6 p-0.5 mb-4'
             onClick={() => {

@@ -3,11 +3,11 @@ import { HiFire, HiPlus } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { getNoRecipeMatchRecipes, getRecipesRecipeContributors } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
-import NavBar from '../NavBar';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
 import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
+import NavBar from '../NavBar';
 
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
@@ -15,55 +15,7 @@ const MyRecipes = () => {
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
     const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>();
     const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
-    const [recipes, setRecipes] = useState<Recipe[]>([{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner', 'Lunch'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner', 'Lunch', 'Breakfast'],
-        dietType: ['Vegetarian'],
-        status: "Published"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Template"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    },{
-        imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
-        name: 'Vegetarian Pizza',
-        id: 1,
-        cookTime: 300,
-        mealType: ['Dinner'],
-        dietType: ['Vegetarian'],
-        status: "Draft"
-    }]);
+    const [recipes, setRecipes] = useState<Recipe[]>();
 
     useEffect(() => {
         getRecipesRecipeContributors()
