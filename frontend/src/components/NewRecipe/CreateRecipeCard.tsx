@@ -38,16 +38,18 @@ export default function CreateRecipe ({closeFunction}: {
     const payload = () => {
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('image', image ?? '', "Photo");
+        if (image) formData.append('image', image);
         formData.append('description', description);
-        formData.append('expectedDuration', (((hours === "" ? 0 : hours) * 60) + (minutes === "" ? 0 : minutes)).toString());
-        formData.append('mealType', JSON.stringify(mealType.map(meal => { return meal.name })));
-        formData.append('dietType', JSON.stringify(dietType.map(diet => { return diet.name })));
+        formData.append('expectedDuration', hours === "" && minutes === "" ? "" : (((hours === "" ? 0 : hours) * 60) + (minutes === "" ? 0 : minutes)).toString());
+        formData.append('mealType', JSON.stringify({mealType: mealType.map(meal => { return meal.name })}));
+        formData.append('dietType', JSON.stringify({dietType: dietType.map(diet => { return diet.name })}));
 
-        formData.append('ingredients', JSON.stringify(ingredients.filter(ingredient => ingredient.id !== -1)));
-        steps.filter(step => step.instructions !== '').forEach((step, index) => {
-            formData.append('instruction[]', step.instructions);
-            if (step.video) formData.append('video[]', step.video, "Video"+index);
+        formData.append('ingredients', JSON.stringify({ingredients: ingredients.filter(ingredient => ingredient.id !== -1)}));
+        const validSteps = steps.filter(step => step.instructions !== '')
+
+        formData.append('instructions', JSON.stringify({instructions: validSteps.map(x => x.instructions)}))
+        validSteps.forEach((step, index) => {
+            if (step.video) formData.append('video'+index, step.video)
         })
         return formData 
     }

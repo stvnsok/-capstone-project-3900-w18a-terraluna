@@ -1,7 +1,7 @@
 import React from 'react'
 import { HiX } from 'react-icons/hi';
 import { toast } from 'react-toastify';
-import { createRecipeFromTemplate, deleteRecipe } from '../../services/recipeContributor.service';
+import { createRecipeFromTemplate, deleteRecipe, publishRecipe } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
 
 const SlideOutRecipe = ({
@@ -28,6 +28,21 @@ const SlideOutRecipe = ({
         <div className='justify-between flex'>
             <h2 className='ml-16 font-semibold text-4xl'>{recipe?.name}</h2>
             <div>
+                <Button
+                    onClick={() => {
+                        if (recipe) {
+                            publishRecipe(recipe.id)
+                                .then(_ => {
+                                    toast.success('Successfully published ' + recipe.name);
+                                })
+                                .catch(err => {
+                                    toast.error(err);
+                                })
+                        }
+                    }}
+                    text={"Publish"}
+                    className="mr-4 border border-solid border-tl-active-black bg-tl-inactive-brown px-6 py-3 rounded-md"
+                />
                 <Button
                     onClick={() => {
                         if (recipe) {

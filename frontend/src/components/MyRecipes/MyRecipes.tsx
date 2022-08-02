@@ -21,42 +21,48 @@ const MyRecipes = () => {
         id: 1,
         cookTime: 300,
         mealType: ['Dinner', 'Lunch'],
-        dietType: ['Vegetarian']
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
         mealType: ['Dinner', 'Lunch', 'Breakfast'],
-        dietType: ['Vegetarian']
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
         mealType: ['Dinner'],
-        dietType: ['Vegetarian']
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
         mealType: ['Dinner'],
-        dietType: ['Vegetarian']
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
         mealType: ['Dinner'],
-        dietType: ['Vegetarian']
+        dietType: ['Vegetarian'],
+        status: "Draft"
     },{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
         name: 'Vegetarian Pizza',
         id: 1,
         cookTime: 300,
         mealType: ['Dinner'],
-        dietType: ['Vegetarian']
+        dietType: ['Vegetarian'],
+        status: "Draft"
     }]);
 
     useEffect(() => {

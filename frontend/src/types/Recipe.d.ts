@@ -5,6 +5,11 @@ interface Recipe {
     imageUrl?: string;
     mealType: string[];
     dietType: string[];
+    status: "Draft" | "Published" | "Template";
+}
+
+interface RecipeDetails extends Recipe {
+    ingredients: Ingredient[]
 }
 
 interface Ingredient {

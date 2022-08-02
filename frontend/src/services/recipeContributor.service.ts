@@ -27,7 +27,13 @@ export const getRecipesRecipeContributors = async (
 export const createRecipe = async (
     formData: FormData
 ): Promise<NewRecipeApiResponse> => {
-    return (await api.post('/recipe_contributors/new', formData)).data
+    return (await api.post('/recipe', formData)).data
+}
+
+export const publishRecipe = async (
+    id: number
+): Promise<NewRecipeApiResponse> => {
+    return (await api.patch('/recipe', id)).data
 }
 
 export const getIngredients = async (
