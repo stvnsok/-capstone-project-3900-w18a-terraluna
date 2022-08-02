@@ -12,10 +12,12 @@ const SlideOutRecipeExplorers = ({
     recipe,
     onClose,
     onPublish,
+    allowFav = true
 }: {
     recipe?: Recipe;
     onClose: () => void
     onPublish: () => void
+    allowFav?: boolean
 }) => {
     const minutesToHoursPipe = (time: number) => {
         const hours = Math.floor(time/60);
@@ -138,7 +140,7 @@ const SlideOutRecipeExplorers = ({
                         text={"Leave A Review"}
                         className="mr-16 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
                     />
-                    <Button
+                    {allowFav && <Button
                         onClick={() => {
                             if (recipe) {
                                 favoriteRecipe(recipe.id)
@@ -154,7 +156,7 @@ const SlideOutRecipeExplorers = ({
                         }}
                         text={"Favorite"}
                         className="mr-16 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
-                    />
+                    />}
                     
                 </div>
             </div>
@@ -211,27 +213,32 @@ const SlideOutRecipeExplorers = ({
                                 <div className='col-span-2'>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(5)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(5)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(4)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(4)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(3)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(3)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(2)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(2)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(1)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(1)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                 </div>
