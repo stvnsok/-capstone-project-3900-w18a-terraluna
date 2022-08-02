@@ -1,7 +1,7 @@
 import json
 import os
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 from werkzeug.utils import secure_filename
@@ -16,6 +16,12 @@ from .utils import *
 
 recipe_bp = Blueprint("recipe_bp", __name__)
 """Blueprint: A Blueprint for all recipe and ingredient routes."""
+
+
+@recipe_bp.route("/uploads/<name>", methods=["GET"])
+@jwt_required()
+def get_upload(name):
+    return send_file(name)
 
 
 @recipe_bp.route("/ingredients", methods=["GET"])
@@ -91,8 +97,8 @@ def create_recipe():
     expected_duration_mins = (
         int(expected_duration_mins) if expected_duration_mins else None
     )
-    meal_types = json.loads(meal_types)["mealType"] or None
-    diet_types = json.loads(diet_types)["dietType"] or None
+    meal_types = json.loads(meal_types)["mealType"]
+    diet_types = json.loads(diet_types)["dietType"]
     description = description or None
     instructions = json.loads(instructions)["instructions"] or None
     ingredients = json.loads(ingredients)["ingredients"] or None
