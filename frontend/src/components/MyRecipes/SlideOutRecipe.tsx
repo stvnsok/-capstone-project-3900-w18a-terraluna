@@ -233,27 +233,32 @@ const SlideOutRecipe = ({
                                 <div className='col-span-2'>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(5)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(5)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(4)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(4)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(3)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(3)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(2)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(2)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                     <div className='h-2 w-full bg-tl-inactive-green rounded-3xl flex mt-2'>
                                         <div className='h-full bg-tl-active-green rounded-3xl' style={{
-                                            width: `${(getReviewCount(1)*100)/getReviewCount()}%`
+                                            width: `${(getReviewCount(1)*100)/getReviewCount()}%`,
+                                            transition: 'width 0.5s'
                                         }}></div>
                                     </div>
                                 </div>

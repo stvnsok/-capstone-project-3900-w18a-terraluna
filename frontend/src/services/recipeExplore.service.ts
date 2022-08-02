@@ -1,9 +1,12 @@
 import { api } from "../api"
 
 export const getRecipes = async (
-    ingredients?: number[]
+    ingredients?: number[],
+    mealType?: string[],
+    dietType?: string[],
+    cookTime?: number
 ): Promise<{recipes: Recipe[]}> => {
-    return (await api.get('/recipes', { params: { ingredients: JSON.stringify({ingredients}) } })).data
+    return (await api.get('/recipes', { params: { ingredients: JSON.stringify({ingredients}), mealType: JSON.stringify({mealType}), dietType: JSON.stringify({dietType}), cookTime } })).data
 }
 
 export const getRecipesFavourites = async (): Promise<{recipes: Recipe[]}> => {
