@@ -245,24 +245,31 @@ def publish_recipe(id):
 @jwt_required()
 def copy_recipe(id):
     """Copy a recipe."""
-    # TODO: refactor this
-    # source = Recipe.query.filter_by(id=id).first()
-    # recipe = Recipe.create(
-    #     contributor=username_to_user_id(get_jwt_identity()),
-    #     status="Draft",
-    #     name=name,
-    #     expected_duration_mins=expected_duration_mins,
-    #     meal_types=meal_types,
-    #     diet_types=diet_types,
-    #     description=description,
-    #     instructions=instructions,
-    #     photo_url=photo_url,
-    #     video_urls=video_urls or None,
-    #     ingredients=ingredients,
-    # )
+    source = Recipe.query.filter_by(id=id).first()
+    ingredients = [
+        {
+            "id": ingredient.ingredient_id,
+            "name": ingredient.ingredient.name,
+            "quantity": ingredient.quantity,
+            "units": ingredient.unit,
+        }
+        for ingredient in source.ingredients
+    ]
 
-    # return jsonify(recipe=recipe.jsonify()), 201
-    pass
+    recipe = Recipe.create(
+        contributor=source.contributor,
+        status="Template",
+        name=source.name + " Copy",
+        expected_duration_mins=source.expected_duration_mins,
+        meal_types=source.meal_types,
+        diet_types=source.diet_types,
+        description=source.description,
+        instructions=source.instructions,
+        photo_url=source.photo_url,
+        video_urls=source.video_urls,
+        ingredients=ingredients,
+    )
+    return jsonify(recipe=recipe.jsonify()), 201
 
 
 @recipe_bp.route("/my_recipes", methods=["GET"])
