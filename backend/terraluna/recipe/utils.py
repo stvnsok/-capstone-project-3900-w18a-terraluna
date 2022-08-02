@@ -27,7 +27,7 @@ def get_ingredient_counts(ingredients):
 def most_popular_n_ingredients(n):
     ingredient_counts = get_ingredient_counts(ingredient_search(""))
     return [
-        ingredient.id
+        {"id": ingredient.id, "name": ingredient.name}
         for ingredient in sorted(
             ingredient_counts, key=ingredient_counts.get, reverse=True  # type: ignore
         )
