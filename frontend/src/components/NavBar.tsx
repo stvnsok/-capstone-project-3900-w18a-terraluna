@@ -8,8 +8,9 @@ import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
 import TLSelect from './global/AsyncSelect';
 
-const NavBar = ({onIngredientSearch}: {
-    onIngredientSearch?: (ingredients: Ingredient[]) => void;
+const NavBar = ({onIngredientSearch, collapsed}: {
+    onIngredientSearch?: (ingredients: Ingredient[], mealType: string[], dietType: string[], cookingTime: number) => void;
+    collapsed? :boolean
 }) => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
@@ -18,6 +19,9 @@ const NavBar = ({onIngredientSearch}: {
     const [username, setUsername] = useState<string>();
     const navigator = useNavigate()
     
+    const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
+    const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
+    const [cookTime, setCookTime] = useState<{ id: number, name: string, value: number}>();
     const triggerSetUsername = (username: string) => {
         setUsername(username);
     }
@@ -33,8 +37,20 @@ const NavBar = ({onIngredientSearch}: {
     }, [])
 
     useEffect(() => {
-        if (onIngredientSearch) onIngredientSearch(ingredients);
-    }, [ingredients])
+        if (onIngredientSearch) onIngredientSearch(ingredients, mealType.map(x => x.name), dietType.map(x => x.name), cookTime?.value ?? -1);
+    }, [ingredients, mealType, dietType, cookTime])
+
+    const dietTypeOptions = ['vegan', 'vegetarian', 'gluten-free', 'dairy-free', 'nut-free', 'Halal'].map((dietType, index) => { 
+        return { id: index, name: dietType }
+    })
+
+    const mealTypeOptions = ['breakfast', 'lunch', 'dinner', 'snack'].map((mealType, index) => { 
+        return { id: index, name: mealType }
+    })
+
+    const cookTimeOptions = [['None Selected', -1], ['<= 20 minutes', 20], ['<= 30 minutes', 30], ['<= 1 hour', 60], ['<= 2 hours', 120], [' >= 2 hours', -1]].map((cookTime, index) => { 
+        return { id: index, name: cookTime[0] as string, value: cookTime[1] as number }
+    })
 
     return (
         <React.Fragment>
@@ -67,9 +83,9 @@ const NavBar = ({onIngredientSearch}: {
                 }}
             />}
             <div 
-                className='w-full bg-tl-inactive-green h-[300px] flex justify-between'
+                className={`w-full bg-tl-inactive-green ${ collapsed ? 'h-[100px]' : 'h-[300px]'} flex justify-between`}
             >   
-                <div className='w-9/12 mx-auto my-10'>
+                {!collapsed ? <div className='w-9/12 mx-auto my-10'>
                     <TLSelect
                         name="Ingredient"
                         header="Ingredient"
@@ -82,7 +98,39 @@ const NavBar = ({onIngredientSearch}: {
                         isAsync
                         multi
                     />
-                </div>
+                    <div className='mt-5 grid grid-cols-3 gap-10'>
+                        <TLSelect
+                            onChange={(e) => {
+                                setMealType(e);
+                            }}
+                            header="Meal Type"
+                            multi={true}
+                            value={mealType}
+                            options={mealTypeOptions}
+                            isAsync={false}
+                        />
+                        <TLSelect
+                            onChange={(e) => {
+                                setDietType(e);
+                            }}
+                            header="Diet Type"
+                            multi={true}
+                            value={dietType}
+                            options={dietTypeOptions}
+                            isAsync={false}
+                        />
+                        <TLSelect
+                            header={"Cooking Time"}
+                            value={cookTime}
+                            onChange={(e) => {
+                                setCookTime(e);
+                            }}
+                            options={cookTimeOptions}
+                            isAsync={false}
+                            multi={false}
+                        />
+                    </div>
+                </div> : <div></div>}
                 <span 
                     className='mr-20 cursor-pointer h-6 relative'
                     onClick={() => {
@@ -112,6 +160,7 @@ const NavBar = ({onIngredientSearch}: {
                         <div 
                             className='p-3 flex w-40 border-solid border border-tl-inactive-grey'
                             onClick={() => {
+                                navigator('/my_favourites')
                             }}
                         > 
                             <HiOutlineHeart size={22}/> 
