@@ -134,7 +134,7 @@ const SlideOutRecipe = ({
                         text={"Publish"}
                         className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                     />}
-                    {recipe?.status === "Draft" && <Button
+                    {recipe?.status !== "Published" && <Button
                         onClick={() => {
                             if (fullRecipe) {
                                 onEdit(fullRecipe)
@@ -143,7 +143,7 @@ const SlideOutRecipe = ({
                         text={"Edit"}
                         className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                     />}
-                    <Button
+                    {recipe?.status !== "Template" && <Button
                         onClick={() => {
                             if (recipe) {
                                 createRecipeFromTemplate(recipe.id)
@@ -157,7 +157,7 @@ const SlideOutRecipe = ({
                         }}
                         text={"Use As Template"}
                         className="mr-4 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
-                    />
+                    />}
                     <Button
                         onClick={() => {
                             if (recipe) {

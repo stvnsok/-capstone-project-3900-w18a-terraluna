@@ -10,7 +10,7 @@ export const createRecipeFromTemplate = async (
 export const deleteRecipe = async (
     id: number
 ): Promise<DeleteRecipeApiResponse> => {
-    return (await api.delete(`/recipe/${id}`)).data
+    return (await api.delete(`/my_recipe/${id}`)).data
 }
 
 export const getNoRecipeMatchRecipes = async (
