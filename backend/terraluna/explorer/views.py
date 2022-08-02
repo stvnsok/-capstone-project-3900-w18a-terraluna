@@ -214,8 +214,7 @@ def change_saved_recipes(id):
     if request.method == "PUT":
         # If the user has not the recipe is not saved, save the recipe
         if (
-            UserSavedRecipes.query()
-            .filter_by(user_id=user_id)
+            UserSavedRecipes.query.filter_by(user_id=user_id)
             .filter_by(recipe_id=id)
             .first()
             is not None
@@ -233,8 +232,7 @@ def change_saved_recipes(id):
         # DELETE FROM SAVED RECIPES TABLE
         pass
         if (
-            UserSavedRecipes.query()
-            .filter_by(user_id=user_id)
+            UserSavedRecipes.query.filter_by(user_id=user_id)
             .filter_by(recipe_id=id)
             .delete()
         ):
