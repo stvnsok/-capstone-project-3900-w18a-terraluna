@@ -90,7 +90,9 @@ def get_ingredient_suggestions(ingredients):
         ingredient
         for ingredient in suggested_recipe_ingredients
         if ingredient not in ingredients
-    ][:5]
+    ][
+        :5
+    ]  # TODO: improvement would be to select the 5 most popular out of these
 
 
 # def recipe_or_403(username, recipe_id):

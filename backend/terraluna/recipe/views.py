@@ -125,7 +125,7 @@ def create_recipe():
 
 @recipe_bp.route("/recipe/ingredient_suggestions", methods=["GET"])
 def ingredient_suggestions():
-    data = request.get_json()
+    data = request.args
     (ingredients,) = get_data(data, "ingredients")
     ingredients = json.loads(ingredients)["ingredients"]
     ingredients = [int(id) for id in ingredients]
