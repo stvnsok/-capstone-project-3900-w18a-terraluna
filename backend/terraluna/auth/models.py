@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db, logger
 
+from .error import *
 from .utils import *
 
 
@@ -16,8 +17,8 @@ class User(db.Model):
     password = db.Column(db.Text, nullable=False)
 
     @staticmethod
-    def create(username, email, password):
-        """Create a new user model and add it to the database. The password
+    def register(username, email, password):
+        """Register a new user model and add it to the database. The password
         is hashed and salted before being added to the database.
 
         Args:
@@ -27,13 +28,143 @@ class User(db.Model):
 
         Returns:
             User: The new user model.
+
+        Raises:
+            InvalidUsernameFormatError: If username is formatted incorrectly.
+            InvalidEmailFormatError: If email is formatted incorrectly.
+            WeakPasswordError: If password is too weak.
+            UsernameInUseError: If username is already in use.
+            EmailInUseError: If email is already in use.
         """
+        # Check username, email, password are all formatted correctly
+        raiseif(not verify_username(username), InvalidUsernameFormatError)
+        raiseif(not verify_email(email), InvalidEmailFormatError)
+        raiseif(not verify_password(password), WeakPasswordError)
+
+        # Check if username or email is taken
+        raiseif(
+            User.query.filter_by(username=username).first() is not None,
+            UsernameInUseError,
+        )
+        raiseif(User.query.filter_by(email=email).first() is not None, EmailInUseError)
+
         user = User(
             username=username, email=email, password=generate_password_hash(password)
         )
         db.session.add(user)
         db.session.commit()
-        logger.debug("Added user to DB: %s", user)  # type: ignore
+        logger.debug("Registered user: %s", user)  # type: ignore
+        return user
+
+    @staticmethod
+    def login(username_or_email, password):
+        """Log in an existing user.
+
+        Args:
+            username_or_email (str): User's username or email.
+            password (str): Password attempt.
+
+        Returns:
+            User: The existing user model.
+
+        Raises:
+            IncorrectLoginError: If username or email does not exist or if
+                password is incorrect.
+        """
+        # Find User
+        if "@" in username_or_email:
+            user = User.query.filter_by(email=username_or_email).first()
+        else:
+            user = User.query.filter_by(username=username_or_email).first()
+
+        if not user or not user.verify_password(password):
+            raise IncorrectLoginError
+
+        logger.debug("Logged in user: %s", user)  # type: ignore
+        return user
+
+    @staticmethod
+    def reset_username(old_username, new_username):
+        """Reset the user's username with a new username. The new username is
+        checked for valid formatting.
+
+        Args:
+            old_username (str): User's old username.
+            new_username (str): New updated username.
+
+        Returns:
+            User: The user model of user with changed username.
+
+        Raises:
+            InvalidUsernameFormatError: If new username is formatted incorrectly.
+            UsernameInUseError: If new username is already in use.
+        """
+        raiseif(not verify_username(new_username), InvalidUsernameFormatError)
+        raiseif(
+            User.query.filter_by(username=new_username).first() is not None,
+            UsernameInUseError,
+        )
+
+        user = User.query.filter_by(username=old_username).first()
+        user.username = new_username
+        db.session.commit()
+        logger.debug("Updated user's username: %s <old_username=%s>", user, old_username)  # type: ignore
+        return user
+
+    @staticmethod
+    def reset_email(username, new_email):
+        """Reset the user's email with a new email. The new email is checked for
+        valid formatting.
+
+        Args:
+            username (str): User's username.
+            new_email (str): New updated email.
+
+        Returns:
+            User: The user model of user with changed email.
+
+        Raises:
+            InvalidEmailFormatError: If new email is formatted incorrectly.
+            EmailInUseError: If new email is already in use.
+        """
+        raiseif(not verify_email(new_email), InvalidEmailFormatError)
+        raiseif(
+            User.query.filter_by(email=new_email).first() is not None, EmailInUseError
+        )
+
+        user = User.query.filter_by(username=username).first()
+        old_email = user.email
+        user.email = new_email
+        db.session.commit()
+        logger.debug("Updated user's email: %s <old_email=%s>", user, old_email)  # type: ignore
+        return user
+
+    @staticmethod
+    def reset_password(username, old_password, new_password):
+        """Reset the user's password with a new hashed and salted password and
+        update the database record.
+
+        The new password is checked for strength.
+
+        Args:
+            username (str): User's username.
+            old_password (str): Old plaintext password.
+            new_password (str): New updated plaintext password.
+
+        Returns:
+            User: The user model of user with changed password.
+
+        Raises:
+            IncorrectPasswordError: If old password is not correct.
+            WeakPasswordError: If new password is too weak.
+        """
+        user = User.query.filter_by(username=username).first()
+        raiseif(not user.verify_password(old_password), IncorrectPasswordError)
+        raiseif(not verify_password(new_password), WeakPasswordError)
+
+        user.password = generate_password_hash(new_password)
+        db.session.commit()
+        logger.debug("Updated user's password: %s", self)  # type: ignore
         return user
 
     def verify_password(self, password):
@@ -46,61 +177,6 @@ class User(db.Model):
             bool: `True` if the password matched, `False` otherwise.
         """
         return check_password_hash(self.password, password)
-
-    def reset_username(self, new_username):
-        """Reset the user's username with a new username. The new username is
-        checked for valid formatting.
-
-        Args:
-            new_username (str): New updated username.
-
-        Returns:
-            bool: `True` if success. `False` otherwise (invalid username format)
-        """
-        if not verify_username(new_username):
-            return False
-        old_username = self.username
-        self.username = new_username
-        db.session.commit()
-        logger.debug("Updated user's username: %s <old_username=%s>", self, old_username)  # type: ignore
-        return True
-
-    def reset_email(self, new_email):
-        """Reset the user's email with a new email. The new email is checked for
-        valid formatting.
-
-        Args:
-            new_email (str): New updated email.
-
-        Returns:
-            bool: `True` if success, `False` otherwise (invalid email format).
-        """
-        if not verify_email(new_email):
-            return False
-        old_email = self.email
-        self.email = new_email
-        db.session.commit()
-        logger.debug("Updated user's email: %s <old_email=%s>", self, old_email)  # type: ignore
-        return True
-
-    def reset_password(self, new_password):
-        """Reset the user's password with a new hashed and salted password and
-        update the database record.
-
-        The new password is checked for strength.
-
-        Args:
-            new_password (str): New updated plaintext password.
-
-        Returns:
-            bool: `True` if success, `False` otherwise (password too weak).
-        """
-        if not verify_password(new_password):
-            return False
-        self.password = generate_password_hash(new_password)
-        db.session.commit()
-        logger.debug("Updated user's password: %s", self)  # type: ignore
-        return True
 
     def __repr__(self):
         return f"<id={self.id}\tusername={self.username}\temail={self.email}>"

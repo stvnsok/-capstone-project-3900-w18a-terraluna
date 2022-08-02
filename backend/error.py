@@ -1,6 +1,11 @@
 from werkzeug.exceptions import HTTPException
 
 
+def raiseif(cond, exc):
+    if cond:
+        raise exc
+
+
 class Error400(HTTPException):
     code = 400  # Bad Request
 

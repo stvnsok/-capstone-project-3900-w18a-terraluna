@@ -1,4 +1,4 @@
-"""Initial migration.
+"""User
 
 Revision ID: 95b7f6851101
 Revises: 
