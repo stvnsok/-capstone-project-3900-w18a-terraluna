@@ -77,17 +77,11 @@ def get_ingredient_suggestions(ingredients):
         >= len(ingredients)  # TODO: bug if ingredient repeated
     ]
 
-    if not suggested_recipes:
-        return most_popular_n_ingredients(5)
-
     filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
     suggested_recipe_ingredients = {
         recipe_ingredient.ingredient
         for recipe_ingredient in RecipeIngredient.query.filter(or_(*filter_list)).all()
     }
-
-    if not suggested_recipe_ingredients:
-        return most_popular_n_ingredients(5)
 
     return [
         {"id": ingredient.id, "name": ingredient.name}
