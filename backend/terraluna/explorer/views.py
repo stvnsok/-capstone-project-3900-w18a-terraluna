@@ -192,7 +192,7 @@ def update_recipe_favourites(id):
     if request.method == "PUT":
         if (
             UserSavedRecipes.query.filter_by(user_id=user_id, recipe_id=id).first()
-            is not None
+            is None
         ):
             db.session.add(UserSavedRecipes(user_id=user_id, recipe_id=id))
             db.session.commit()
