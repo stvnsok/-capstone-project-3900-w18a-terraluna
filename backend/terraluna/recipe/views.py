@@ -237,8 +237,8 @@ def delete_recipe(id):
 def publish_recipe(id):
     """Publish a recipe. Recipes cannot be published unless all entries are completed,
     except videos per instruction are optional."""
-    Recipe.publish(id)
-    return "", 204
+    recipe = Recipe.publish(id)
+    return jsonify(recipe=recipe.jsonify_extended())
 
 
 @recipe_bp.route("/my_recipes/<id>/copy", methods=["POST"])
