@@ -89,7 +89,7 @@ def get_ingredient_suggestions(ingredients):
     return [
         {"id": ingredient.id, "name": ingredient.name}
         for ingredient in suggested_recipe_ingredients
-        if ingredient not in ingredients
+        if ingredient.id not in ingredients
     ][
         :5
     ]  # TODO: improvement would be to select the 5 most popular out of these
