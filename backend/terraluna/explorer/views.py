@@ -19,7 +19,7 @@ explorer_bp = Blueprint("explorer_bp", __name__)
 @explorer_bp.route("/recipes", methods=["GET"])
 @jwt_required()
 def get_ready_recipes():
-    """Get list of recipes that can be made based on the given list on ingredients."""
+    """Get list of published recipes that can be made based on the given list on ingredients."""
     data = request.args
     (pantry_ingredients,) = get_data(data, "ingredients")
     pantry_ingredients = json.loads(pantry_ingredients)["ingredients"]
@@ -27,6 +27,9 @@ def get_ready_recipes():
 
     ready_recipes = []
     for recipe in Recipe.query.all():
+        if recipe.status != "Published":
+            continue
+
         necessary_ingredients = [
             ingredient.ingredient_id for ingredient in recipe.ingredients
         ]
@@ -198,10 +201,11 @@ def list_savedRecipes():
 
 @explorer_bp.route("/recipes/<int:id>/favourite", methods=["PUT", "DELETE"])
 @jwt_required()
-def change_saved_recipes(id):
-    """
-    PUT: add recipe to user's saved recipes
-    DELETE: remove recipe from user's saved recipes
+def update_recipe_favourites(id):
+    """Update a user's favourited recipes.
+
+    PUT: Add recipe to user's favourited recipes.
+    DELETE: Remove recipe from user's favourited recipes.
     """
 
     # Check that recipe_id exists and is published and get the Recipe object
