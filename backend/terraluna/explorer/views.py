@@ -166,7 +166,7 @@ def recipe_comment(id):
     return jsonify(comment_id=comment.id)
 
 
-@explorer_bp.route("/savedRecipes", methods=["GET"])
+@explorer_bp.route("/recipes/favourite", methods=["GET"])
 @jwt_required(fresh=True)
 def list_savedRecipes():
     """Return a list of all recipes saved by the user"""
@@ -196,8 +196,8 @@ def list_savedRecipes():
     return jsonify
 
 
-@explorer_bp.route("/savedRecipes/<int:id>", methods=["PUT", "DELETE"])
-@jwt_required(fresh=True)
+@explorer_bp.route("/recipes/<int:id>/favourite/", methods=["PUT", "DELETE"])
+@jwt_required()
 def change_saved_recipes(id):
     """
     PUT: add recipe to user's saved recipes
