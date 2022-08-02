@@ -1,3 +1,7 @@
+from datetime import datetime
+
+from sqlalchemy import func
+
 from app import db, logger
 
 
@@ -45,6 +49,7 @@ class Recipe(db.Model):
     video_urls = db.Column(db.ARRAY(db.Text))  # one per instruction
 
     ingredients = db.relationship("RecipeIngredient", back_populates="recipe")
+    comments = db.relationship("Comment", back_populates="recipe")
 
     @staticmethod
     def create(
@@ -128,6 +133,29 @@ class Recipe(db.Model):
         db.session.commit()
         return recipe
 
+    @staticmethod
+    def delete(id):
+        """Delete a recipe from the database.
+
+        Args:
+            id (int): Id of recipe to delete
+        """
+        db.session.query(RecipeIngredient).filter(
+            RecipeIngredient.recipe_id == id
+        ).delete()
+        db.session.query(Recipe).filter(Recipe.id == id).delete()
+        db.session.commit()
+
+    @staticmethod
+    def publish(id):
+        """Publish a draft recipe.
+
+        Args:
+            id (int): Id of recipe draft to publish.
+        """
+        Recipe.query.filter_by(id=id).first().status = "Published"
+        db.session.commit()
+
     def jsonify(self):
         return {
             "id": self.id,
@@ -137,8 +165,42 @@ class Recipe(db.Model):
             "mealType": self.meal_types,
             "dietType": self.diet_types,
             "description": self.description,
-            "instructions": self.instructions,
             "imageUrl": self.photo_url,
+        }
+
+    def jsonify_extended(self):
+        ingredients = [
+            {
+                "id": recipe_ingredient.ingredient_id,
+                "name": recipe_ingredient.ingredient.name,
+                "units": recipe_ingredient.units,
+                "quantity": recipe_ingredient.quantity,
+            }
+            for recipe_ingredient in self.ingredients
+        ]
+
+        steps = [
+            {"instruction": self.instructions[i], "videoUrl": self.video_urls[i]}
+            for i in range(func.cardinality(self.instructions))
+        ]
+
+        reviews = [
+            {"stars": comment.stars, "review": comment.message}
+            for comment in self.comments
+        ]
+
+        return {
+            "id": self.id,
+            "status": self.status,
+            "name": self.name,
+            "cookTime": self.expected_duration_mins,
+            "mealType": self.meal_types,
+            "dietType": self.diet_types,
+            "description": self.description,
+            "imageUrl": self.photo_url,
+            "ingredients": ingredients,
+            "steps": steps,
+            "reviews": reviews,
         }
 
     def __repr__(self):
@@ -163,3 +225,43 @@ class RecipeIngredient(db.Model):
 
     recipe = db.relationship("Recipe", back_populates="ingredients")
     ingredient = db.relationship("Ingredient", back_populates="recipes")
+
+
+class Comment(db.Model):
+    """A comment/review on a recipe."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    stars = db.Column(db.Integer)
+    message = db.Column(db.Text)
+    time = db.Column(db.Time)
+
+    recipe = db.relationship("Recipe", back_populates="comments")
+
+    @staticmethod
+    def create(recipe_id, user_id, stars, message):
+        """Create a new comment model and add it to the database.
+
+        Args:
+            recipe_id (int): Id of recipe being reviewed.
+            user_id (int): User id of reviewer.
+            stars (int): Star rating given (1 to 5).
+            message (str): Review message.
+
+        Returns:
+            Comment: The new comment model.
+        """
+        # Create and add comment object to db
+        comment = Comment(
+            recipe_id=recipe_id,
+            user_id=user_id,
+            stars=stars,
+            message=message,
+            time=datetime.now(),
+        )
+        db.session.add(comment)
+        db.session.commit()
+        logger.debug("Added comment to DB: <%s>", comment.id)  # type: ignore
+        return comment

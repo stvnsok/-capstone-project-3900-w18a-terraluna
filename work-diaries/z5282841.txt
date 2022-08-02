@@ -59,6 +59,7 @@ Week 4
 * Created Flask-JWT-Extended integration to implement token-based authentication using both
   access tokens and refresh tokens (to be stored on the client-side)
 * Tested endpoints/routes thoroughly using Postman
+* Added various debug logging throughout the code
 * Coordinated with David to ensure correct communication with the backend API by making clear
   the expected request/response formats
 * Enabled CORS after David discovered that backend calls did not work with `axios` (albeit
