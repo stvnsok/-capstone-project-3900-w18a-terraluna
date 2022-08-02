@@ -2,6 +2,7 @@ interface Recipe {
     id: number;
     name: string;
     cookTime: number;
+    description?: string;
     imageUrl?: string;
     mealType: string[];
     dietType: string[];
