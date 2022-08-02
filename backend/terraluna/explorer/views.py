@@ -196,7 +196,7 @@ def list_savedRecipes():
     return jsonify
 
 
-@explorer_bp.route("/recipes/<int:id>/favourite/", methods=["PUT", "DELETE"])
+@explorer_bp.route("/recipes/<int:id>/favourite", methods=["PUT", "DELETE"])
 @jwt_required()
 def change_saved_recipes(id):
     """
@@ -226,6 +226,8 @@ def change_saved_recipes(id):
         else:
             logger.debug("Recipe " + id + " already saved")  # type: ignore
 
+        return "", 204
+
     # DELETE: remove recipe from user's saved recipes
     elif request.method == "DELETE":
         # DELETE FROM SAVED RECIPES TABLE
@@ -240,3 +242,5 @@ def change_saved_recipes(id):
         else:
             logger.debug("Recipe " + id + " not in saved recipes")  # type: ignore
         db.commit()
+
+        return "", 204
