@@ -77,6 +77,9 @@ def get_ingredient_suggestions(ingredients):
         >= len(ingredients)  # TODO: bug if ingredient repeated
     ]
 
+    if not suggested_recipes:
+        return []
+
     filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
     suggested_recipe_ingredients = {
         recipe_ingredient.ingredient
