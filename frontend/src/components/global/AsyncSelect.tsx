@@ -6,6 +6,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     value,
     onChange,
     multi,
+    name,
     excludeHeader,
     header,
     menuText = (value: T) => value.name,
@@ -13,9 +14,10 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     options,
     apiCall,
 }: {
-    value: IsMulti extends true ? T[] : T;
+    value?: IsMulti extends true ? T[] : T;
     onChange: (val: IsMulti extends true ? T[] : T) => void;
     multi? : IsMulti;
+    name?: string;
     excludeHeader?: boolean | undefined;
     header?: string;
     menuText?: (value: T) => string;
@@ -31,18 +33,34 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
         }
     }
 
+
     return <div>
-        {!excludeHeader && <label className='text-md font-medium'>{header}{multi ? 's' : ''}</label>}
+        {!excludeHeader && <label className='text-md font-medium mb-2'>{header}{multi ? 's' : ''}</label>}
         {isAsync ? 
         <AsyncSelect
+            name={"select"+header+name}
             isMulti={multi}
             value={value}
             styles={{
+                multiValueRemove: (styles) => {
+                    return {
+                        ...styles,
+                        ":hover": {
+                            background: '#4BB03A'
+                        }
+                    }
+                },
                 multiValue: (styles) => {
                     return {
                         ...styles,
                         color: '#FFF',
                         background: '#A8F59B'
+                    }
+                },
+                container: (styles) => {
+                    return {
+                        ...styles,
+                        marginTop: "8px"
                     }
                 }
             }}
@@ -52,25 +70,43 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
             onChange={(e) => {
                 onChange(e as IsMulti extends true ? T[] : T);
             }}
+            placeholder={header ? header+"..." : undefined}
         /> : 
         <Select
-                isMulti={multi}
-                value={value}
-                styles={{
-                    multiValue: (styles) => {
-                        return {
-                            ...styles,
-                            color: '#FFF',
-                            background: '#A8F59B'
+            name={"select"+header+name}
+            isMulti={multi}
+            value={value}
+            styles={
+                {multiValueRemove: (styles) => {
+                    return {
+                        ...styles,
+                        ":hover": {
+                            background: '#85f772',
+                            opacity: '80%'
                         }
                     }
-                }}
-                options={options as T[]}
-                getOptionLabel={e => menuText(e)}
-                getOptionValue={e => `${e.id}`}
-                onChange={(e) => {
-                    onChange(e as IsMulti extends true ? T[] : T);
-                }}
+                },
+                multiValue: (styles) => {
+                    return {
+                        ...styles,
+                        color: '#FFF',
+                        background: '#A8F59B'
+                    }
+                },
+                container: (styles) => {
+                    return {
+                        ...styles,
+                        marginTop: "8px"
+                    }
+                }
+            }}
+            options={options as T[]}
+            getOptionLabel={e => menuText(e)}
+            getOptionValue={e => `${e.id}`}
+            onChange={(e) => {
+                onChange(e as IsMulti extends true ? T[] : T);
+            }}
+            placeholder={header ? header+"..." : undefined}
         />}
     </div>
 }
