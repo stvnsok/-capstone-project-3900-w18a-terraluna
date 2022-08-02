@@ -184,10 +184,10 @@ class Recipe(db.Model):
             for i in range(len(self.instructions))
         ]
 
-        # reviews = [
-        #     {"stars": comment.stars, "review": comment.message}
-        #     for comment in self.comments
-        # ]
+        reviews = [
+            {"stars": comment.stars, "review": comment.message}
+            for comment in self.comments
+        ]
 
         return {
             "id": self.id,
@@ -200,7 +200,7 @@ class Recipe(db.Model):
             "imageUrl": self.photo_url,
             "ingredients": ingredients,
             "steps": steps,
-            # "reviews": reviews,
+            "reviews": reviews,
         }
 
     def __repr__(self):

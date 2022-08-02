@@ -8,10 +8,12 @@ import { BsCircleFill } from 'react-icons/bs';
 
 const SlideOutRecipe = ({
     recipe,
-    onClose
+    onClose,
+    onEdit
 }: {
     recipe?: Recipe;
     onClose: () => void
+    onEdit: (fullRecipe: Partial<RecipeDetails>) => void
 }) => {
     const minutesToHoursPipe = (time: number) => {
         const hours = Math.floor(time/60);
@@ -126,6 +128,15 @@ const SlideOutRecipe = ({
                             }
                         }}
                         text={"Publish"}
+                        className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
+                    />}
+                    {recipe?.status === "Draft" && <Button
+                        onClick={() => {
+                            if (fullRecipe) {
+                                onEdit(fullRecipe)
+                            }
+                        }}
+                        text={"Edit"}
                         className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                     />}
                     <Button

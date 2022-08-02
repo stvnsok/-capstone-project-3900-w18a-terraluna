@@ -5,8 +5,10 @@ import CreateRecipeCard from './CreateRecipeCard';
 const RecipeForm = ({
     isOpen,
     onClose,
+    fullRecipe,
 }: {
     isOpen: boolean;
+    fullRecipe?: Partial<RecipeDetails>;
     onClose: () => void
 }) => {
 
@@ -22,6 +24,7 @@ const RecipeForm = ({
         >
             <CreateRecipeCard
                 closeFunction={onClose}
+                fullRecipe={fullRecipe}
             />
         </div>
     </div>

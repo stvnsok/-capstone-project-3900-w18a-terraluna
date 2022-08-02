@@ -8,6 +8,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     multi,
     name,
     excludeHeader,
+    defaultValue,
     header,
     menuText = (value: T) => value.name,
     isAsync,
@@ -16,6 +17,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     apiCallKey
 }: {
     value?: IsMulti extends true ? T[] : T;
+    defaultValue?: IsMulti extends true ? T[] : T;
     onChange: (val: IsMulti extends true ? T[] : T) => void;
     multi? : IsMulti;
     name?: string;
@@ -78,6 +80,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
             name={"select"+header+name}
             isMulti={multi}
             value={value}
+            defaultValue={defaultValue}
             styles={
                 {multiValueRemove: (styles) => {
                     return {

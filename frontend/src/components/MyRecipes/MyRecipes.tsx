@@ -13,6 +13,7 @@ const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
     const [isCreateRecipeOpen, setIsCreateRecipeOpen] = useState<boolean>(false);
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
+    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>();
     const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>([{
         imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXxLY0tYQVBsb3FBb3x8ZW58MHx8fHw%3D&w=1000&q=80',
@@ -192,6 +193,11 @@ const MyRecipes = () => {
             onClose={() => {
                 setSlideOutRecipe(undefined)
             }}
+            onEdit={(recipe) => {
+                setIsCreateRecipeOpen(true);
+                setFullRecipe(recipe)
+                setSlideOutRecipe(undefined)
+            }}
         />
 
         <CreateRecipeForm
@@ -199,6 +205,7 @@ const MyRecipes = () => {
             onClose={() => {
                 setIsCreateRecipeOpen(false)
             }}
+            fullRecipe={fullRecipe}
         />
     </React.Fragment> 
 )}
