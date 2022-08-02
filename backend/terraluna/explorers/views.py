@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, Response, request
+from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from terraluna.explorers.error import *
 from terraluna.explorers.models import *
@@ -16,16 +16,21 @@ recipe_explorers_bp = Blueprint("recipe_explorers_bp", __name__)
 @recipe_explorers_bp.route("/ingredient_categories", methods=["GET"])
 def ingredient_categories():
     """Return a list of all ingredients in categories"""
+    
     result = []
     category_names = db.session.query(IngredientCategory.name).distinct()
     for category_name in category_names:
         ingredients = []
-        for ingredient_id in IngredientCategory.query.filter_by(name=category_name):
-            ingredient_name = Ingredient.query.filter_by(id=ingredient_id).one()
+        query = db.session.query(
+            IngredientCategory,
+            Ingredient
+        ).filter(IngredientCategory.ingredient_id==Ingredient.id
+        ).filter(IngredientCategory.name==category_name)
+        for row in query:
             ingredients.append(
                 {
-                    'ingredient_id': ingredient_id,
-                    'name': ingredient_name
+                    'ingredient_id': row.Ingredient.id,
+                    'name': row.Ingredient.name
                 }
             )
         result.append({
@@ -34,32 +39,34 @@ def ingredient_categories():
             }
         )
         
-    return Response(json.dumps(result), mimetype='application/json')
+    return jsonify(ingredientCategories=result)
 
 @recipe_explorers_bp.route("/pantry", methods=["GET", "PUT"])
 @jwt_required(fresh=True)
 def pantry():
     """
     GET: return ingredients from the user's saved pantry
-    PUT: update ingredients in user's pantry given a list of ingredient_id
+    PUT: given a list of ingredients, updates ingredients in user's pantry
     """
+
     # Retrieve current user from token
     user_id = username_to_user_id(get_jwt_identity())
 
     # GET: Return list of all ingredients in the user's pantry
     if request.method == "GET":
         pantry = []
-        for row in UserPantry.query.filter_by(user_id=user_id):
-            ingredient_id = row.ingredient_id
-            ingredient = Ingredient.query.filter_by(id=ingredient_id).one()
-            ingredient_name = ingredient.name
+        query = db.session.query(
+            UserPantry, Ingredient
+        ).filter_by(UserPantry.ingredient_id == Ingredient.id
+        ).filter_by(UserPantry.user_id==user_id)
+        for row in query:
             pantry.append({
-                'ingredient_id': ingredient_id, 
-                'name': ingredient_name
+                'ingredient_id': row.Ingredient.id, 
+                'name': row.Ingredient.name
             })
-        return Response(json.dumps(pantry), mimetype='application/json')
+        return jsonify(pantry=pantry)
 
-    # Given a list of ingredient_id, updates the UserPantry Table
+    # PUT: Given a list of ingredient_id, updates the UserPantry Table
     elif request.method == "PUT":
         pass
         ##################################################
@@ -80,8 +87,12 @@ def recipe_view(id):
     """Return details of the recipe"""
     
     # Check that recipe_id exists and is published and get the Recipe object
-    recipe = validate_recipe_id(id)
+    recipe = id_to_valid_recipe(id)
 
+    ########################
+    # TODO: Change this to fit new recipe model
+    # You can copy directly from "/my_recipes/{id}" GET route and add 'comments' key
+    ########################
     response = {
         'name': recipe.name,
         'recipePhoto_url': recipe.photo_url,

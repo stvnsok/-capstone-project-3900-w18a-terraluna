@@ -2,6 +2,7 @@ import datetime
 
 from app import db, logger
 
+
 class IngredientCategory(db.Model):
     """An Ingredient Category"""
     
@@ -40,7 +41,7 @@ class Comment(db.Model):
         Args:
             recipe_id (int): recipe id.
             user_id (int): user id.
-            comment (str): comment.
+            message (str): message.
 
         Returns:
             Comment: The new comment model.

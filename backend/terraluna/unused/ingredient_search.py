@@ -4,6 +4,12 @@ from error import *
 from flask import Blueprint, Response, request
 from terraluna.recipe.models import Ingredient
 
+
+
+#########################################################
+# Up to you if you want to use this, looks like you already implemented it
+#########################################################
+
 ingredient_search_bp = Blueprint("ingredient_search_bp", __name__)
 """Blueprint: A Blueprint for the ingredient_search route."""
 
