@@ -47,6 +47,22 @@ Week 7
 Began writing skeleton code to meet basic functionality for demo B.
 Realised witht he team that a few more details needed to be ironed out as to how we
 would implement the project in particular reference to how a user would input information
-and storage in database. Realised I needed to touch base with flask_blueprint and flast_jwt
+and storage in database. Realised I needed to touch base with flask_blueprint and flask_jwt
 packages for the project. Also plan on writing some basic backend tests. 
 Defined required views to connect backend to frontend
+
+Week 8
+Functionality was mostly complete for demo B however, front end and back end had trouble linking up.
+This was due to conflicting schedules between team members, thus created and API spec for the frontend\
+and backend team to work off of, however not in time for it to reflect in demo B but served as a standardised
+API between the two halves of our team. Had our retrospective in which we highlighted strongly this point. 
+Reviewed API specification with team during our retrospective and made changes to better focus our efforts.
+
+Week 9
+With other uni commitments, little progress was made however, started on models and views for the final demo
+In addition, seed/test/demo files are being created for the project. 
+Also restructuring code to make it more readable and reusable.
+
+Week 10
+
+

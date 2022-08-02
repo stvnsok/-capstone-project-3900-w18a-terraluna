@@ -1,0 +1,19 @@
+Cheeses
+parmesan
+cream cheese
+cheddar
+mozzarella
+feta
+ricotta
+blue cheese
+goat cheese
+fresh mozzarella
+swiss cheese
+american cheese
+brie
+gouda
+halloumi
+smoked gouda
+aged cheddar
+smoked mozzarella
+cheese powder
