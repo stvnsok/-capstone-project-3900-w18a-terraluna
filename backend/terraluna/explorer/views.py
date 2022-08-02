@@ -20,27 +20,59 @@ explorer_bp = Blueprint("explorer_bp", __name__)
 @explorer_bp.route("/recipes", methods=["GET"])
 @jwt_required()
 def get_ready_recipes():
-    """Get list of published recipes that can be made based on the given list on ingredients."""
+    """Get list of published recipes that can be made based on the given list on ingredients.
+
+    Optional filters can be applied to the search results. Can filter by a maximum cooking
+    time, meal types and diet types.
+
+    Returned recipes match *any* given meal type and match *all* given diet types.
+    """
     data = request.args
-    (pantry_ingredients,) = get_data(data, "ingredients")
+    (pantry_ingredients, meal_types, diet_types, cook_time) = get_data(
+        data, "ingredients", "mealType", "dietType", "cookTime"
+    )
     pantry_ingredients = json.loads(pantry_ingredients)["ingredients"]
     pantry_ingredients = [int(id) for id in pantry_ingredients]
+    meal_types = json.loads(meal_types)["mealType"]
+    diet_types = json.loads(diet_types)["dietType"]
+    cook_time = int(cook_time) if cook_time else None
+    cook_time = cook_time if cook_time != -1 else None  # -1 => 3 hours+ => no filter
 
     ready_recipes = []
     for recipe in Recipe.query.all():
+        # Check recipe is published
         if recipe.status != "Published":
             continue
 
+        # Check if recipe takes too long to make
+        if cook_time and recipe.expected_duration_mins > cook_time:
+            continue
+
+        # Check if recipe has any correct meal type
+        if meal_types and not any(
+            meal_type in recipe.meal_types for meal_type in meal_types
+        ):
+            continue
+
+        # Check if recipe has all correct diet types
+        if diet_types and not all(
+            diet_type in recipe.diet_types for diet_type in diet_types
+        ):
+            continue
+
+        # Check recipe's necessary ingredients
         necessary_ingredients = [
             ingredient.ingredient_id for ingredient in recipe.ingredients
         ]
 
+        # Check recipe's necessary ingredients that are not in pantry
         absent_necessary_ingredients = [
             ingredient
             for ingredient in necessary_ingredients
             if ingredient not in pantry_ingredients
         ]
 
+        # If there are no missing necessary ingredients, we can make this recipe
         if not absent_necessary_ingredients:
             ready_recipes.append(recipe)
 
