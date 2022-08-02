@@ -86,6 +86,9 @@ def get_ingredient_suggestions(ingredients):
         for recipe_ingredient in RecipeIngredient.query.filter(or_(*filter_list)).all()
     }
 
+    if not suggested_recipe_ingredients:
+        return most_popular_n_ingredients(5)
+
     return [
         {"id": ingredient.id, "name": ingredient.name}
         for ingredient in suggested_recipe_ingredients
