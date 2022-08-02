@@ -143,28 +143,107 @@ def create_recipe():
     return jsonify(recipe=recipe.jsonify()), 201
 
 
-@recipe_bp.route("/my_recipes/<id>", methods=["DELETE"])
-@jwt_required()
-def delete_recipe(id):
-    """Delete a recipe."""
-    Recipe.delete(id)
-    return ("", 204)
-
-
-@recipe_bp.route("/my_recipes/<id>", methods=["PUT"])
-@jwt_required()
-def publish_recipe(id):
-    """Publish a recipe. Recipes cannot be published unless all entries are completed,
-    except videos per instruction are optional."""
-    pass
-
-
 @recipe_bp.route("/my_recipes/<id>", methods=["GET"])
 @jwt_required()
 def get_recipe(id):
     """Get the full details of a single recipe."""
     recipe = Recipe.query.filter_by(id=id).first()
     return jsonify(recipe=recipe.jsonify_extended())
+
+
+@recipe_bp.route("/my_recipes/<id>", methods=["PUT", "PATCH"])
+@jwt_required()
+def edit_recipe(id):
+    """Edit a recipe."""
+    data = request.form
+    (
+        name,
+        expected_duration_mins,
+        meal_types,
+        diet_types,
+        description,
+        instructions,
+        ingredients,
+    ) = get_data(
+        data,
+        "name",
+        "expectedDuration",  # "182" or ""
+        "mealType",  # "{"mealType": ['lunch', 'dinner']}"
+        "dietType",  # "{"dietType": ['vegetarian', 'nut-free']}"
+        "description",
+        "instructions",  # "{"instructions": ['step 1', 'step 2']}"
+        "ingredients",  # "{"ingredients": [{"id": 1, "name": "Water", "quantity": 1, "units": "L"}]}"
+    )
+
+    # Type changes
+    name = name or None
+    expected_duration_mins = (
+        int(expected_duration_mins) if expected_duration_mins else None
+    )
+    meal_types = json.loads(meal_types)["mealType"]
+    diet_types = json.loads(diet_types)["dietType"]
+    description = description or None
+    instructions = json.loads(instructions)["instructions"] or None
+    ingredients = json.loads(ingredients)["ingredients"] or None
+
+    # Save files
+    # TODO: improvement delete old files
+    files = request.files
+
+    photo_url = None
+    video_urls = [""] * len(instructions) if instructions else []
+    for input_name in files:
+        # Input tag name: "image", "video0"
+        # FileStorage.filename: original filenames
+        file = files[input_name]
+        if not file.filename:
+            continue  # TODO
+
+        filename = secure_filename(file.filename)
+        if input_name == "image":
+            photo_url = os.path.join(app.config["PHOTO_UPLOAD_FOLDER"], filename)
+            file.save(photo_url)
+        else:
+            video_url = os.path.join(app.config["VIDEO_UPLOAD_FOLDER"], filename)
+            video_urls[int(input_name[-1])] = video_url
+            file.save(video_url)
+
+    recipe = Recipe.edit(
+        id,
+        name,
+        expected_duration_mins,
+        meal_types,
+        diet_types,
+        description,
+        instructions,
+        photo_url,
+        video_urls,
+        ingredients,
+    )
+    return jsonify(recipe=recipe.jsonify()), 201
+
+
+@recipe_bp.route("/my_recipes/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_recipe(id):
+    """Delete a recipe."""
+    Recipe.delete(id)
+    return "", 204
+
+
+@recipe_bp.route("/my_recipes/<id>/publish", methods=["PUT"])
+@jwt_required()
+def publish_recipe(id):
+    """Publish a recipe. Recipes cannot be published unless all entries are completed,
+    except videos per instruction are optional."""
+    Recipe.publish(id)
+    return "", 204
+
+
+@recipe_bp.route("/my_recipes/<id>/copy", methods=["POST"])
+@jwt_required()
+def copy_recipe(id):
+    pass
 
 
 @recipe_bp.route("/my_recipes", methods=["GET"])
