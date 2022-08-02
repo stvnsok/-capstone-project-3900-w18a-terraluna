@@ -25,13 +25,21 @@ export const getRecipesRecipeContributors = async (
 }
 
 export const createRecipe = async (
-    recipe: Recipe
+    formData: FormData
 ): Promise<NewRecipeApiResponse> => {
-    return (await api.post('/recipe_contributors/new', {params: {recipe: recipe}})).data
+    return (await api.post('/recipe_contributors/new', formData)).data
 }
 
 export const getIngredients = async (
     query: string
 ): Promise<Ingredient[]> => {
-    return (await api.post('/ingredients', {params: {query}})).data
+    return (await api.get('/ingredients', {params: {query}})).data
 }
+
+
+
+//1. How many recipes does the current ingredient set match - A;
+//2. Check for each ingredient that doesn't exist in the ingredient set what makes A + New Recipes Unlocked the greatest.
+// New Recipes Unlocked
+// NumberOfRecipesMatched(Ingedients[]) => number
+// 

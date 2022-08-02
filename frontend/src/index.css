@@ -37,3 +37,23 @@ html, body {
     66%   {transform: rotate(-5deg)}
     100%   {transform: rotate(3deg)}
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #9cff95;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(123, 255, 97);
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(44, 187, 0);
+  }
