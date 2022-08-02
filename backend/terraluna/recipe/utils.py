@@ -1,5 +1,7 @@
 import re
 
+from sqlalchemy import or_
+
 from terraluna.auth.models import User
 from terraluna.recipe.models import *
 
@@ -22,6 +24,16 @@ def get_ingredient_counts(ingredients):
     }
 
 
+def most_popular_n_ingredients(n):
+    ingredient_counts = get_ingredient_counts(ingredient_search(""))
+    return [
+        ingredient.id
+        for ingredient in sorted(
+            ingredient_counts, key=ingredient_counts.get, reverse=True  # type: ignore
+        )
+    ][:n]
+
+
 def username_to_user_id(username):
     """Given a username, returns the corresponding user id.
 
@@ -32,6 +44,53 @@ def username_to_user_id(username):
         int: Corresponding id of given username.
     """
     return User.query.filter_by(username=username).first().id
+
+
+def get_ingredient_suggestions(ingredients):
+    """Suggest ingredients to add to a recipe. An ingredient is suggested
+    if it is not in the current recipe but in another recipe that contains all
+    the current ingredients and more.
+
+    Args:
+        ingredients (list of int): List of ingredient ids in current recipe.
+    """
+    if not ingredients:
+        return most_popular_n_ingredients(5)
+
+    filter_list = [RecipeIngredient.ingredient_id == id for id in ingredients]
+    recipes_with_current_ingredients = RecipeIngredient.query.filter(
+        or_(*filter_list)
+    ).all()
+
+    ingredient_counts = {}
+    for recipe in recipes_with_current_ingredients:
+        ingredient_counts[recipe.recipe_id] = (
+            1
+            if ingredient_counts.get(recipe.recipe_id) is None
+            else ingredient_counts[recipe.recipe_id] + 1
+        )
+
+    suggested_recipes = [
+        recipe
+        for recipe in ingredient_counts
+        if ingredient_counts[recipe]
+        >= len(ingredients)  # TODO: bug if ingredient repeated
+    ]
+
+    if not suggested_recipes:
+        return most_popular_n_ingredients(5)
+
+    filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
+    suggested_recipe_ingredients = {
+        recipe_ingredient.ingredient_id
+        for recipe_ingredient in RecipeIngredient.query.filter(or_(*filter_list)).all()
+    }
+
+    return [
+        ingredient
+        for ingredient in suggested_recipe_ingredients
+        if ingredient not in ingredients
+    ][:5]
 
 
 # def recipe_or_403(username, recipe_id):

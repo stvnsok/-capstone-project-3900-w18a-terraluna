@@ -49,6 +49,10 @@ def ingredients():
 @recipe_bp.route("/recipe", methods=["POST"])
 @jwt_required()
 def create_recipe():
+    """Create a new recipe draft.
+
+    Recipe image and instruction videos are saved on the filesystem if given.
+    """
     data = request.form
     (
         name,
@@ -117,6 +121,15 @@ def create_recipe():
     )
 
     return jsonify(recipe=recipe.jsonify())
+
+
+@recipe_bp.route("/recipe/ingredient_suggestions", methods=["GET"])
+def ingredient_suggestions():
+    data = request.get_json()
+    (ingredients,) = get_data(data, "ingredients")
+    ingredients = json.loads(ingredients)["ingredients"]
+    ingredients = [int(id) for id in ingredients]
+    return jsonify(ingredients=get_ingredient_suggestions(ingredients))
 
 
 ###############################################################################
