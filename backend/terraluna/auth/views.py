@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended.utils import (
     create_access_token,
     create_refresh_token,
+    decode_token,
     get_jwt,
     get_jwt_identity,
 )
@@ -69,12 +70,17 @@ def register():
     )
 
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     """Log in a user with valid credentials.
 
     Generates a new access/refresh token pair.
     """
+    if request.method == "GET":
+        data = request.args
+        (access_token,) = get_data(data, "access_token")
+        return jsonify(username=decode_token(access_token)["sub"])
+
     data = request.get_json()
     username_or_email, password = get_data(data, "username_or_email", "password")
 
