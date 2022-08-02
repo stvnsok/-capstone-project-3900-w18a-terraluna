@@ -264,6 +264,7 @@ export default function CreateRecipe ({closeFunction}: {
                                     setIngredients(tmp.map((ingredient, ingredientIndex) => index === ingredientIndex ? val : ingredient));
                                 }}
                                 apiCall={getIngredients}
+                                apiCallKey="ingredients"
                                 isAsync
                                                        
                             />
