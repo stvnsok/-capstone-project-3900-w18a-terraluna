@@ -146,8 +146,8 @@ def recipe_view(id):
     return Response(json.dumps(response), mimetype="application/json")
 
 
-@explorer_bp.route("/recipe/<int:id>/comment", methods=["POST"])
-@jwt_required(fresh=True)
+@explorer_bp.route("/recipes/<int:id>/review", methods=["POST"])
+@jwt_required()
 def recipe_comment(id):
     """Comment on the recipe"""
 
