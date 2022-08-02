@@ -318,10 +318,13 @@ class Recipe(db.Model):
             for recipe_ingredient in self.ingredients
         ]
 
-        steps = [
-            {"instruction": self.instructions[i], "videoUrl": self.video_urls[i]}
-            for i in range(len(self.instructions))
-        ]
+        if self.instructions:
+            steps = [
+                {"instruction": self.instructions[i], "videoUrl": self.video_urls[i]}
+                for i in range(len(self.instructions))
+            ]
+        else:
+            steps = []
 
         reviews = [
             {"stars": comment.stars, "review": comment.message}
