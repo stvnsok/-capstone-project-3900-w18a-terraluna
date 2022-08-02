@@ -66,25 +66,26 @@ class Recipe(db.Model):
 
         Args:
             contributor (int): ID of recipe contributor.
-            status (str): Status of recipe (draft, template or published).
+            status (str): Status of recipe (Draft, Template or Published).
             name (str): Recipe name.
-            expected_duration (int, optional): Estimated cooking time duration
+            expected_duration_mins (int, optional): Estimated cooking time duration
                 in minutes. Defaults to None.
-            meal_type (list of str, optional): Types of meal this recipe falls under.
+            meal_types (list of str, optional): Types of meal this recipe falls under.
                 Defaults to None.
-            description (str, optional): Description of recipe. Defaults to None.
             diet_type (list of str, optional): Types of diet this recipe satisfies.
                 Defaults to None.
-            instructions (str, optional): Recipe instructions. Defaults to None.
+            description (str, optional): Description of recipe. Defaults to None.
+            instructions (list of str, optional): Recipe instructions. Defaults to None.
             photo_url (str, optional): URL for recipe photo. Defaults to None.
-            video_url (str, optional): URL for recipe video. Defaults to None.
+            video_urls (list of str, optional): URL for recipe instruction videos. Defaults to None.
             ingredients (list of dict, optional): Ingredients required for this recipe.
                 Defaults to None.
                     [
                         {
-                            "ingredient_id": int
-                            "quantity": int
-                            "unit": str
+                            "id": int,
+                            "name": str,
+                            "quantity": int,
+                            "units": str
                         },
                         ...
                     ]
@@ -117,19 +118,31 @@ class Recipe(db.Model):
                 RecipeIngredient(
                     recipe_id=recipe.id,
                     # TODO: what if ingredient id does not exist
-                    ingredient_id=ingredient["ingredient_id"],
+                    ingredient_id=ingredient["id"],
                     quantity=ingredient["quantity"],
                     unit=ingredient["units"],
                 )
             )
-            logger.debug("Added ingredient <%s> to recipe <%s>", ingredient["ingredient_id"], recipe.id)  # type: ignore
+            logger.debug("Added ingredient <%s> to recipe <%s>", ingredient["id"], recipe.id)  # type: ignore
 
         db.session.commit()
         return recipe
 
+    def jsonify(self):
+        return {
+            "id": self.id,
+            "status": self.status,
+            "name": self.name,
+            "cookTime": self.expected_duration_mins,
+            "mealType": self.meal_types,
+            "dietType": self.diet_types,
+            "description": self.description,
+            "instructions": self.instructions,
+            "imageUrl": self.photo_url,
+        }
+
     def __repr__(self):
-        return ""
-        # return f"<id={self.id}\tcontributor={self.contributor}\tstatus={self.status}\tname={self.name}\texpected_duration={self.expected_duration}\tmeal_type={self.meal_type}\tdescription={self.description}\tdiet_type={self.diet_type}\tphoto_url={self.photo_url}\tvideo_url={self.video_url}>"
+        return f"<id={self.id}\tcontributor={self.contributor}\tstatus={self.status}\tname={self.name}\texpected_duration_mins={self.expected_duration_mins}\tmeal_types={self.meal_types}\tdescription={self.description}\tdiet_types={self.diet_types}\tphoto_url={self.photo_url}\tvideo_urls={self.video_urls}>"
 
 
 class RecipeIngredient(db.Model):
