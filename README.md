@@ -27,7 +27,7 @@
 ### Interface
 | HTTP Route | HTTP Method | Description | Args/Form/JSON | Response | Errors |
 |---|---|---|---|---|---|
-| **/ingredients** | GET | Return up to 10 matching ingredients (based on frequency in recipes). Empty query returns up to 10 most frequently used ingredients | JSON<pre>{<br>  "query": "wa"<br>}</pre> | <pre>{<br>    "ingredients": [<br>        {"id": 1, "name": "water"},<br>        ...<br>    ]<br>}</pre> | |
+| **/ingredients** | GET | Return up to 10 matching ingredients (based on frequency in recipes). Empty query returns up to 10 most frequently used ingredients | Args<pre>{<br>  "query": "wa"<br>}</pre> | <pre>{<br>    "ingredients": [<br>        {"id": 1, "name": "water"},<br>        ...<br>    ]<br>}</pre> | |
 | /suggest_ingredients | GET | | { "ingredients": [ingredient_id] } | { ingredients } | |
 | **/recipe** | POST | Create a new recipe *draft* | Form<pre>{<br>    "name": "Pasta",<br>    "description": "Pasta recipe",<br>    "expectedDuration": 1922,<br>    "mealType": ["lunch", "dinner"],<br>    "dietType": ["vegetarian", "nut-free"],<br>    "ingredients": [<br>        {<br>            "id": 1,<br>            "quantity": 5,<br>            "units": "ml"<br>        },<br>        ...<br>    ],<br>    "instruction": ["Step 1", "Step 2", "Step 3", ...]<br>}</pre>Files<pre>{<br>    "image": (binary),<br>    "1": (binary),<br>    "3": (binary), /* video for instruction step 3 */<br>    ...<br>}</pre> | `{ }` | |
 | /my_recipes | GET | | {} | { recipes } | |
