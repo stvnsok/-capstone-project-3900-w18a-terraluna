@@ -20,8 +20,9 @@ const NavBar = () => {
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
-        if (access_token) loginWithToken(access_token).then(res => {
-            setUsername(res.data.username)
+        if (access_token !== null) loginWithToken(access_token).then(res => {
+            setUsername(res.data.username);
+            setIsLoggedIn(true);
         }).catch(() => toast.error("Could not log in"))
     }, [])
 
@@ -47,6 +48,8 @@ const NavBar = () => {
                 onLogOut={() => {
                     setIsLoggedIn(false);
                     setUsername(undefined);
+                    localStorage.removeItem('access_token')
+                    localStorage.removeItem('refresh_token')
                 }}
                 username={username}
                 onUsernameChange={(username: string) => {
@@ -96,6 +99,8 @@ const NavBar = () => {
                             onClick={() => {
                                 setIsLoggedIn(false);
                                 setUsername(undefined);
+                                localStorage.removeItem('access_token')
+                                localStorage.removeItem('refresh_token')
                             }}
                         > 
                             <HiLogout size={22}/> 
