@@ -16,7 +16,7 @@ def ingredient_search(query):
         list of Ingredient: List of matched ingredients.
     """
     return Ingredient.query.filter(
-        Ingredient.name.ilike(f"%{''.join(query.split())}%")
+        "".join(Ingredient.name.split()).lower() == "".join(query.split()).lower()
     ).all()
 
 

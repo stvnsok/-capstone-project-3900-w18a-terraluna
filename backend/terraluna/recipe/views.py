@@ -270,7 +270,7 @@ def my_recipes():
 
     recipes = (
         Recipe.query.filter_by(contributor=get_jwt_identity())
-        .filter(Recipe.name.ilike(f"%{''.join(query.split())}%"))
+        .filter("".join(Recipe.name.split()).lower() == "".join(query.split()).lower())
         .all()
     )
 
