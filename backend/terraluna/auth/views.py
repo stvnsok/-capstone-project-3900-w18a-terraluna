@@ -78,7 +78,10 @@ def login():
     if request.method == "GET":
         data = request.args
         (access_token,) = get_data(data, "access_token")
-        return jsonify(username=user_id_to_username(decode_token(access_token)["sub"]))
+        username = (
+            User.query.filter_by(id=decode_token(access_token)["sub"]).first().username
+        )
+        return jsonify(username=username)
 
     data = request.get_json()
     username_or_email, password = get_data(data, "username_or_email", "password")

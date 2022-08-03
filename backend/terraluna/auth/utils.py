@@ -1,19 +1,5 @@
 import re
 
-from .models import User
-
-
-def user_id_to_username(user_id):
-    """Given a user id, returns the corresponding username.
-
-    Args:
-        user_id (int): User id to convert.
-
-    Returns:
-        str: Corresponding username of given user id.
-    """
-    return User.query.filter_by(id=user_id).first().username
-
 
 def verify_username(username):
     """Verify if a username is of a valid format according to the following
