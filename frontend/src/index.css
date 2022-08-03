@@ -88,3 +88,10 @@ html, body {
   border-radius: 100%;
   transform: scale(0.3) translateX(-100%);
 }
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}

@@ -52,7 +52,7 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
 
     useEffect(() => {
         if (isLoggedIn) getPantry().then(res => {
-            setIngredients(res.ingredients)
+            setIngredients(res.ingredients.filter((x, y, z) => z.indexOf(x) === y))
         }).catch(() => {
             toast.error("Could not retrieve Pantry")
         }) 
@@ -120,6 +120,8 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                 onLogOut={() => {
                     setIsLoggedIn(false);
                     setUsername(undefined);
+                    navigator('/')
+                    setIngredients([])
                     localStorage.removeItem('access_token')
                     localStorage.removeItem('refresh_token')
                 }}
@@ -239,7 +241,8 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                             isAsync={false}
                         />
                         <TLSelect
-                            header={"Statuses"}
+                            header={"Statuse"}
+                            placeholder="Statuses..."
                             value={statuses}
                             onChange={(e) => {
                                 setStatuses(e);
@@ -291,6 +294,8 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                             onClick={() => {
                                 setIsLoggedIn(false);
                                 setUsername(undefined);
+                                navigator('/')
+                                setIngredients([])
                                 localStorage.removeItem('access_token')
                                 localStorage.removeItem('refresh_token')
                             }}

@@ -123,7 +123,7 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
             }}
         >
             <h2 className='px-10 pt-5 font-semibold text-2xl'> {fullRecipe ? "Edit" : "Create"} Recipe</h2>
-            <div className='my-auto'>
+            <div className='my-auto mr-10'>
                 <Button
                     onClick={() => {
                         clear();
