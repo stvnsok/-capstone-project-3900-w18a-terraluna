@@ -83,42 +83,30 @@ def get_ingredient_suggestions(ingredients):
         .all()
     )
 
-    for recipe in partially_satisfied_recipes:
-        print(recipe.id)
-
-    return most_popular_n_ingredients(5)
-
-    ingredient_counts = {}
-    for recipe in recipes_with_current_ingredients:
-        ingredient_counts[recipe.recipe_id] = (
-            1
-            if ingredient_counts.get(recipe.recipe_id) is None
-            else ingredient_counts[recipe.recipe_id] + 1
-        )
-
-    suggested_recipes = [
-        recipe
-        for recipe in ingredient_counts
-        if ingredient_counts[recipe]
-        >= len(ingredients)  # TODO: bug if ingredient repeated
-    ]
-
-    if not suggested_recipes:
+    if not partially_satisfied_recipes:
         return most_popular_n_ingredients(5, exclude=ingredients)
 
-    filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
-    suggested_recipe_ingredients = {
-        recipe_ingredient.ingredient
-        for recipe_ingredient in RecipeIngredient.query.join(Recipe)
-        .filter(Recipe.status == "Published")
-        .filter(or_(*filter_list))
-        .all()
-    }
+    missing_ingredients = {}  # Recipe -> List[RecipeIngredient]
+    for recipe in partially_satisfied_recipes:
+        missing_ingredients[recipe] = []
+
+        for ingredient in recipe.ingredients:
+            if ingredient.ingredient_id not in ingredients:
+                missing_ingredients[recipe].append(ingredient)
+
+    missing_ingredients = sorted(missing_ingredients.items(), key=lambda i: len(i[1]))
+
+    suggestions = []
+    for recipe, missing_ingredient in missing_ingredients:
+        missing_ingredient = Ingredient.query.filter_by(
+            id=missing_ingredient.ingredient_id
+        ).first()
+
+        if missing_ingredient not in suggestions:
+            suggestions.append(missing_ingredient)
 
     return [
-        {"id": ingredient.id, "name": ingredient.name}
-        for ingredient in suggested_recipe_ingredients
-        if ingredient.id not in ingredients
+        {"id": ingredient.id, "name": ingredient.name} for ingredient in suggestions
     ][
         :5
     ]  # TODO: improvement would be to select the 5 most popular out of these
