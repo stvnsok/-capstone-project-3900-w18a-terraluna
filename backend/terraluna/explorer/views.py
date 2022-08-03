@@ -79,76 +79,67 @@ def get_ready_recipes():
     return jsonify(recipes=[recipe.jsonify() for recipe in ready_recipes])
 
 
-###############################################################################
+# @explorer_bp.route("/ingredient_categories", methods=["GET"])
+# def ingredient_categories():
+#     """Return a list of all ingredients in categories"""
+
+#     result = []
+#     category_names = db.session.query(IngredientCategory.name).distinct()
+#     for category_name in category_names:
+#         ingredients = []
+#         query = (
+#             db.session.query(IngredientCategory, Ingredient)
+#             .filter(IngredientCategory.ingredient_id == Ingredient.id)
+#             .filter(IngredientCategory.name == category_name)
+#         )
+#         for row in query:
+#             ingredients.append(
+#                 {"ingredient_id": row.Ingredient.id, "name": row.Ingredient.name}
+#             )
+#         result.append({"name": category_name, "ingredients": ingredients})
+
+#     return jsonify(ingredientCategories=result)
 
 
-@explorer_bp.route("/ingredient_categories", methods=["GET"])
-def ingredient_categories():
-    """Return a list of all ingredients in categories"""
-
-    result = []
-    category_names = db.session.query(IngredientCategory.name).distinct()
-    for category_name in category_names:
-        ingredients = []
-        query = (
-            db.session.query(IngredientCategory, Ingredient)
-            .filter(IngredientCategory.ingredient_id == Ingredient.id)
-            .filter(IngredientCategory.name == category_name)
-        )
-        for row in query:
-            ingredients.append(
-                {"ingredient_id": row.Ingredient.id, "name": row.Ingredient.name}
-            )
-        result.append({"name": category_name, "ingredients": ingredients})
-
-    return jsonify(ingredientCategories=result)
-
-
-@explorer_bp.route("/pantry", methods=["GET", "PUT"])
-@jwt_required(fresh=True)
+@explorer_bp.route("/pantry", methods=["GET", "POST"])
+@jwt_required()
 def pantry():
-    """
-    GET: return ingredients from the user's saved pantry
-    PUT: given a list of ingredients, updates ingredients in user's pantry
-    """
+    """Get or update a user's saved pantry.
 
-    # Retrieve current user from token
+    GET: Return ingredients from the user's saved pantry.
+    POST: Given a list of ingredients, updates ingredients in user's pantry.
+    """
     user_id = username_to_user_id(get_jwt_identity())
 
-    # GET: Return list of all ingredients in the user's pantry
+    # GET: Return ingredients from the user's saved pantry.
     if request.method == "GET":
-        pantry = []
-        query = (
-            db.session.query(UserPantry, Ingredient)
-            .filter_by(UserPantry.ingredient_id == Ingredient.id)
-            .filter_by(UserPantry.user_id == user_id)
+        ingredients = [
+            Ingredient.query.filter_by(id=ingredient.ingredient_id).first()
+            for ingredient in UserPantry.query.filter_by(user_id=user_id).all()
+        ]
+        return jsonify(
+            ingredients=[
+                {"id": ingredient.id, "name": ingredient.name}
+                for ingredient in ingredients
+            ]
         )
-        for row in query:
-            pantry.append({"id": row.Ingredient.id, "name": row.Ingredient.name})
-        return jsonify(pantry=pantry)
 
-    # PUT: Given a list of ingredient_id, updates the UserPantry Table
-    elif request.method == "PUT":
-
+    # POST: Given a list of ingredients, updates ingredients in user's pantry.
+    elif request.method == "POST":
         data = request.get_json()
         (ingredients,) = get_data(data, "ingredients")
+        ingredients = json.loads(ingredients)["ingredients"]
+        ingredients = [int(id) for id in ingredients]
 
         # Clear pantry
         UserPantry.query.filter_by(user_id=user_id).delete()
+        db.session.commit()
 
         # Add new ingredients
         for ingredient_id in ingredients:
-            db.session.add(UserPantry(user_id, ingredient_id))
-        db.commit()
-
-
-@explorer_bp.route("/search", methods=["GET"])
-def search():
-    ##################################################
-    ##################################################
-    ##################################################
-    # TODO:
-    pass
+            db.session.add(UserPantry(user_id=user_id, ingredient_id=ingredient_id))
+        db.session.commit()
+        return "", 204
 
 
 @explorer_bp.route("/recipes/<int:id>/review", methods=["POST"])
@@ -192,7 +183,7 @@ def update_recipe_favourites(id):
     if request.method == "PUT":
         if (
             UserSavedRecipes.query.filter_by(user_id=user_id, recipe_id=id).first()
-            is not None
+            is None
         ):
             db.session.add(UserSavedRecipes(user_id=user_id, recipe_id=id))
             db.session.commit()

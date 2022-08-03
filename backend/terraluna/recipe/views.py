@@ -1,3 +1,4 @@
+import collections
 import json
 import os
 
@@ -7,6 +8,7 @@ from flask_jwt_extended.view_decorators import jwt_required
 from werkzeug.utils import secure_filename
 
 from app import app
+from terraluna.explorer.models import UserPantry
 from utils import *
 
 from .error import *
@@ -192,6 +194,10 @@ def edit_recipe(id):
 
     photo_url = Recipe.query.filter_by(id=id).first().photo_url
     video_urls = Recipe.query.filter_by(id=id).first().video_urls
+    if instructions and video_urls:
+        video_urls.extend([""] * (len(instructions) - len(video_urls)))
+    elif instructions and video_urls is None:
+        video_urls = [""] * len(instructions)
     for input_name in files:
         # Input tag name: "image", "video0"
         # FileStorage.filename: original filenames
@@ -263,3 +269,33 @@ def my_recipes():
 
     recipe_details = [recipe.jsonify() for recipe in recipes]
     return jsonify(recipes=recipe_details)
+
+
+@recipe_bp.route("/ingredients/no_match_frequency", methods=["GET"])
+@jwt_required()
+def no_match_frequency():
+    """Find the ingredients in explorers' pantry with no recipes that use
+    those ingredients so that contributors know what recipes to add next.
+    """
+    recipe_ingredients = list(
+        {ingredient.ingredient_id for ingredient in RecipeIngredient.query.all()}
+    )
+
+    unused_pantry_ingredients = [
+        ingredient.ingredient_id
+        for ingredient in UserPantry.query.all()
+        if ingredient.ingredient_id not in recipe_ingredients
+    ]
+
+    counts = collections.Counter(unused_pantry_ingredients)
+    most_frequent_unused = [
+        Ingredient.query.filter_by(id=ingredient[0]).first()
+        for ingredient in counts.most_common(5)
+    ]
+
+    return jsonify(
+        ingredients=[
+            {"id": ingredient.id, "name": ingredient.name}
+            for ingredient in most_frequent_unused
+        ]
+    )
