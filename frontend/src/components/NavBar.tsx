@@ -22,6 +22,7 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
     const [username, setUsername] = useState<string>();
     const [name, setName] = useState<string>('');
     const navigator = useNavigate()
+    const [hasLoaded, setHasLoaded] = useState<boolean>(false);
     
     const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
     const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
@@ -51,10 +52,11 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
         }).catch(() => {
             toast.error("Could not retrieve Pantry")
         }) 
-    })
+    }, [isLoggedIn])
 
     useEffect(() => {
-        savePantry(ingredients.map(x => x.id)).catch(() => {
+        if (!hasLoaded) setHasLoaded(true)
+        else savePantry(ingredients.map(x => x.id)).catch(() => {
             toast.error("Could not save Pantry")
         })
     }, [ingredients])
