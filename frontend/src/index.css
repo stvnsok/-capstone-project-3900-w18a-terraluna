@@ -57,3 +57,35 @@ html, body {
   ::-webkit-scrollbar-thumb:hover {
     background: rgb(44, 187, 0);
   }
+
+  body {background: #222;}
+
+@keyframes leafanimation {
+    0% {transform:translate(900px,500px) rotate(0deg); color:rgba(255,0,0,0);}
+   20% {transform:translate(850px,450px) rotate(360deg); color:rgba(255,0,0,0);}
+   40% {transform:translate(450px,200px) rotate(720deg); color:rgba(255,0,0,0);}
+   60% {transform:translate(100px,100px) rotate(1080deg); color:rgba(255,0,0,0);}
+   80% {transform:translate(0,0) rotate(1440deg); color:rgba(255,0,0,0);}
+  100% {transform:translate(0,0) rotate(1440deg); color:rgba(255,0,0,1);}
+}
+
+.my-logo {
+  position:absolute; 
+  top:0;
+  left:0;
+  height: 40px;
+  line-height: 40px;
+  font-size: 36px;
+  color: rgb(255,0,0);
+  animation: leafanimation 6s ease-out;
+}
+
+.my-logo div {
+  display: inline-block;
+  width: 300px;
+  height: 300px;
+  vertical-align: middle;
+  background-image: url('https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVwcGVyb25pJTIwcGl6emF8ZW58MHx8MHx8&w=1000&q=80');
+  background-color: green;
+  border-radius: 20px;
+}

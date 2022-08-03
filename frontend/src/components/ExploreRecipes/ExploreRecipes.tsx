@@ -21,7 +21,7 @@ const ExploreRecipes = () => {
                 })
         }}/>
         <div className={`grid grid-cols-7 gap-6 pl-10 mt-10`}>
-            {recipes && recipes.map(recipe => { return (
+            {recipes && recipes.length > 0 ? recipes.map(recipe => { return (
                 <div>
                     <div >
                         <RecipeCard
@@ -34,7 +34,7 @@ const ExploreRecipes = () => {
                         
                     </div>
                 </div>
-            )})}
+            )}) : <div className=' text-3xl col-span-full mx-auto'>No Recipes Found... Enter more ingredients!</div>}
         </div>
         
         <SlideOutRecipeExplorers
