@@ -19,13 +19,7 @@ const MyRecipes = () => {
     const navigator = useNavigate();
 
     useEffect(() => {
-        getRecipesRecipeContributors()
-            .then(res => {
-                setRecipes(res.recipes);
-            })
-            .catch(err => {
-                toast.error(err);
-            })
+        triggerGetRecipes()
     }, [])
 
     const triggerGetRecipes = (query?: string, mealType?: string[], dietType?: string[], statuses?: string[]) => {

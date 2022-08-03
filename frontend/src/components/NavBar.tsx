@@ -3,7 +3,7 @@ import { HiLogout, HiOutlineHeart, HiOutlineNewspaper, HiOutlineUser } from 'rea
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginWithToken } from '../services/auth.service';
-import { getIngredients } from '../services/recipeContributor.service';
+import { getIngredients, getSuggestedIngredient } from '../services/recipeContributor.service';
 import { getPantry, savePantry } from '../services/recipeExplore.service';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
@@ -33,6 +33,7 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
     }
 
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
+    const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([])
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
@@ -58,6 +59,9 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
         if (!hasLoaded) setHasLoaded(true)
         else savePantry(ingredients.map(x => x.id)).catch(() => {
             toast.error("Could not save Pantry")
+        })
+        getSuggestedIngredient(ingredients.map(x => x.id)).then(res => {
+            setRecommendedIngredients(res.ingredients);
         })
     }, [ingredients])
 
@@ -111,9 +115,14 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                     setUsername(username)
                 }}
             />}
+            <div className="my-logo z-50">
+                My Logo
+                <div></div>
+            </div>
             <div 
                 className={`w-full bg-tl-inactive-green ${ collapsed ? 'h-[100px]' : 'h-[300px]'} flex justify-between`}
             >   
+                
                 {!collapsed && onIngredientSearch ? <div className='w-9/12 mx-auto my-10'>
                     <TLSelect
                         name="Ingredient"
@@ -158,6 +167,21 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                             isAsync={false}
                             multi={false}
                         />
+                    </div>
+                    <div className='mt-6'>
+                        {recommendedIngredients.length > 0 && <span className='ml-2'>Do you have?</span>}
+                        {recommendedIngredients && recommendedIngredients.map(ingredient => {return <div 
+                            className='inline bg-tl-inactive-brown text-tl-inactive-black rounded-full px-3 py-2 hover:bg-tl-active-green hover:text-tl-active-grey cursor-pointer ml-2'
+                            onClick={() => {
+                                setIngredients(prev => [...prev, {
+                                    id: ingredient.id,
+                                    name: ingredient.name
+                                }])
+                                setRecommendedIngredients([])
+                            }}
+                        >
+                            {ingredient.name}
+                        </div>})}
                     </div>
                 </div> : <div></div>}
                 {!collapsed && onMyRecipeSearch ? <div className='w-9/12 mx-auto my-10'>
