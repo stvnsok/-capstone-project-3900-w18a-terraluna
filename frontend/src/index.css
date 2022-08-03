@@ -77,14 +77,15 @@ html, body {
   line-height: 40px;
   font-size: 36px;
   color: rgb(255,0,0);
-  animation: leafanimation 6s linear;
+  animation: leafanimation 6s ease-out;
 }
 
 .my-logo div {
   display: inline-block;
-  width: 20px;
-  height: 40px;
+  width: 300px;
+  height: 300px;
   vertical-align: middle;
-  background-color: rgb(255,0,0);
+  background-image: url('https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVwcGVyb25pJTIwcGl6emF8ZW58MHx8MHx8&w=1000&q=80');
+  background-color: green;
   border-radius: 20px;
 }
