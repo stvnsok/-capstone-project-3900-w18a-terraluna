@@ -8,6 +8,7 @@ from flask_jwt_extended.view_decorators import jwt_required
 from werkzeug.utils import secure_filename
 
 from app import app
+from terraluna.auth.utils import *
 from terraluna.explorer.models import UserPantry
 from utils import *
 
@@ -128,7 +129,7 @@ def create_recipe():
 
     # Create recipe
     recipe = Recipe.create(
-        contributor=username_to_user_id(get_jwt_identity()),
+        contributor=get_jwt_identity(),
         status="Draft",
         name=name,
         expected_duration_mins=expected_duration_mins,
@@ -259,15 +260,15 @@ def copy_recipe(id):
 def my_recipes():
     """Get all of the user's recipes with an optional query on the recipe name."""
     data = request.args
-    (query,) = get_data(data, "query")
+    query, status = get_data(data, "query", "status")
 
     recipes = (
-        Recipe.query.filter_by(contributor=username_to_user_id(get_jwt_identity()))
+        Recipe.query.filter_by(contributor=get_jwt_identity())
         .filter(Recipe.name.ilike(f"%{''.join(query.split())}%"))
         .all()
     )
 
-    recipe_details = [recipe.jsonify() for recipe in recipes]
+    recipe_details = [recipe.jsonify() for recipe in recipes if recipe.status in status]
     return jsonify(recipes=recipe_details)
 
 

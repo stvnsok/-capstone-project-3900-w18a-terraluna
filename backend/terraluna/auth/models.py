@@ -84,12 +84,12 @@ class User(db.Model):
         return user
 
     @staticmethod
-    def reset_username(old_username, new_username):
+    def reset_username(id, new_username):
         """Reset the user's username with a new username. The new username is
         checked for valid formatting.
 
         Args:
-            old_username (str): User's old username.
+            id (int): User's id.
             new_username (str): New updated username.
 
         Returns:
@@ -105,19 +105,18 @@ class User(db.Model):
             UsernameInUseError,
         )
 
-        user = User.query.filter_by(username=old_username).first()
+        user = User.query.filter_by(id=id).first()
         user.username = new_username
         db.session.commit()
-        logger.debug("Updated user's username: %s <old_username=%s>", user, old_username)  # type: ignore
         return user
 
     @staticmethod
-    def reset_email(username, new_email):
+    def reset_email(id, new_email):
         """Reset the user's email with a new email. The new email is checked for
         valid formatting.
 
         Args:
-            username (str): User's username.
+            id (int): User's id.
             new_email (str): New updated email.
 
         Returns:
@@ -132,22 +131,20 @@ class User(db.Model):
             User.query.filter_by(email=new_email).first() is not None, EmailInUseError
         )
 
-        user = User.query.filter_by(username=username).first()
-        old_email = user.email
+        user = User.query.filter_by(id=id).first()
         user.email = new_email
         db.session.commit()
-        logger.debug("Updated user's email: %s <old_email=%s>", user, old_email)  # type: ignore
         return user
 
     @staticmethod
-    def reset_password(username, old_password, new_password):
+    def reset_password(id, old_password, new_password):
         """Reset the user's password with a new hashed and salted password and
         update the database record.
 
         The new password is checked for strength.
 
         Args:
-            username (str): User's username.
+            id (int): User's id.
             old_password (str): Old plaintext password.
             new_password (str): New updated plaintext password.
 
@@ -158,7 +155,7 @@ class User(db.Model):
             IncorrectPasswordError: If old password is not correct.
             WeakPasswordError: If new password is too weak.
         """
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(id=id).first()
         raiseif(not user.verify_password(old_password), IncorrectPasswordError)
         raiseif(not verify_password(new_password), WeakPasswordError)
 

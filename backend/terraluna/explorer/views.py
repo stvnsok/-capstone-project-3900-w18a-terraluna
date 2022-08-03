@@ -1,10 +1,10 @@
 import json
 
 from flask import Blueprint, jsonify, request
-from flask.wrappers import Response
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 
+from terraluna.auth.utils import *
 from terraluna.recipe.models import *
 from terraluna.recipe.utils import *
 from utils import *
@@ -109,7 +109,7 @@ def pantry():
     GET: Return ingredients from the user's saved pantry.
     POST: Given a list of ingredients, updates ingredients in user's pantry.
     """
-    user_id = username_to_user_id(get_jwt_identity())
+    user_id = get_jwt_identity()
 
     # GET: Return ingredients from the user's saved pantry.
     if request.method == "GET":
@@ -149,7 +149,7 @@ def add_recipe_review(id):
     data = request.get_json()
     message, stars = get_data(data, "review", "stars")
 
-    user_id = username_to_user_id(get_jwt_identity())
+    user_id = get_jwt_identity()
     comment = Comment.create(
         recipe_id=id, user_id=user_id, stars=stars, message=message
     )
@@ -160,7 +160,7 @@ def add_recipe_review(id):
 @jwt_required()
 def get_recipe_favourites():
     """Return a list of all recipes saved by the user."""
-    user_id = username_to_user_id(get_jwt_identity())
+    user_id = get_jwt_identity()
 
     saved_recipes = [
         Recipe.query.filter_by(id=saved_recipe.recipe_id).first()
@@ -177,7 +177,7 @@ def update_recipe_favourites(id):
     PUT: Add recipe to user's favourited recipes.
     DELETE: Remove recipe from user's favourited recipes.
     """
-    user_id = username_to_user_id(get_jwt_identity())
+    user_id = get_jwt_identity()
 
     # PUT: Add recipe to user's favourited recipes.
     if request.method == "PUT":
