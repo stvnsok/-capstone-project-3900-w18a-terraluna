@@ -80,24 +80,23 @@ def get_ready_recipes():
 
 @explorer_bp.route("/ingredient_categories", methods=["GET"])
 def ingredient_categories():
-    """Return a list of all ingredients in categories"""
-
-    result = []
-    category_names = db.session.query(IngredientCategory.name).distinct()
-    for category_name in category_names:
-        ingredients = []
-        query = (
-            db.session.query(IngredientCategory, Ingredient)
-            .filter(IngredientCategory.ingredient_id == Ingredient.id)
-            .filter(IngredientCategory.name == category_name)
-        )
-        for row in query:
-            ingredients.append(
-                {"ingredient_id": row.Ingredient.id, "name": row.Ingredient.name}
-            )
-        result.append({"name": category_name, "ingredients": ingredients})
-
-    return jsonify(ingredientCategories=result)
+    """Return a list of all ingredients in categories."""
+    return jsonify(
+        ingredients=[
+            {
+                {
+                    "category": categorised_ingredient.name,
+                    "id": categorised_ingredient.ingredient_id,
+                    "name": Ingredient.query.filter_by(
+                        id=categorised_ingredient.ingredient_id
+                    )
+                    .first()
+                    .name,
+                }
+                for categorised_ingredient in IngredientCategory.query.all()
+            }
+        ]
+    )
 
 
 @explorer_bp.route("/pantry", methods=["GET", "POST"])
