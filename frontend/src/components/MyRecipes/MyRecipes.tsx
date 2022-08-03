@@ -29,7 +29,7 @@ const MyRecipes = () => {
     }, [])
 
     const triggerGetRecipes = (query?: string, mealType?: string[], dietType?: string[], statuses?: string[]) => {
-        getRecipesRecipeContributors(query, mealType, dietType, statuses)
+        getRecipesRecipeContributors(query ?? '', mealType ?? [], dietType ?? [], statuses ?? [])
             .then(res => {
                 setRecipes(res.recipes);
             })
@@ -73,10 +73,10 @@ const MyRecipes = () => {
                     <div 
                         className='absolute'
                     >
-                        {noMatchIngredientSets && noMatchIngredientSets.length > 0 ? <div 
+                        {noMatchIngredientSets && noMatchIngredientSets.length > 0 ? noMatchIngredientSets.map(x => {return <div 
                             className='mt-2 ml-4 rounded-md p-2 w-60 bg-tl-inactive-white border border-solid border-tl-inactive-grey relative pl-5 flex justify-between'>
-                                asdf
-                            </div> :<div 
+                                {x.name}
+                            </div>}) :<div 
                             className='mt-2 ml-4 rounded-md p-2 w-60 bg-tl-inactive-white border border-solid border-tl-inactive-grey relative pl-5 flex justify-between'>
                                 No Pantry Items Not Matched
                             </div>}
@@ -131,8 +131,9 @@ const MyRecipes = () => {
         <CreateRecipeForm
             isOpen={isCreateRecipeOpen}
             onClose={() => {
-                setIsCreateRecipeOpen(false)
                 triggerGetRecipes()
+                setFullRecipe(undefined)
+                setIsCreateRecipeOpen(false)
             }}
             fullRecipe={fullRecipe}
         />
