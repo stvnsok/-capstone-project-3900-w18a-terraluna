@@ -18,7 +18,6 @@ explorer_bp = Blueprint("explorer_bp", __name__)
 
 
 @explorer_bp.route("/recipes", methods=["GET"])
-@jwt_required()
 def get_ready_recipes():
     """Get list of published recipes that can be made based on the given list on ingredients.
 
@@ -79,26 +78,26 @@ def get_ready_recipes():
     return jsonify(recipes=[recipe.jsonify() for recipe in ready_recipes])
 
 
-# @explorer_bp.route("/ingredient_categories", methods=["GET"])
-# def ingredient_categories():
-#     """Return a list of all ingredients in categories"""
+@explorer_bp.route("/ingredient_categories", methods=["GET"])
+def ingredient_categories():
+    """Return a list of all ingredients in categories"""
 
-#     result = []
-#     category_names = db.session.query(IngredientCategory.name).distinct()
-#     for category_name in category_names:
-#         ingredients = []
-#         query = (
-#             db.session.query(IngredientCategory, Ingredient)
-#             .filter(IngredientCategory.ingredient_id == Ingredient.id)
-#             .filter(IngredientCategory.name == category_name)
-#         )
-#         for row in query:
-#             ingredients.append(
-#                 {"ingredient_id": row.Ingredient.id, "name": row.Ingredient.name}
-#             )
-#         result.append({"name": category_name, "ingredients": ingredients})
+    result = []
+    category_names = db.session.query(IngredientCategory.name).distinct()
+    for category_name in category_names:
+        ingredients = []
+        query = (
+            db.session.query(IngredientCategory, Ingredient)
+            .filter(IngredientCategory.ingredient_id == Ingredient.id)
+            .filter(IngredientCategory.name == category_name)
+        )
+        for row in query:
+            ingredients.append(
+                {"ingredient_id": row.Ingredient.id, "name": row.Ingredient.name}
+            )
+        result.append({"name": category_name, "ingredients": ingredients})
 
-#     return jsonify(ingredientCategories=result)
+    return jsonify(ingredientCategories=result)
 
 
 @explorer_bp.route("/pantry", methods=["GET", "POST"])
