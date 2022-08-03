@@ -78,7 +78,7 @@ def login():
     if request.method == "GET":
         data = request.args
         (access_token,) = get_data(data, "access_token")
-        return jsonify(username=decode_token(access_token)["sub"])
+        return jsonify(username=user_id_to_username(decode_token(access_token)["sub"]))
 
     data = request.get_json()
     username_or_email, password = get_data(data, "username_or_email", "password")
@@ -145,11 +145,3 @@ def reset_password():
     # Reset password
     User.reset_password(get_jwt_identity(), old_password, new_password)
     return "", 204
-
-
-# TODO: This is a test route, delete later
-@auth_bp.route("/protected")
-@jwt_required()
-def protected():
-    identity = get_jwt_identity()
-    return f"Hello, {identity}!"
