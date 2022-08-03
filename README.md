@@ -1,4 +1,9 @@
 # COMP3900 w18a-terraluna Project
+## Requirements
+
+* `node==14.17.3`
+* `python==3.8.12`
+
 ## Interface Specifications
 ### Data Types
 | Variable name | Type |
