@@ -38,9 +38,9 @@ def token_revoked_callback(jwt_header, jwt_payload):
 @jwt_required(refresh=True)
 def refresh():
     """Generate a new stale (not fresh) access token using a valid refresh token."""
-    username = get_jwt_identity()
-    access_token = create_access_token(identity=username, fresh=False)
-    logger.debug("Refreshed access token for: %s", username)  # type: ignore
+    user_id = get_jwt_identity()
+    access_token = create_access_token(identity=user_id, fresh=False)
+    logger.debug("Refreshed access token for: %s", user_id)  # type: ignore
     return jsonify(access_token=access_token)
 
 
@@ -57,8 +57,8 @@ def register():
     user = User.register(username, email, password)
 
     # Return JWT Access & Refresh Token
-    access_token = create_access_token(identity=user.username, fresh=True)
-    refresh_token = create_refresh_token(identity=user.username)
+    access_token = create_access_token(identity=user.id, fresh=True)
+    refresh_token = create_refresh_token(identity=user.id)
     return (
         jsonify(
             access_token=access_token,
@@ -87,8 +87,8 @@ def login():
     user = User.login(username_or_email, password)
 
     # Return JWT Access & Refresh Token
-    access_token = create_access_token(identity=user.username, fresh=True)
-    refresh_token = create_refresh_token(identity=user.username)
+    access_token = create_access_token(identity=user.id, fresh=True)
+    refresh_token = create_refresh_token(identity=user.id)
     return jsonify(
         access_token=access_token, refresh_token=refresh_token, username=user.username
     )
@@ -102,12 +102,12 @@ def logout():
     This route should be called twice with both the access token and
     refresh token in order to revoke both of them.
     """
-    username = get_jwt_identity()
+    user_id = get_jwt_identity()
     token = get_jwt()
     jti = token["jti"]
     type = token["type"]
     RevokedToken.create(jti, type)
-    logger.debug("User logged out (%s): %s", type, username)  # type: ignore
+    logger.debug("User logged out (%s): %s", type, user_id)  # type: ignore
     return "", 204
 
 
@@ -119,8 +119,7 @@ def reset_username():
     (new_username,) = get_data(data, "new_username")
 
     # Reset username
-    old_username = get_jwt_identity()
-    user = User.reset_username(old_username, new_username)
+    user = User.reset_username(get_jwt_identity(), new_username)
     return jsonify(username=user.username)
 
 
@@ -132,8 +131,7 @@ def reset_email():
     (new_email,) = get_data(data, "new_email")
 
     # Reset email
-    username = get_jwt_identity()
-    User.reset_email(username, new_email)
+    User.reset_email(get_jwt_identity(), new_email)
     return "", 204
 
 
@@ -145,8 +143,7 @@ def reset_password():
     old_password, new_password = get_data(data, "old_password", "new_password")
 
     # Reset password
-    username = get_jwt_identity()
-    User.reset_password(username, old_password, new_password)
+    User.reset_password(get_jwt_identity(), old_password, new_password)
     return "", 204
 
 

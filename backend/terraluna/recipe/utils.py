@@ -1,21 +1,8 @@
 from sqlalchemy import or_
 
-from terraluna.auth.models import User
 from terraluna.recipe.models import *
 
 from .models import *
-
-
-def username_to_user_id(username):
-    """Given a username, returns the corresponding user id.
-
-    Args:
-        username (str): Username to convert.
-
-    Returns:
-        int: Corresponding id of given username.
-    """
-    return User.query.filter_by(username=username).first().id
 
 
 def ingredient_search(query):
