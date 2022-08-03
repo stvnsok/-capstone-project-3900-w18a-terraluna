@@ -84,17 +84,15 @@ def ingredient_categories():
     return jsonify(
         ingredients=[
             {
-                {
-                    "category": categorised_ingredient.name,
-                    "id": categorised_ingredient.ingredient_id,
-                    "name": Ingredient.query.filter_by(
-                        id=categorised_ingredient.ingredient_id
-                    )
-                    .first()
-                    .name,
-                }
-                for categorised_ingredient in IngredientCategory.query.all()
+                "category": categorised_ingredient.name,
+                "id": categorised_ingredient.ingredient_id,
+                "name": Ingredient.query.filter_by(
+                    id=categorised_ingredient.ingredient_id
+                )
+                .first()
+                .name,
             }
+            for categorised_ingredient in IngredientCategory.query.all()
         ]
     )
 
