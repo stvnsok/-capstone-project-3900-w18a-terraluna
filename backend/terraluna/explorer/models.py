@@ -4,11 +4,15 @@ from app import db
 class IngredientCategory(db.Model):
     """An ingredient category."""
 
-    id = db.Column(db.Text, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
+    name = db.Column(db.Text, primary_key=True)
     ingredient_id = db.Column(
-        db.Integer, db.ForeignKey("ingredient.id"), nullable=False
+        db.Integer, db.ForeignKey("ingredient.id"), primary_key=True
     )
+
+    @staticmethod
+    def create(name, ingredient_id):
+        db.session.add(IngredientCategory(name=name, ingredient_id=ingredient_id))
+        db.session.commit()
 
 
 class UserPantry(db.Model):
