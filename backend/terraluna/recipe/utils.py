@@ -97,7 +97,7 @@ def get_ingredient_suggestions(ingredients):
     ]
 
     if not suggested_recipes:
-        return []
+        return most_popular_n_ingredients(5)
 
     filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
     suggested_recipe_ingredients = {
