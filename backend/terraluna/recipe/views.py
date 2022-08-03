@@ -303,7 +303,12 @@ def no_match_frequency():
     those ingredients so that contributors know what recipes to add next.
     """
     recipe_ingredients = list(
-        {ingredient.ingredient_id for ingredient in RecipeIngredient.query.all()}
+        {
+            ingredient.ingredient_id
+            for ingredient in RecipeIngredient.query.all()
+            if Recipe.query.filter_by(id=ingredient.recipe_id).first().status
+            == "Published"
+        }
     )
 
     unused_pantry_ingredients = [
