@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiLogout, HiOutlineHeart, HiOutlineNewspaper, HiOutlineUser } from 'react-icons/hi'
+import { HiLogin, HiLogout, HiOutlineHeart, HiOutlineNewspaper, HiOutlineUser } from 'react-icons/hi'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginWithToken } from '../services/auth.service';
@@ -8,7 +8,9 @@ import { getPantry, savePantry } from '../services/recipeExplore.service';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
 import TLSelect from './global/AsyncSelect';
+import Button from './global/Button';
 import TextInput from './global/TextInput';
+import NavBarPantrySlideOut from './NavBarPantrySlideOut';
 
 const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
     onIngredientSearch?: (ingredients: Ingredient[], mealType: string[], dietType: string[], cookingTime: number) => void;
@@ -19,6 +21,7 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [isPantryOpen, setIsPantryOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>();
     const [name, setName] = useState<string>('');
     const navigator = useNavigate()
@@ -57,7 +60,7 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
 
     useEffect(() => {
         if (!hasLoaded) setHasLoaded(true)
-        else savePantry(ingredients.map(x => x.id)).catch(() => {
+        else if (isLoggedIn) savePantry(ingredients.map(x => x.id)).catch(() => {
             toast.error("Could not save Pantry")
         })
         getSuggestedIngredient(ingredients.map(x => x.id)).then(res => {
@@ -87,6 +90,16 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
 
     return (
         <React.Fragment>
+            <NavBarPantrySlideOut
+                selectedIngredients={ingredients}
+                onAddSelectedIngredient={(ingredient) => {
+                    !ingredients.some(selected => selected.name === ingredient.name) ? setIngredients([...ingredients, ingredient]) : setIngredients([...ingredients].filter(x => x.name !== ingredient.name))
+                }}
+                isOpen={isPantryOpen}
+                onClose={() => {
+                    setIsPantryOpen(false)
+                }}
+            />
             <LoginModal
                 isOpen={isLoginModalOpen}
                 closeFunction={() => {
@@ -115,27 +128,36 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                     setUsername(username)
                 }}
             />}
-            <div className="my-logo z-50">
-                My Logo
+            {onIngredientSearch && <div className="my-logo z-50 -mt-16 ml-4">
+                TerraLuna
                 <div></div>
-            </div>
+            </div>}
             <div 
                 className={`w-full bg-tl-inactive-green ${ collapsed ? 'h-[100px]' : 'h-[300px]'} flex justify-between`}
             >   
                 
-                {!collapsed && onIngredientSearch ? <div className='w-9/12 mx-auto my-10'>
-                    <TLSelect
-                        name="Ingredient"
-                        header="Ingredient"
-                        value={ingredients} 
-                        onChange={(val: Ingredient[]) => {
-                            setIngredients(val);
-                        }}
-                        apiCall={getIngredients}
-                        apiCallKey="ingredients"
-                        isAsync
-                        multi
-                    />
+                {!collapsed && onIngredientSearch ? <div className='w-9/12 mx-auto my-10'
+                    style={{transform: 'translateX(50px)'}}
+                >
+                    <div className='flex w-full'>
+                        <Button
+                            onClick={() => setIsPantryOpen(prev => !prev)}
+                            className="w-[37px] h-[37px] shadow-sm bg-tl-inactive-white rounded-md mt-auto mr-4"
+                            text={isPantryOpen ? <HiLogout size={22} className="m-auto"/> : <HiLogin size={22} className="m-auto"/>}
+                        />
+                        <TLSelect
+                            name="Ingredient"
+                            header="Ingredient"
+                            value={ingredients} 
+                            onChange={(val: Ingredient[]) => {
+                                setIngredients(val);
+                            }}
+                            apiCall={getIngredients}
+                            apiCallKey="ingredients"
+                            isAsync
+                            multi
+                        />
+                    </div>
                     <div className='mt-5 grid grid-cols-3 gap-10'>
                         <TLSelect
                             onChange={(e) => {

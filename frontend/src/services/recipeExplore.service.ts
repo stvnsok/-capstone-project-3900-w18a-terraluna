@@ -13,6 +13,10 @@ export const getRecipesFavourites = async (): Promise<{recipes: Recipe[]}> => {
     return (await api.get('/recipes/favourite')).data
 }
 
+export const getIngredientCategories = async (): Promise<{ingredients: (Ingredient & {category: string})[]}> => {
+    return (await api.get('/ingredient_categories')).data
+}
+
 export const favoriteRecipe = async (
     id?: number
 ): Promise<{recipes: Recipe[]}> => {

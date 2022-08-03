@@ -28,22 +28,13 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
     const [imageUrl, setImageUrl] = useState<string>();
     const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
     const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
-    const [ingredients, setIngredients] = useState<IngredientDetails[]>([{
-        name: undefined,
-        id: -1
-    }]);
+    const [ingredients, setIngredients] = useState<IngredientDetails[]>([]);
     const [name, setName] = useState<string>('')
     const [description, setDescription] = useState<string>('')
     const [hours, setHours] = useState<number | ''>('')
     const [minutes, setMinutes] = useState<number | ''>('')
     const [steps, setSteps] = useState<Step[]>([])
-    const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([{
-        id: 1,
-        name: "Water"
-    }, {
-        id: 2, 
-        name: "Chicken"
-    }]);
+    const [recommendedIngredients, setRecommendedIngredients] = useState<Ingredient[]>([]);
 
     const payload = () => {
         const formData = new FormData();
@@ -80,6 +71,7 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
         setHours('');
         setMinutes('');
         setDescription('');
+        setRecommendedIngredients([]);
         setPreview('');
         setSteps([]);
         setDietType([]);
@@ -380,7 +372,7 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
                     </span>
                     {recommendedIngredients.length > 0 && <span className='ml-2'>Do you want to add? -</span>}
                     {recommendedIngredients && recommendedIngredients.map(ingredient => {return <div 
-                        className='inline bg-tl-inactive-green text-tl-inactive-black rounded-sm px-2 py-1 hover:bg-tl-active-green hover:text-tl-active-grey cursor-pointer ml-2'
+                        className='inline bg-tl-inactive-green text-tl-inactive-black rounded-full px-3 py-2 hover:bg-tl-active-green hover:text-tl-active-grey cursor-pointer ml-2'
                         onClick={() => {
                             setIngredients(prev => [...prev, {
                                 id: ingredient.id,
@@ -392,6 +384,7 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
                         {ingredient.name}
                     </div>})}
                 </div>
+                <div  className='mt-4'>
                 <label htmlFor = 'Instruction'> Recipe Instructions</label>
                 {steps && steps.map((step, index) => {
                     return (
@@ -446,9 +439,10 @@ export default function CreateRecipe ({closeFunction, fullRecipe}: {
                                     id={`videoInput-${index}`}
                                 />
                             </React.Fragment>
-                             
                         }</div>)}
                 )}
+                </div>
+                
                 <div 
                     className='mt-2'
                 >

@@ -38,7 +38,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     }
 
 
-    return <div>
+    return <div className='w-full'>
         {!excludeHeader && <label className='text-md font-medium mb-2'>{header}{multi ? 's' : ''}</label>}
         {isAsync ? 
         <AsyncSelect

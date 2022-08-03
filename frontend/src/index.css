@@ -61,12 +61,10 @@ html, body {
   body {background: #222;}
 
 @keyframes leafanimation {
-    0% {transform:translate(900px,500px) rotate(0deg); color:rgba(255,0,0,0);}
-   20% {transform:translate(850px,450px) rotate(360deg); color:rgba(255,0,0,0);}
-   40% {transform:translate(450px,200px) rotate(720deg); color:rgba(255,0,0,0);}
-   60% {transform:translate(100px,100px) rotate(1080deg); color:rgba(255,0,0,0);}
-   80% {transform:translate(0,0) rotate(1440deg); color:rgba(255,0,0,0);}
-  100% {transform:translate(0,0) rotate(1440deg); color:rgba(255,0,0,1);}
+   0% {transform:translate(450px,200px) rotate(720deg); color:rgba(255,0,0,0); opacity: 0.0;}
+   33% {transform:translate(100px,100px) rotate(1080deg); color:rgba(255,0,0,0); opacity: 1}
+   66% {transform:translate(0,0) rotate(1440deg); color:rgba(204, 255, 200, 0); opacity: 1}
+  100% {transform:translate(0,0) rotate(1440deg); color:green; opacity: 1}
 }
 
 .my-logo {
@@ -76,16 +74,17 @@ html, body {
   height: 40px;
   line-height: 40px;
   font-size: 36px;
-  color: rgb(255,0,0);
-  animation: leafanimation 6s ease-out;
+  color: green;
+  animation: leafanimation 4s ease-out;
 }
 
 .my-logo div {
   display: inline-block;
-  width: 300px;
-  height: 300px;
+  width: 220px;
+  height: 220px;
   vertical-align: middle;
-  background-image: url('https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVwcGVyb25pJTIwcGl6emF8ZW58MHx8MHx8&w=1000&q=80');
+  background-image: url('https://as2.ftcdn.net/jpg/02/98/41/23/220_F_298412362_ZNN72WoRPzM2xvGXkEv1A9hdqgBGdB62.jpg');
   background-color: green;
-  border-radius: 20px;
+  border-radius: 100%;
+  transform: scale(0.3) translateX(-100%);
 }
