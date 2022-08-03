@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { HiFire, HiPlus } from 'react-icons/hi';
+import { HiChevronLeft, HiFire, HiPlus } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { getNoRecipeMatchRecipes, getRecipesRecipeContributors } from '../../services/recipeContributor.service';
 import Button from '../global/Button';
@@ -8,6 +8,7 @@ import SlideOutRecipe from './SlideOutRecipe';
 import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 import NavBar from '../NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const MyRecipes = () => {
     const [slideOutRecipe, setSlideOutRecipe] = useState<Recipe>();
@@ -16,6 +17,7 @@ const MyRecipes = () => {
     const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>();
     const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>();
+    const navigator = useNavigate();
 
     useEffect(() => {
         getRecipesRecipeContributors()
@@ -107,11 +109,10 @@ const MyRecipes = () => {
             <div className='flex'>
                 <Button
                     onClick={() => {
-                        setIsCreateRecipeOpen(true);
-                        setSlideOutRecipe(undefined);
+                        navigator('/')
                     }}
-                    className="w-10 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md"
-                    text={<HiPlus size={22} className="m-auto"/>}
+                    text={<span className='flex justify-center'><HiChevronLeft className='mr-2' size={26}/> Continue Exploring</span>}
+                    className="w-60 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md"
                 />
                 <div className='relative'>
                     <Button
@@ -132,6 +133,15 @@ const MyRecipes = () => {
                         })}
                     </div>}
                 </div>
+                <Button
+                    onClick={() => {
+                        setIsCreateRecipeOpen(true);
+                        setSlideOutRecipe(undefined);
+                    }}
+                    className="w-10 h-10 border border-solid border-tl-inactive-black bg-tl-inactive-white rounded-md ml-4"
+                    text={<HiPlus size={22} className="m-auto"/>}
+                />
+                
             </div>
             <div>
 
