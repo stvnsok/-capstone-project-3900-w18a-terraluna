@@ -30,9 +30,9 @@ def get_ingredient_counts(ingredients):
         dict: Of an ingredient to its count.
     """
     return {
-        ingredient: RecipeIngredient.query.filter_by(
-            ingredient_id=ingredient.id
-        ).count()
+        ingredient: RecipeIngredient.query.join(Recipe)
+        .filter_by(ingredient_id=ingredient.id, status="Published")
+        .count()
         for ingredient in ingredients
     }
 
@@ -73,9 +73,12 @@ def get_ingredient_suggestions(ingredients):
         return most_popular_n_ingredients(5)
 
     filter_list = [RecipeIngredient.ingredient_id == id for id in ingredients]
-    recipes_with_current_ingredients = RecipeIngredient.query.filter(
-        or_(*filter_list)
-    ).all()
+    recipes_with_current_ingredients = (
+        RecipeIngredient.query.join(Recipe)
+        .filter_by(status="Published")
+        .filter(or_(*filter_list))
+        .all()
+    )
 
     ingredient_counts = {}
     for recipe in recipes_with_current_ingredients:
@@ -98,7 +101,10 @@ def get_ingredient_suggestions(ingredients):
     filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
     suggested_recipe_ingredients = {
         recipe_ingredient.ingredient
-        for recipe_ingredient in RecipeIngredient.query.filter(or_(*filter_list)).all()
+        for recipe_ingredient in RecipeIngredient.query.join(Recipe)
+        .filter_by(status="Published")
+        .filter(or_(*filter_list))
+        .all()
     }
 
     return [
