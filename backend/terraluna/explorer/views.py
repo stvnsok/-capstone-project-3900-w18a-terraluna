@@ -128,8 +128,6 @@ def pantry():
     elif request.method == "POST":
         data = request.get_json()
         (ingredients,) = get_data(data, "ingredients")
-        ingredients = json.loads(ingredients)["ingredients"]
-        ingredients = [int(id) for id in ingredients]
 
         # Clear pantry
         UserPantry.query.filter_by(user_id=user_id).delete()
