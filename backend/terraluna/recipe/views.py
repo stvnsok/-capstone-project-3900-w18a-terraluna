@@ -260,7 +260,13 @@ def copy_recipe(id):
 def my_recipes():
     """Get all of the user's recipes with an optional query on the recipe name."""
     data = request.args
-    query, status = get_data(data, "query", "status")
+    query, meal_types, diet_types, statuses = get_data(
+        data, "query", "mealType", "dietType", "statuses"
+    )
+
+    meal_types = json.loads(meal_types)["mealType"]
+    diet_types = json.loads(diet_types)["dietType"]
+    statuses = json.loads(statuses)["statuses"]
 
     recipes = (
         Recipe.query.filter_by(contributor=get_jwt_identity())
@@ -268,8 +274,26 @@ def my_recipes():
         .all()
     )
 
-    recipe_details = [recipe.jsonify() for recipe in recipes if recipe.status in status]
-    return jsonify(recipes=recipe_details)
+    results = []
+    for recipe in recipes:
+        if statuses and recipe.status not in statuses:
+            continue
+
+        # Check if recipe has any correct meal type
+        if meal_types and not any(
+            meal_type in recipe.meal_types for meal_type in meal_types
+        ):
+            continue
+
+        # Check if recipe has any correct diet types
+        if diet_types and not any(
+            diet_type in recipe.diet_types for diet_type in diet_types
+        ):
+            continue
+
+        results.append(recipe.jsonify())
+
+    return jsonify(recipes=results)
 
 
 @recipe_bp.route("/ingredients/no_match_frequency", methods=["GET"])
