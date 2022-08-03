@@ -6,7 +6,6 @@ oats
 rice
 brown rice
 basmati rice
-oats
 rolled oats
 penne
 spaghetti
