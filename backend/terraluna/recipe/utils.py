@@ -31,7 +31,7 @@ def get_ingredient_counts(ingredients):
     """
     return {
         ingredient: Recipe.query.join(RecipeIngredient)
-        .filter_by(ingredient_id=ingredient.id, status="Published")
+        .filter_by(ingredient_id=ingredient.id, recipe_status="Published")
         .count()
         for ingredient in ingredients
     }
@@ -75,7 +75,7 @@ def get_ingredient_suggestions(ingredients):
     filter_list = [RecipeIngredient.ingredient_id == id for id in ingredients]
     recipes_with_current_ingredients = (
         Recipe.query.join(RecipeIngredient)
-        .filter_by(status="Published")
+        .filter_by(recipe_status="Published")
         .filter(or_(*filter_list))
         .all()
     )
@@ -102,7 +102,7 @@ def get_ingredient_suggestions(ingredients):
     suggested_recipe_ingredients = {
         recipe_ingredient.ingredient
         for recipe_ingredient in Recipe.query.join(RecipeIngredient)
-        .filter_by(status="Published")
+        .filter_by(recipe_status="Published")
         .filter(or_(*filter_list))
         .all()
     }
