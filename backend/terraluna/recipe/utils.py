@@ -97,13 +97,14 @@ def get_ingredient_suggestions(ingredients):
     missing_ingredients = sorted(missing_ingredients.items(), key=lambda i: len(i[1]))
 
     suggestions = []
-    for recipe, missing_ingredient in missing_ingredients:
-        missing_ingredient = Ingredient.query.filter_by(
-            id=missing_ingredient.ingredient_id
-        ).first()
+    for recipe, missing in missing_ingredients:
+        for ingredient in missing:
+            missing_ingredient = Ingredient.query.filter_by(
+                id=ingredient.ingredient_id
+            ).first()
 
-        if missing_ingredient not in suggestions:
-            suggestions.append(missing_ingredient)
+            if missing_ingredient not in suggestions:
+                suggestions.append(missing_ingredient)
 
     return [
         {"id": ingredient.id, "name": ingredient.name} for ingredient in suggestions
