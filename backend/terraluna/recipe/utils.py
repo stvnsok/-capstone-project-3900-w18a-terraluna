@@ -76,12 +76,17 @@ def get_ingredient_suggestions(ingredients):
         return most_popular_n_ingredients(5)
 
     filter_list = [RecipeIngredient.ingredient_id == id for id in ingredients]
-    recipes_with_current_ingredients = (
-        RecipeIngredient.query.join(Recipe)
+    partially_satisfied_recipes = (
+        Recipe.query.join(RecipeIngredient)
         .filter(Recipe.status == "Published")
         .filter(or_(*filter_list))
         .all()
     )
+
+    for recipe in partially_satisfied_recipes:
+        print(recipe.id)
+
+    return most_popular_n_ingredients(5)
 
     ingredient_counts = {}
     for recipe in recipes_with_current_ingredients:
