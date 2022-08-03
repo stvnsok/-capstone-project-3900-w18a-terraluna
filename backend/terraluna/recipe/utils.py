@@ -38,12 +38,13 @@ def get_ingredient_counts(ingredients):
     }
 
 
-def most_popular_n_ingredients(n):
+def most_popular_n_ingredients(n, exclude=[]):
     """Find the most popular n ingredients. Popularity is based on how many
     times an ingredient is used in a recipe.
 
     Args:
         n (int): Up to how many popular ingredients to find.
+        exclude (list of int): List of ingredient ids to exclude from result.
 
     Returns:
         list of dict: List of most popular n ingredients.
@@ -54,6 +55,7 @@ def most_popular_n_ingredients(n):
         for ingredient in sorted(
             ingredient_counts, key=ingredient_counts.get, reverse=True  # type: ignore
         )
+        if ingredient.id not in exclude
     ][:n]
 
 
@@ -97,7 +99,7 @@ def get_ingredient_suggestions(ingredients):
     ]
 
     if not suggested_recipes:
-        return most_popular_n_ingredients(5)
+        return most_popular_n_ingredients(5, exclude=ingredients)
 
     filter_list = [RecipeIngredient.recipe_id == id for id in suggested_recipes]
     suggested_recipe_ingredients = {
