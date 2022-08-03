@@ -1,5 +1,5 @@
 import { api } from "../api"
-import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NewRecipeApiResponse, NoMatchFrequencyApiResponse, RecipesRecipeContributorsApiResponse } from "../types/RecipeContributorApiResponse"
+import { CopyRecipeApiResponse, DeleteRecipeApiResponse, NewRecipeApiResponse, RecipesRecipeContributorsApiResponse } from "../types/RecipeContributorApiResponse"
 
 export const createRecipeFromTemplate = async (
     id: number
@@ -14,8 +14,8 @@ export const deleteRecipe = async (
 }
 
 export const getNoRecipeMatchRecipes = async (
-): Promise<NoMatchFrequencyApiResponse> => {
-    return (await api.get(`/recipe_contributors/no_match_frequency`)).data
+): Promise<{ingredients: Ingredient[]}> => {
+    return (await api.get(`/ingredients/no_match_frequency`)).data
 }
 
 export const getRecipesRecipeContributors = async (query?: string, mealType?: string[], dietType?: string[], statuses?: string[]): Promise<RecipesRecipeContributorsApiResponse> => {

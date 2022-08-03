@@ -5,7 +5,6 @@ import { getNoRecipeMatchRecipes, getRecipesRecipeContributors } from '../../ser
 import Button from '../global/Button';
 import RecipeCard from './RecipeCard';
 import SlideOutRecipe from './SlideOutRecipe';
-import NoMatchRecipeMenuItem from './NoMatchRecipeMenuItem';
 import CreateRecipeForm from '../NewRecipe/CreateRecipeForm';
 import NavBar from '../NavBar';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +14,7 @@ const MyRecipes = () => {
     const [isCreateRecipeOpen, setIsCreateRecipeOpen] = useState<boolean>(false);
     const [openNoMatchContextMenu, setOpenNoMatchContextMenu] = useState<boolean>(false);
     const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>();
-    const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<NoMatchIngredients[]>([])
+    const [noMatchIngredientSets, setNoMatchIngredientSets] = useState<Ingredient[]>([])
     const [recipes, setRecipes] = useState<Recipe[]>();
     const navigator = useNavigate();
 
@@ -42,60 +41,8 @@ const MyRecipes = () => {
     useEffect(() => {
         getNoRecipeMatchRecipes()
             .then(res => {
-                console.log("TODO" + res.ingredientSets)
-                setNoMatchIngredientSets([{
-                    ingredients: [{
-                        id: 0,
-                        name: 'Apple'
-                    }, {
-                        id: 1,
-                        name: 'Bannana'
-                    }, {
-                        id: 2,
-                        name: 'Chicken'
-                    }]
-                }, {
-                    ingredients: [{
-                        id: 0,
-                        name: 'Date'
-                    }, {
-                        id: 1,
-                        name: 'Egg'
-                    }, {
-                        id: 2,
-                        name: 'Fig'
-                    }]
-                }])
+                setNoMatchIngredientSets(res.ingredients)
             }).catch(err => console.log(err))
-            setNoMatchIngredientSets([{
-                ingredients: [{
-                    id: 0,
-                    name: 'Apple'
-                }, {
-                    id: 1,
-                    name: 'Bannana'
-                }, {
-                    id: 2,
-                    name: 'Chicken'
-                }]
-            }, {
-                ingredients: [{
-                    id: 0,
-                    name: 'Date'
-                }, {
-                    id: 1,
-                    name: 'Egg'
-                }, {
-                    id: 2,
-                    name: 'Fig'
-                }, {
-                    id: 3,
-                    name: 'Sugar'
-                }, {
-                    id: 4,
-                    name: 'ChickenBreast'
-                }]
-            }])
     }, [])
 
     return (
@@ -120,17 +67,19 @@ const MyRecipes = () => {
                             setOpenNoMatchContextMenu(!openNoMatchContextMenu);
                         }}
                         className="w-60 h-10 border border-solid border-tl-active-red bg-tl-inactive-white rounded-md ml-4"
-                        text={<React.Fragment><HiFire size={22} className="m-auto text-tl-active-red inline"/>Hottest Recipes Needed</React.Fragment>}
+                        text={<React.Fragment><HiFire size={22} className="m-auto text-tl-active-red inline"/>Hottest Ingredients Needed</React.Fragment>}
                     />
                     {openNoMatchContextMenu && 
                     <div 
                         className='absolute'
                     >
-                        {noMatchIngredientSets.map(noMatchIngredients => {
-                            return <NoMatchRecipeMenuItem
-                                noMatchIngredients={noMatchIngredients}
-                            />
-                        })}
+                        {noMatchIngredientSets && noMatchIngredientSets.length > 0 ? <div 
+                            className='mt-2 ml-4 rounded-md p-2 w-60 bg-tl-inactive-white border border-solid border-tl-inactive-grey relative pl-5 flex justify-between'>
+                                asdf
+                            </div> :<div 
+                            className='mt-2 ml-4 rounded-md p-2 w-60 bg-tl-inactive-white border border-solid border-tl-inactive-grey relative pl-5 flex justify-between'>
+                                No Pantry Items Not Matched
+                            </div>}
                     </div>}
                 </div>
                 <Button

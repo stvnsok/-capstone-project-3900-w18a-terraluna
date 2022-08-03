@@ -26,3 +26,13 @@ export const addReview = async (
 ): Promise<{recipes: Recipe[]}> => {
     return (await api.post(`/recipes/${id}/review`, { review, stars })).data
 }
+
+export const savePantry = async (
+    ingredients: number[]
+): Promise<any> => {
+    return (await api.post(`/pantry`, {ingredients})).data
+}
+
+export const getPantry = async (): Promise<{ingredients: Ingredient[]}> => {
+    return (await api.get(`/pantry`)).data
+}

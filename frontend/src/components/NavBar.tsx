@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginWithToken } from '../services/auth.service';
 import { getIngredients } from '../services/recipeContributor.service';
+import { getPantry, savePantry } from '../services/recipeExplore.service';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
 import TLSelect from './global/AsyncSelect';
@@ -43,6 +44,20 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
     useEffect(() => {
         if (onIngredientSearch) onIngredientSearch(ingredients, mealType.map(x => x.name), dietType.map(x => x.name), cookTime?.value ?? -1);
     }, [ingredients, mealType, dietType, cookTime])
+
+    useEffect(() => {
+        if (isLoggedIn) getPantry().then(res => {
+            setIngredients(res.ingredients)
+        }).catch(() => {
+            toast.error("Could not retrieve Pantry")
+        }) 
+    })
+
+    useEffect(() => {
+        savePantry(ingredients.map(x => x.id)).catch(() => {
+            toast.error("Could not save Pantry")
+        })
+    }, [ingredients])
 
     useEffect(() => {
         if (onMyRecipeSearch) onMyRecipeSearch(name, mealType.map(x => x.name), dietType.map(x => x.name), statuses.map(x => x.name));
