@@ -27,8 +27,8 @@ const MyRecipes = () => {
             })
     }, [])
 
-    const triggerGetRecipes = () => {
-        getRecipesRecipeContributors()
+    const triggerGetRecipes = (query?: string, mealType?: string[], dietType?: string[], statuses?: string[]) => {
+        getRecipesRecipeContributors(query, mealType, dietType, statuses)
             .then(res => {
                 setRecipes(res.recipes);
             })
@@ -98,7 +98,11 @@ const MyRecipes = () => {
 
     return (
     <React.Fragment>
-        <NavBar/>
+        <NavBar
+            onMyRecipeSearch={(query: string, mealType: string[], dietType: string[], statuses: string[]) => {
+                triggerGetRecipes(query, mealType, dietType, statuses)
+            }}
+        />
         <div className='flex justify-between p-10' id="main-page">
             <div className='flex'>
                 <Button

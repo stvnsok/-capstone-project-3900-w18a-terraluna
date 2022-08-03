@@ -18,10 +18,8 @@ export const getNoRecipeMatchRecipes = async (
     return (await api.get(`/recipe_contributors/no_match_frequency`)).data
 }
 
-export const getRecipesRecipeContributors = async (
-        query?: string
-    ): Promise<RecipesRecipeContributorsApiResponse> => {
-    return (await api.get('/my_recipes', { params: { query: query ?? '' } })).data
+export const getRecipesRecipeContributors = async (query?: string, mealType?: string[], dietType?: string[], statuses?: string[]): Promise<RecipesRecipeContributorsApiResponse> => {
+    return (await api.get('/my_recipes', { params: { query: query ?? '', mealType: JSON.stringify({mealType}), dietType: JSON.stringify({dietType}), statuses: JSON.stringify({statuses}) } })).data
 }
 
 export const createRecipe = async (

@@ -7,9 +7,11 @@ import { getIngredients } from '../services/recipeContributor.service';
 import AccountSettingsModal from './Auth/AccountSettingsModal';
 import LoginModal from './Auth/LoginModal';
 import TLSelect from './global/AsyncSelect';
+import TextInput from './global/TextInput';
 
-const NavBar = ({onIngredientSearch, collapsed}: {
+const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
     onIngredientSearch?: (ingredients: Ingredient[], mealType: string[], dietType: string[], cookingTime: number) => void;
+    onMyRecipeSearch?: (query: string, mealType: string[], dietType: string[], statuses: string[]) => void
     collapsed? :boolean
 }) => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
@@ -17,10 +19,12 @@ const NavBar = ({onIngredientSearch, collapsed}: {
     const [isContextMenuOpen, setIsContextMenuOpen] = useState<boolean>(false);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [username, setUsername] = useState<string>();
+    const [name, setName] = useState<string>('');
     const navigator = useNavigate()
     
     const [mealType, setMealType] = useState<{ id: number, name: string}[]>([]);
     const [dietType, setDietType] = useState<{ id: number, name: string}[]>([]);
+    const [statuses, setStatuses] = useState<{ id: number, name: string}[]>([]);
     const [cookTime, setCookTime] = useState<{ id: number, name: string, value: number}>();
     const triggerSetUsername = (username: string) => {
         setUsername(username);
@@ -40,11 +44,19 @@ const NavBar = ({onIngredientSearch, collapsed}: {
         if (onIngredientSearch) onIngredientSearch(ingredients, mealType.map(x => x.name), dietType.map(x => x.name), cookTime?.value ?? -1);
     }, [ingredients, mealType, dietType, cookTime])
 
+    useEffect(() => {
+        if (onMyRecipeSearch) onMyRecipeSearch(name, mealType.map(x => x.name), dietType.map(x => x.name), statuses.map(x => x.name));
+    }, [name, mealType, dietType, statuses])
+
     const dietTypeOptions = ['vegan', 'vegetarian', 'gluten-free', 'dairy-free', 'nut-free', 'Halal'].map((dietType, index) => { 
         return { id: index, name: dietType }
     })
 
     const mealTypeOptions = ['breakfast', 'lunch', 'dinner', 'snack'].map((mealType, index) => { 
+        return { id: index, name: mealType }
+    })
+
+    const statusOptions = ['Draft', 'Published', 'Template'].map((mealType, index) => { 
         return { id: index, name: mealType }
     })
 
@@ -85,7 +97,7 @@ const NavBar = ({onIngredientSearch, collapsed}: {
             <div 
                 className={`w-full bg-tl-inactive-green ${ collapsed ? 'h-[100px]' : 'h-[300px]'} flex justify-between`}
             >   
-                {!collapsed ? <div className='w-9/12 mx-auto my-10'>
+                {!collapsed && onIngredientSearch ? <div className='w-9/12 mx-auto my-10'>
                     <TLSelect
                         name="Ingredient"
                         header="Ingredient"
@@ -128,6 +140,50 @@ const NavBar = ({onIngredientSearch, collapsed}: {
                             options={cookTimeOptions}
                             isAsync={false}
                             multi={false}
+                        />
+                    </div>
+                </div> : <div></div>}
+                {!collapsed && onMyRecipeSearch ? <div className='w-9/12 mx-auto my-10'>
+                    <div>
+                        <label htmlFor='name'> Recipe Name</label>
+                        <TextInput
+                            value={name}
+                            onValueChange={(value) => {
+                                setName(value);
+                            }}
+                            placeholder={"Recipe Name..."}
+                        />
+                    </div>
+                    <div className='mt-5 grid grid-cols-3 gap-10'>
+                        <TLSelect
+                            onChange={(e) => {
+                                setMealType(e);
+                            }}
+                            header="Meal Type"
+                            multi={true}
+                            value={mealType}
+                            options={mealTypeOptions}
+                            isAsync={false}
+                        />
+                        <TLSelect
+                            onChange={(e) => {
+                                setDietType(e);
+                            }}
+                            header="Diet Type"
+                            multi={true}
+                            value={dietType}
+                            options={dietTypeOptions}
+                            isAsync={false}
+                        />
+                        <TLSelect
+                            header={"Statuses"}
+                            value={statuses}
+                            onChange={(e) => {
+                                setStatuses(e);
+                            }}
+                            options={statusOptions}
+                            isAsync={false}
+                            multi={true}
                         />
                     </div>
                 </div> : <div></div>}
