@@ -1,3 +1,6 @@
+
+#!/bin/bash
+
 # Install venv and postgres
 sudo apt update
 sudo apt install python3-venv postgresql postgresql-contrib -y
@@ -12,7 +15,7 @@ sed -i -e 's#DATABASE_URL=.*#DATABASE_URL=postgresql\+psycopg2://cs3900:cs3900@l
 
 # Install node using nvm
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-source ~/.bashrc
+. ~/.bashrc
 nvm install 14.17.3
 
 # Create virtual environment and install requirements
@@ -28,3 +31,10 @@ python3 seed.py basic_categories
 # Install node packages
 cd ../frontend
 npm install
+
+# Start backend and frontend
+cd ../backend && . venv/bin/activate && flask run > /dev/null & pids=$!
+cd ../frontend && npm start & pids+=" $!"
+
+trap "kill $pids" SIGTERM SIGINT
+wait $pids
