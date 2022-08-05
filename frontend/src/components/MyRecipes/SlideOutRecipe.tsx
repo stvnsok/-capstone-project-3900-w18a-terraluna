@@ -24,7 +24,7 @@ const SlideOutRecipe = ({
     }
 
     const getReviewCount = (stars?: [1,2,3,4,5][number]): number => {
-        if (!fullRecipe.reviews) return 0;
+        if (!fullRecipe?.reviews) return 0;
         if (!stars) return fullRecipe.reviews.length;
         return fullRecipe.reviews.filter(review => review.stars === stars).length
     }
@@ -38,61 +38,7 @@ const SlideOutRecipe = ({
         return (total / fullRecipe.reviews.length).toPrecision(3);
     }
 
-    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>({
-        ...recipe,
-        ingredients: [{
-            id: 1,
-            name: 'Chicken',
-            quantity: 30,
-            units: 'leg'
-        }],
-        reviews: [{
-            review: "This was a good recipe",
-            stars: 4
-        }, {
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 1
-        },{
-            review: "This was a good recipe",
-            stars: 4
-        },{
-            review: "This was a good recipe",
-            stars: 5
-        }, {
-            review: "This was a good recipe",
-            stars: 4
-        }, {
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 1
-        },{
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 5
-        }, {
-            review: "This was a good recipe",
-            stars: 4
-        }, {
-            review: "This was a good recipe",
-            stars: 2
-        },{
-            review: "This was a good recipe",
-            stars: 1
-        },{
-            review: "This was a good recipe",
-            stars: 4
-        },{
-            review: "This was a good recipe",
-            stars: 5
-        },]
-    });
+    const [fullRecipe, setFullRecipe] = useState<Partial<RecipeDetails>>();
 
     const getStatusIcon = (status: Recipe["status"]) => {
         if (status === 'Draft') return <HiOutlineXCircle size={32}/>    
@@ -113,11 +59,14 @@ const SlideOutRecipe = ({
 
     }}>
         <div className='w-full content-center max-h-screen overflow-y-auto'>
-            <div><HiX className='ml-4 cursor-pointer text-tl-inactive-grey' size={50} onClick={onClose}/></div>
+            <div><HiX className='ml-4 cursor-pointer text-tl-inactive-grey' size={50} onClick={() => {
+                    setFullRecipe(undefined);
+                    onClose()
+                }}/></div>
             <div className='justify-between flex'>
                 <h2 className='ml-16 font-semibold text-4xl'>{recipe?.name}</h2>
                 <div>
-                    {(fullRecipe.status ?? recipe?.status) === "Draft" && <Button
+                    {(fullRecipe?.status ?? recipe?.status) === "Draft" && <Button
                         onClick={() => {
                             if (recipe) {
                                 publishRecipe(recipe.id)
@@ -134,7 +83,7 @@ const SlideOutRecipe = ({
                         text={"Publish"}
                         className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                     />}
-                    {(fullRecipe.status ?? recipe?.status) !== "Published" && <Button
+                    {(fullRecipe?.status ?? recipe?.status) !== "Published" && <Button
                         onClick={() => {
                             if (fullRecipe) {
                                 onEdit(fullRecipe)
@@ -143,12 +92,12 @@ const SlideOutRecipe = ({
                         text={"Edit"}
                         className="mr-4 bg-tl-inactive-green px-6 py-3 rounded-md shadow-md"
                     />}
-                    {(fullRecipe.status ?? recipe?.status) !== "Template" && <Button
+                    {(fullRecipe?.status ?? recipe?.status) !== "Template" && <Button
                         onClick={() => {
                             if (recipe) {
                                 createRecipeFromTemplate(recipe.id)
                                     .then(_ => {
-                                        toast.success('Successfully created a copy of ' + fullRecipe.name ?? recipe.name);
+                                        toast.success('Successfully created a copy of ' + fullRecipe?.name ?? recipe.name);
                                         onPublish();
                                         onClose();
                                     })
@@ -183,23 +132,24 @@ const SlideOutRecipe = ({
             {recipe && <div className='p-10 grid grid-cols-4 gap-5'>
                 <div>
                     <img width={400} height={400} src={recipe.imageUrl ? `http://localhost:5000/uploads?name=${recipe.imageUrl}` : 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png'} alt="recipeImage"/>
-                    {fullRecipe.ingredients && fullRecipe.ingredients.map(ingredient => { return <div className='mt-8 flex'><BsCircleFill size={12} className='my-auto text-tl-active-green'/> <span className='ml-4 text-md'>{ingredient.name} - {ingredient.quantity} {ingredient.units}</span></div>})}
+                    {fullRecipe?.ingredients && fullRecipe?.ingredients.map(ingredient => { return <div className='mt-8 flex'><BsCircleFill size={12} className='my-auto text-tl-active-green'/> <span className='ml-4 text-md'>{ingredient.name} - {ingredient.quantity} {ingredient.units}</span></div>})}
+                    <div className='p-5 shadow-md rounded-md bg-tl-inactive-white mt-10 mr-16'><div className='font-semibold text-2xl'>Description: </div><div className='mt-5'>{fullRecipe?.description}</div></div>
                 </div>
                 <div className='col-span-3 grid grid-cols-3'>
                     <div>
                         <div className='font-semibold text-3xl'>Details</div>
-                        <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{fullRecipe.name ?? recipe.name}</span></div>
-                        <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(fullRecipe.cookTime ?? recipe.cookTime)}</span></div>
-                        <div className='mt-8 flex'>{getStatusIcon(fullRecipe.status ?? recipe.status)}<span className='ml-4 text-xl'>{fullRecipe.status ?? recipe.status}</span></div>
+                        <div className='mt-8 flex'><HiOutlineCreditCard size={32}/> <span className='ml-4 text-xl'>{fullRecipe?.name ?? recipe.name}</span></div>
+                        <div className='mt-8 flex'><HiOutlineClock size={32}/> <span className='ml-4 text-xl'>{minutesToHoursPipe(fullRecipe?.cookTime ?? recipe.cookTime)}</span></div>
+                        <div className='mt-8 flex'>{getStatusIcon(fullRecipe?.status ?? recipe.status)}<span className='ml-4 text-xl'>{fullRecipe?.status ?? recipe.status}</span></div>
                     </div>
                     <div>
                         <div className='font-semibold text-3xl'>Meal Types</div>
-                        {(fullRecipe.mealType ?? recipe.mealType).map(mealType => { return <div className='mt-8 flex'><BsCircleFill size={16} className=" text-tl-inactive-red my-auto"/> <span className='ml-4 text-xl'>{mealType}</span></div>})}
+                        {(fullRecipe?.mealType ?? recipe.mealType).map(mealType => { return <div className='mt-8 flex'><BsCircleFill size={16} className=" text-tl-inactive-red my-auto"/> <span className='ml-4 text-xl'>{mealType}</span></div>})}
                         
                     </div>
                     <div>
                         <div className='font-semibold text-3xl'>Diet Types</div>
-                        {(fullRecipe.dietType ?? recipe.dietType).map(dietType => { return <div className='mt-8 flex'><BsCircleFill size={16} className=" text-tl-inactive-blue my-auto"/> <span className='ml-4 text-xl'>{dietType}</span></div>})}
+                        {(fullRecipe?.dietType ?? recipe.dietType).map(dietType => { return <div className='mt-8 flex'><BsCircleFill size={16} className=" text-tl-inactive-blue my-auto"/> <span className='ml-4 text-xl'>{dietType}</span></div>})}
                     </div>
                     {fullRecipe && <React.Fragment>
                         <div className='col-span-2 mt-24'>
@@ -226,7 +176,7 @@ const SlideOutRecipe = ({
                         </div>
                         <div></div>
                         </React.Fragment>}
-                    {(fullRecipe.status ?? recipe.status) === "Published" && <React.Fragment>
+                    {(fullRecipe?.status ?? recipe.status) === "Published" && <React.Fragment>
                         {getReviewCount() > 0 ? <div className='col-span-2 mt-24'>
                             <div className='text-2xl font-semibold'>Reviews - Average Score {getAverageReview()}/5</div>
                             <div className='grid grid-cols-3'>
@@ -298,7 +248,7 @@ const SlideOutRecipe = ({
                             </div>
                         </div>}
                     </React.Fragment>}
-                    {fullRecipe.reviews && recipe.status === "Published" && <React.Fragment>
+                    {fullRecipe?.reviews && recipe.status === "Published" && <React.Fragment>
                         <div className='col-span-3 grid grid-cols-2 gap-5 mt-4'>
                             <div>
                                 {fullRecipe.reviews.map((review, index) => {

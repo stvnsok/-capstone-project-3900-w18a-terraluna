@@ -14,7 +14,8 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     isAsync,
     options,
     apiCall,
-    apiCallKey
+    apiCallKey,
+    placeholder
 }: {
     value?: IsMulti extends true ? T[] : T;
     defaultValue?: IsMulti extends true ? T[] : T;
@@ -28,6 +29,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
     options?: IsAsync extends false ? T[] : undefined;
     apiCall?: (query: string) => Promise<{[key: string] : T[]}>
     apiCallKey?: string
+    placeholder?: string
 }) => {
     const promiseOptions = (query: string, callback: (options: T[]) => void) => {
         if (apiCall && apiCallKey) {
@@ -74,7 +76,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
             onChange={(e) => {
                 onChange(e as IsMulti extends true ? T[] : T);
             }}
-            placeholder={header ? header+"..." : undefined}
+            placeholder={placeholder ? placeholder : header ? header+"..." : undefined}
         /> : 
         <Select
             name={"select"+header+name}
@@ -111,7 +113,7 @@ const TLSelect = <T extends { id: number, name: string }, IsMulti extends boolea
             onChange={(e) => {
                 onChange(e as IsMulti extends true ? T[] : T);
             }}
-            placeholder={header ? header+"..." : undefined}
+            placeholder={placeholder ? placeholder :header ? header+"..." : undefined}
         />}
     </div>
 }

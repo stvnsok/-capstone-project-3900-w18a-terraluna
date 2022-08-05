@@ -133,13 +133,13 @@ const SlideOutRecipeExplorers = ({
             <div className='justify-between flex'>
                 <h2 className='ml-16 font-semibold text-4xl'>{recipe?.name}</h2>
                 <div>
-                    <Button
+                    {allowFav &&<Button
                         onClick={() => {
                             if (recipe) setOpenReviewModal(true);
                         }}
                         text={"Leave A Review"}
                         className="mr-16 bg-tl-inactive-white px-6 py-3 rounded-md shadow-md"
-                    />
+                    />}
                     {allowFav && <Button
                         onClick={() => {
                             if (recipe) {
@@ -164,6 +164,7 @@ const SlideOutRecipeExplorers = ({
                 <div>
                     <img width={400} height={400} src={recipe.imageUrl ? `http://localhost:5000/uploads?name=${recipe.imageUrl}` : 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png'} alt="recipeImage"/>
                     {fullRecipe.ingredients && fullRecipe.ingredients.map(ingredient => { return <div className='mt-8 flex'><BsCircleFill size={12} className='my-auto text-tl-active-green'/> <span className='ml-4 text-md'>{ingredient.name} - {ingredient.quantity} {ingredient.units}</span></div>})}
+                    <div className='p-5 shadow-md rounded-md bg-tl-inactive-white mt-10 mr-16'><div className='font-semibold text-2xl'>Description: </div><div className='mt-5'>{fullRecipe.description}</div></div>
                 </div>
                 <div className='col-span-3 grid grid-cols-3'>
                     <div>

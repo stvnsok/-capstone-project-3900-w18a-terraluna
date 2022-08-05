@@ -43,3 +43,15 @@ Attended the retrospective B meeting to talk about the issues we encountered and
 Brainstormed some ideas to try for the next sprint to improve the work process
 Wrote up the retrospective B document and submitted to the tutor.
 Started to work on improving the UI and aesthetic of our system. 
+
+Week 9
+Little progress was made during this week, but I started to work on the next sprint
+Also started working on recipe explorers and a skeleton for it 
+Had a meeting with the team to make the project cohesive
+Finishing up the code for the project demo
+Started preparing for the final demo 
+
+
+Week 10
+Cleaned up code for code submission
+Started writing up the final report for the project

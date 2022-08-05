@@ -46,3 +46,22 @@ This included an AsyncSelect which can make an apiCall to get its options rather
 
 Week 7
 Worked on my parts for sprint 3 and polished stuff from sprint 2
+
+Week 8
+- Implemented a couple components but was mostly working on the input component, select component, async select component, card css styling, as well as assisting james in endpoint usage.
+- worked on animations for the create recipe card
+- worked on importing images and videos
+- worked on designing the inputs and various other pages for recipe contributors
+- worked on the nav bar and filtering for the recipe contributors
+
+Week 9
+- completed all the recipe contributor user stories
+- worked on the nav bar
+- worked on pantry slide out
+- worked on view recipe for recipe explorers
+- worked on reviews
+- worked on designing viewing the recipe instructions
+- completed all tthe recipe explorer user stories
+- spent a lot of time refactoring and editing Stephen's frontend code
+- worked on the animation for the logo
+- spent a lot of time on testing the api calls and hooking them up to the frontend correctly, ensuring that route names match etc...
