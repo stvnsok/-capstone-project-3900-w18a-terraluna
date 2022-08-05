@@ -1,8 +1,79 @@
 # COMP3900 w18a-terraluna Project
 ## Requirements
 
-* `node==14.17.3`
 * `python==3.8.12`
+* `node==14.17.3`
+
+## Installation & Setup
+
+### Cloning the Repository
+
+On Lubuntu 20.04.1 LTS VM, the clipboard can be bidirectionally shared by enabling it in Settings > General > Advanced.
+
+```bash
+# Generate SSH key
+$ ssh-keygen -t ed25519 -a 100
+
+# Display SSH public key
+$ cat ~/.ssh/id_ed25519.pub
+```
+
+Add SSH key to GitHub.
+
+```bash
+# Clone the repository
+$ git clone git@github.com:unsw-cse-comp3900-9900-22T2/capstone-project-3900-w18a-terraluna.git
+
+# cd into repository
+$ cd capstone-project-3900-w18a-terraluna/
+```
+
+### Lubuntu 20.04.1 LTS VM
+
+Run the `setup-lubuntu.sh` script. Enter sudo password `lubuntu` when prompted.
+
+```bash
+$ ./setup-lubuntu.sh
+```
+
+The script does the following:
+
+```bash
+# Install venv and postgres
+$ sudo apt update
+$ sudo apt install python3-venv postgresql postgresql-contrib -y
+
+# Start postgres service
+$ sudo systemctl start postgresql.service
+
+# Create user and database and set DATABASE_URL in .env
+$ sudo -u postgres psql -c "CREATE ROLE cs3900 PASSWORD 'cs3900' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN"
+$ sudo -u postgres createdb cs3900-terraluna --owner=cs3900
+$ sed -i -e 's#DATABASE_URL=.*#DATABASE_URL=postgresql\+psycopg2://cs3900:cs3900@localhost:5432/cs3900-terraluna#' backend/.env
+
+# Install node using nvm
+$ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+$ exec bash -l
+$ nvm install 14.17.3
+
+# Create virtual environment and install requirements
+$ cd backend/
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ python3 -m pip install -r requirements.txt
+
+# Run db migrations and seed ingredients and ingredient categories
+$ flask db upgrade
+$ python3 seed.py basic_categories
+
+# Install node packages
+$ cd ../frontend
+$ npm install
+```
+
+Create a Postgres database and in `.env` set `DATABASE_URL` to `dialect+driver://username:password@host:port/database`.
+
+For example, `postgresql+psycopg2://james:james@localhost:5432/terraluna`.
 
 ## Interface Specifications
 ### Data Types
