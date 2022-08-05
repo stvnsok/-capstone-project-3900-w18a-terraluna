@@ -13,7 +13,7 @@ sed -i -e 's#DATABASE_URL=.*#DATABASE_URL=postgresql\+psycopg2://cs3900:cs3900@l
 # Install node using nvm
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 source ~/.bashrc
-vm install 14.17.3
+nvm install 14.17.3
 
 # Create virtual environment and install requirements
 cd backend/
