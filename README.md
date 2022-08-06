@@ -141,6 +141,9 @@ With an account, the user's pantry is persisted and saved even after reloading t
 | **/auth/login** | GET | Get username of logged in user. | Args<pre>{"access_token": <access_token>}</pre> | <pre>200<br>{"username": "James"}</pre> | |
 | **/auth/login** | POST | Log in a user with valid credentials. | JSON<pre>{<br>    "username_or_email": "james@test.com",<br>    "password": "Password123"<br>}</pre> | <pre>200<br>{<br>    "access_token": <access_token>,<br>    "refresh_token": <refresh_token>,<br>    "username": "James"<br>}</pre> | |
 | **/auth/logout** | DELETE | Log out a user by revoking their access token. | | <pre>204<br>""</pre> | |
+| **/auth/reset/username** | PUT | Reset a user's username to a valid unique username. Fresh access token required. | JSON<pre>{"new_username": "David"}</pre> | <pre>200<br>{"username": "David"}</pre> | |
+| **/auth/reset/email** | PUT | Reset a user's email to a valid unique email. Fresh access token required. | JSON<pre>{"new_email": "david@test.com"}</pre> | <pre>204<br>""</pre> | |
+| **/auth/reset/password** | PUT | Reset a user's password to a valid password. Fresh access token required. | JSON<pre>{<br>    "old_password": "Password123",<br>    "new_password": "Password12345"<br>}</pre> | <pre>204<br>""</pre> | |
 
 
 | HTTP Route | HTTP Method | Description | Args/Form/JSON | Response | Errors |
