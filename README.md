@@ -163,6 +163,8 @@ With an account, the user's pantry is persisted and saved even after reloading t
 
 ### Explorer
 
+| HTTP Route | HTTP Method | Description | Args/Form/JSON | Response | Errors |
+|---|---|---|---|---|---|
 | **/recipes/** | GET | Get list of published recipes that can be made based on the given list on ingredients. Optional filters can be applied to the search results. Can filter by a maximum cooking time, meal types and diet types. Returned recipes match *any* given meal type and match *all* given diet types. | Args<pre>?ingredients={"ingredients": ["1", "2", "3"]}&mealType={"mealType": ["lunch", "dinner"]}&dietType={"dietType": ["vegan"]}&cookTime=50</pre> | <pre>200<br>{<br>    "recipes": [<br>        {<br>            "id": 1,<br>            "status": "Draft",<br>            "name": "Pasta",<br>            "cookTime": 50,<br>            "mealType": ["lunch"],<br>            "dietType": ["vegan"],<br>            "description": "Pasta recipe",<br>            "imageUrl": "/home/bob/images/cat.jpg"<br>        },<br>        ...<br>    ]<br>}</pre> | |
 | **/ingredient_categories/** | GET | Return a list of all ingredients in categories. | | <pre>200<br>{<br>    "ingredients": [<br>        {"category": "liquids", "id": 1, "name": "water"},<br>        ...<br>    ]<br>}</pre> | |
 | **/pantry/** | GET | Return ingredients from the user's saved pantry. | | <pre>200<br>{<br>    "ingredients": [<br>        {"id": 1, "name": "water"},<br>        ...<br>    ]<br>}</pre> | |
