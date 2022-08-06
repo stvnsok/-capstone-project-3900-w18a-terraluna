@@ -1,5 +1,5 @@
 
-#!/bin/bash -i
+#!/bin/bash
 
 # Install venv and postgres
 sudo apt update
@@ -29,5 +29,7 @@ flask db upgrade
 python3 seed.py basic_categories
 
 # Install node packages
-cd ../frontend
+cd ../frontend/
 npm install
+
+cd ../
