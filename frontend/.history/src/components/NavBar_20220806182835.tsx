@@ -130,10 +130,10 @@ const NavBar = ({onIngredientSearch, onMyRecipeSearch, collapsed}: {
                     setUsername(username)
                 }}
             />}
-            {/* {onIngredientSearch && <div className="my-logo z-50 -mt-16 ml-4">
+            {onIngredientSearch && <div className="my-logo z-50 -mt-16 ml-4">
                 TerraLuna
                 <div></div>
-            </div>} */}
+            </div>}
             <div 
                 className={`w-full bg-tl-inactive-green ${ collapsed ? 'h-[100px]' : 'h-[300px]'} flex justify-between`}
             >   
