@@ -138,7 +138,7 @@ With an account, the user's pantry is persisted and saved even after reloading t
 |---|---|---|---|---|---|
 | **/auth/refresh** | POST | Generate a new stale (not fresh) access token using a valid refresh token. | | <pre>200<br>{"access_token": <access_token>}</pre> | |
 | **/auth/register** | POST | Register a new user with a username, email and password. Generates a new access/refresh token pair. | JSON<pre>{<br>    "username": "James",<br>    "email": "james@test.com",<br>    "password": "Password123"<br>}</pre> | <pre>201<br>{<br>    "access_token": <access_token>,<br>    "refresh_token": <refresh_token>,<br>    "username": "James"<br>}</pre> | |
-| **/auth/login** | GET | Get username of logged in user. | Args<pre>{"access_token": <access_token>}</pre> | <pre>200<br>{"username": "James"}</pre> | |
+| **/auth/login** | GET | Get username of logged in user. | Args<pre>?access_token=<access_token></pre> | <pre>200<br>{"username": "James"}</pre> | |
 | **/auth/login** | POST | Log in a user with valid credentials. | JSON<pre>{<br>    "username_or_email": "james@test.com",<br>    "password": "Password123"<br>}</pre> | <pre>200<br>{<br>    "access_token": <access_token>,<br>    "refresh_token": <refresh_token>,<br>    "username": "James"<br>}</pre> | |
 | **/auth/logout** | DELETE | Log out a user by revoking their access token. | | <pre>204<br>""</pre> | |
 | **/auth/reset/username** | PUT | Reset a user's username to a valid unique username. Fresh access token required. | JSON<pre>{"new_username": "David"}</pre> | <pre>200<br>{"username": "David"}</pre> | |
