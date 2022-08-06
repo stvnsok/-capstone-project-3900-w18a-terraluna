@@ -226,7 +226,7 @@ def edit_recipe(id):
         video_urls,
         ingredients,
     )
-    return jsonify(recipe=recipe.jsonify()), 201
+    return jsonify(recipe=recipe.jsonify())
 
 
 @recipe_bp.route("/my_recipes/<id>", methods=["DELETE"])
@@ -257,7 +257,8 @@ def copy_recipe(id):
 @recipe_bp.route("/my_recipes", methods=["GET"])
 @jwt_required()
 def my_recipes():
-    """Get all of the user's recipes with an optional query on the recipe name."""
+    """Get all of the user's recipes with an optional query on the recipe name,
+    meal types, diet types and status."""
     data = request.args
     query, meal_types, diet_types, statuses = get_data(
         data, "query", "mealType", "dietType", "statuses"
