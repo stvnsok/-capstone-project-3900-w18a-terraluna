@@ -4,11 +4,15 @@
 * `python==3.8.12`
 * `node==14.17.3`
 
-## Installation & Setup
+## Installation & Setup: Lubuntu 20.04.1 LTS VM
 
 ### Cloning the Repository
 
-On Lubuntu 20.04.1 LTS VM, the clipboard can be bidirectionally shared by enabling it in Settings > General > Advanced.
+The application is best viewed on high resolutions. On the Lubuntu 20.04.1 LTS VM, click the icon in the bottom left and in `Preferences > LXQt settings > Monitor settings` set the resolution to 1920 x 1080 (or higher).
+
+You may need to reduce the scaling in `View > Virtual Screen 1 > Scale to 100%`.
+
+On a fresh Lubuntu 20.04.1 LTS VM, navigate to the home `~` directory.
 
 ```bash
 # Generate SSH key
@@ -18,7 +22,7 @@ $ ssh-keygen -t ed25519 -a 100
 $ cat ~/.ssh/id_ed25519.pub
 ```
 
-Add SSH key to GitHub.
+Add SSH key to GitHub under `Settings > SSH and GPG keys`.
 
 ```bash
 # Clone the repository
@@ -28,47 +32,20 @@ $ git clone git@github.com:unsw-cse-comp3900-9900-22T2/capstone-project-3900-w18
 $ cd capstone-project-3900-w18a-terraluna/
 ```
 
-### Lubuntu 20.04.1 LTS VM
+### Setup Script
 
-Run the `setup-lubuntu.sh` script. Enter sudo password `lubuntu` when prompted.
+Run the `setup-lubuntu.sh` script. Enter sudo password `lubuntu` when prompted. The "dot space dot slash" notation here is important.
 
 ```bash
-$ ./setup-lubuntu.sh
+$ . ./setup-lubuntu.sh
 ```
 
-The script does the following:
+### Start Script
+
+Run the `start.sh` script. The "dot space dot slash" notation here is important. Make the browser window fullscreen when opened.
 
 ```bash
-# Install venv and postgres
-$ sudo apt update
-$ sudo apt install python3-venv postgresql postgresql-contrib -y
-
-# Start postgres service
-$ sudo systemctl start postgresql.service
-
-# Create user and database and set DATABASE_URL in .env
-$ sudo -u postgres psql -c "CREATE ROLE cs3900 PASSWORD 'cs3900' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN"
-$ sudo -u postgres createdb cs3900-terraluna --owner=cs3900
-$ sed -i -e 's#DATABASE_URL=.*#DATABASE_URL=postgresql\+psycopg2://cs3900:cs3900@localhost:5432/cs3900-terraluna#' backend/.env
-
-# Install node using nvm
-$ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-$ exec bash -l
-$ nvm install 14.17.3
-
-# Create virtual environment and install requirements
-$ cd backend/
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ python3 -m pip install -r requirements.txt
-
-# Run db migrations and seed ingredients and ingredient categories
-$ flask db upgrade
-$ python3 seed.py basic_categories
-
-# Install node packages
-$ cd ../frontend
-$ npm install
+$ . ./start.sh
 ```
 
 Create a Postgres database and in `.env` set `DATABASE_URL` to `dialect+driver://username:password@host:port/database`.
