@@ -74,3 +74,35 @@ Week 4
   testing was performed
 * Not finished: 
 * Next week: 
+
+Week 5
+* Attended Demo A and presented the authorisation and authentication routes
+* Attended Retrospective A meeting and filled out the report
+* Met up with the team to try and draft an API specification
+
+Week 6 (Flex-week)
+
+Week 7
+* Worked with Michael to flesh out recipe contributor models
+* Started recipe contributor views/routes
+
+Week 8
+* Attended Demo B and presented partially completed recipe contributor routes
+* Had difficulties integrating smooth communication between frontend and backend
+* This resulted in an incomplete demo
+* Attended Retrospective B meeting and filled out the report
+* Discussed ways to better sync frontend and backend and decided to flesh out an API spec
+
+Week 9
+* Finished recipe contributor models and views
+* Refactored authentication and authorisation models and views
+* Started recipe explorer models
+
+Week 10
+* Finished recipe explorer models and views
+* Worked with David to ensure the application worked in its entirety
+* Finished all models and views and tested the application
+* Created setup scripts for Lubuntu 20.04.1 LTS VM
+* Worked on project report
+* Attended final demo, which went well and all user stories were complete
+* All objectives and user stories were complete and worked well by the end
