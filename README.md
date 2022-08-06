@@ -48,7 +48,7 @@ Run the `start.sh` script. The "dot space dot slash" notation here is important.
 $ . ./start.sh
 ```
 
-If the script fails, re-running it may also fail due to the addresses already being used. The default port for the frontend is 3000 and the default port for the backend is 5000. To kill the process, find the PIDs for `node` and `flask` with these command:
+If the script fails, re-running it may also fail due to the addresses already being used. The default port for the frontend is 3000 and the default port for the backend is 5000. To kill the process, find the PIDs for `node` and `flask` with these commands:
 
 ```bash
 $ sudo lsof -i :3000
@@ -82,7 +82,7 @@ Install `postgresql`, `postgresql-contrib` and `python3-venv` with `apt`.
 
 Create a Postgres database and in `.env` set `DATABASE_URL` to `dialect+driver://username:password@host:port/database`.
 
-For example, `postgresql+psycopg2://james:james@localhost:5432/terraluna`.
+For example, `postgresql+psycopg2://james:james@localhost:5432/terraluna`. The lubuntu setup script contains commands to setup a basic user and database.
 
 Navigate to the `backend/` directory, create a virtual environment, install the requirements, run the database migrations and seed the database with the commands:
 
