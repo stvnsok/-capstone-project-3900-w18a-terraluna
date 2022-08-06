@@ -1,5 +1,5 @@
 
-#!/bin/bash
+#!/bin/bash -i
 
 # Install venv and postgres
 sudo apt update
@@ -21,7 +21,7 @@ nvm install 14.17.3
 # Create virtual environment and install requirements
 cd backend/
 python3 -m venv venv
-source venv/bin/activate
+. venv/bin/activate
 python3 -m pip install -r requirements.txt
 
 # Run db migrations and seed ingredients and ingredient categories
@@ -31,10 +31,3 @@ python3 seed.py basic_categories
 # Install node packages
 cd ../frontend
 npm install
-
-# Start backend and frontend
-cd ../backend && . venv/bin/activate && flask run > /dev/null & pids=$!
-cd ../frontend && npm start & pids+=" $!"
-
-trap "kill $pids" SIGTERM SIGINT
-wait $pids
