@@ -57,9 +57,8 @@ def ingredients():
 
 @recipe_bp.route("/recipe/ingredient_suggestions", methods=["GET"])
 def ingredient_suggestions():
-    """Suggest ingredients to add to a recipe. An ingredient is suggested
-    if it is not in the current recipe but in another recipe that contains all
-    the current ingredients and more.
+    """Suggest ingredients to add to a current set of ingredients. An ingredient
+    is suggested if when added will move closer to matching more recipes.
     """
     data = request.args
     (ingredients,) = get_data(data, "ingredients")

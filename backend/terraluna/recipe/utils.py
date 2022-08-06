@@ -60,9 +60,8 @@ def most_popular_n_ingredients(n, exclude=[]):
 
 
 def get_ingredient_suggestions(ingredients):
-    """Suggest ingredients to add to a recipe. An ingredient is suggested
-    if it is not in the current recipe but in another recipe that contains all
-    the current ingredients and more.
+    """SSuggest ingredients to add to a current set of ingredients. An ingredient
+    is suggested if when added will move closer to matching more recipes.
 
     If there are no ingredients, the 5 most popular ingredients are suggested.
 
