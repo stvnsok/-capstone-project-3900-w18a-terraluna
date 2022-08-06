@@ -130,32 +130,16 @@ After creating and publishing some recipes, these recipes can be explored on the
 
 With an account, the user's pantry is persisted and saved even after reloading the page.
 
-## Interface Specifications
-### Data Types
-| Variable name | Type |
-|---|---|
-| named exactly **name** | string |
-| named exactly **description** | string |
-| named exactly **mealType** | [ string ] |
-| named exactly **dietType** | [ string ] |
-| named exactly **recipeInstructions** | string |
-| named exactly **expectedDuration** | integer |
-| named exactly **quantity** | integer |
-| named exactly **units** | string |
-| named exactly **published** | enum |
-| named exactly **query** | string |
-| named exactly **message** | string |
-| (output only) named exactly **time** | integer (unix timestamp) |
-| has suffix **_id** | integer |
-| has suffix **_url** | string |
-| (input only) named exactly **ingredients** | List of dictionaries, where each dictionary contains types { ingredient_id, quantity, units } |
-| named exactly **filters** | Dictionary containing { ...different booleans vegetarian, lactose, vegan } |
-| (outputs only) named exactly **ingredients** | List of dictionaries, where each dictionary contains types { ingredient_id, name } |
-| (outputs only) named exactly **ingredientCategories** | List of dictionaries, where each dictionary contains types { name, ingredients } |
-| (outputs only) named exactly **recipes** | List of dictionaries, where each dictionary contains types { recipe_id, name, recipePhoto_url, published, description } |
-| (outputs only) named exactly **comments** | List of dictionaries, where each dictionary contains types { comment_id, name, message, time } |
+## API Specification
 
-### Interface
+### Authentication and Authorisation
+
+| HTTP Route | HTTP Method | Description | Args/Form/JSON | Response | Errors |
+|---|---|---|---|---|---|
+| **/auth/refresh** | POST | Generate a new stale (not fresh) access token using a valid refresh token. | | <pre>200<br>{"access_token": <access_token>}</pre> | |
+| **/auth/register** | POST | Register a new user with a username, email and password. Generates a new access/refresh token pair. | <pre>{<br>    "username": "James",<br>    "email": "james@test.com",<br>"password": "Password123"<br>}</pre> | <pre>200<br>{<br>    "access_token": <access_token>,<br>    "refresh_token": <refresh_token>,<br>    "username": "James"<br>}</pre> | |
+
+
 | HTTP Route | HTTP Method | Description | Args/Form/JSON | Response | Errors |
 |---|---|---|---|---|---|
 | **/ingredients** | GET | Return up to 10 matching ingredients (based on frequency in recipes). Empty query returns up to 10 most frequently used ingredients. | Arg<pre>?query=wa</pre> | <pre>200<br>{<br>    "ingredients": [<br>        {"id": 1, "name": "water"},<br>        ...<br>    ]<br>}</pre> | |
