@@ -112,6 +112,24 @@ $ cd frontend/
 $ npm start
 ```
 
+## Usage
+
+### Without Registration
+
+Without a user account, users can only add ingredients to their non-persistent pantry and search for recipes made by recipe contributors. Search filters can be applied accordingly.
+
+### With Registration
+
+With a user account, users can navigate to the `My Recipes` page and create recipes. You would probably want to do this first to add some recipes so that the recipe exploring functionality can be tested.
+
+To create a recipe, use the `+` button, fill in the form and press `Create`. This creates a recipe `Draft`. To publish it, you must edit the recipe, fill in all form details and press `Publish`.
+
+**Note:** For every ingredient added, you must specify a quantity and a unit otherwise the recipe draft cannot be created. Also, instruction videos are optional even when publishing.
+
+After creating and publishing some recipes, these recipes can be explored on the home page. The user must add the required ingredients for this recipe to their pantry in order to view it.
+
+With an account, the user's pantry is persisted and saved even after reloading the page.
+
 ## Interface Specifications
 ### Data Types
 | Variable name | Type |
