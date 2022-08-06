@@ -48,9 +48,69 @@ Run the `start.sh` script. The "dot space dot slash" notation here is important.
 $ . ./start.sh
 ```
 
+If the script fails, re-running it may also fail due to the addresses already being used. The default port for the frontend is 3000 and the default port for the backend is 5000. To kill the process, find the PIDs for `node` and `flask` with these command:
+
+```bash
+$ sudo lsof -i :3000
+$ sudo lsof -i :5000
+```
+
+Then run `kill` on these PIDS. For example,
+
+```bash
+$ kill 8221 8049
+```
+
+If the start script continues to fail, see Manual Setup instructions below.
+
+### Manual Setup
+
+Install `node==14.17.3`. The setup script uses `nvm` to install this version. `nvm` can be installed via
+
+```bash
+$ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+After installing `nvm` you may need to restart your terminal or `source ~/.bashrc` to be able to use the command. The correct node version can then be installed via
+
+```bash
+$ nvm install 14.17.3
+$ nvm use 14.17.3
+```
+
+Install `postgresql`, `postgresql-contrib` and `python3-venv` with `apt`.
+
 Create a Postgres database and in `.env` set `DATABASE_URL` to `dialect+driver://username:password@host:port/database`.
 
 For example, `postgresql+psycopg2://james:james@localhost:5432/terraluna`.
+
+Navigate to the `backend/` directory, create a virtual environment, install the requirements, run the database migrations and seed the database with the commands:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ python3 -m pip install -r requirements.txt
+$ flask db upgrade
+$ python3 seed.py basic_categories
+```
+
+Navigate to the `frontend/` directory and install the required node packages via
+
+```bash
+$ npm install
+```
+
+At this point we are ready to start the backend and frontend. Open two terminal windows and run the following commands in each:
+
+```bash
+$ cd backend/
+$ flask run
+```
+
+```bash
+$ cd frontend/
+$ npm start
+```
 
 ## Interface Specifications
 ### Data Types
